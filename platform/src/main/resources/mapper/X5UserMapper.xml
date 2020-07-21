@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.X5UserMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.X5User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bm_staff_id" property="bmStaffId" jdbcType="VARCHAR" />
+    <result column="bm_staff_account" property="bmStaffAccount" jdbcType="VARCHAR" />
+    <result column="x5_staff_name" property="x5StaffName" jdbcType="VARCHAR" />
+    <result column="x5_user_id" property="x5UserId" jdbcType="VARCHAR" />
+    <result column="x5_account" property="x5Account" jdbcType="VARCHAR" />
+    <result column="x5_token" property="x5Token" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, bm_staff_id, bm_staff_account, x5_staff_name, x5_user_id, x5_account, x5_token, 
+    create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from x5_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByBmStaffId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from x5_user
+    where bm_staff_id = #{id}
+  </select>
+
+  <select id="selectByX5Id" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from x5_user
+    where x5_user_id = #{id}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from x5_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.X5User" >
+    insert into x5_user (id, bm_staff_id, bm_staff_account, 
+      x5_staff_name, x5_user_id, x5_account, 
+      x5_token, create_time)
+    values (#{id,jdbcType=INTEGER}, #{bmStaffId,jdbcType=VARCHAR}, #{bmStaffAccount,jdbcType=VARCHAR}, 
+      #{x5StaffName,jdbcType=VARCHAR}, #{x5UserId,jdbcType=VARCHAR}, #{x5Account,jdbcType=VARCHAR}, 
+      #{x5Token,jdbcType=VARCHAR}, NOW())
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.X5User" >
+    update x5_user
+    set bm_staff_id = #{bmStaffId,jdbcType=VARCHAR},
+      bm_staff_account = #{bmStaffAccount,jdbcType=VARCHAR},
+      x5_staff_name = #{x5StaffName,jdbcType=VARCHAR},
+      x5_user_id = #{x5UserId,jdbcType=VARCHAR},
+      x5_account = #{x5Account,jdbcType=VARCHAR},
+      x5_token = #{x5Token,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

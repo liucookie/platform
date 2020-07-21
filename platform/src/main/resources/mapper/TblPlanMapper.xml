@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TblPlanMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TblPlan">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="Starttime" property="starttime" jdbcType="TIMESTAMP"/>
+        <result column="Endtime" property="endtime" jdbcType="TIMESTAMP"/>
+        <result column="Name" property="name" jdbcType="VARCHAR"/>
+        <result column="Applytime" property="applytime" jdbcType="TIMESTAMP"/>
+        <result column="Exam_time" property="examTime" jdbcType="INTEGER"/>
+        <result column="Exam_TipTime" property="examTiptime" jdbcType="INTEGER"/>
+        <result column="Exam_Ids" property="examIds" jdbcType="INTEGER"/>
+        <result column="pass_score" property="passScore" jdbcType="INTEGER"/>
+        <result column="well_score" property="wellScore" jdbcType="INTEGER"/>
+        <result column="good_score" property="goodScore" jdbcType="INTEGER"/>
+        <result column="examCount" property="examcount" jdbcType="INTEGER"/>
+        <result column="examDoneCount" property="examdonecount" jdbcType="INTEGER"/>
+        <result column="isdelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="isTest" property="isTest" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID,date_format(Starttime, '%Y-%m-%d %H:%i:%s')  Starttime  ,date_format(Endtime, '%Y-%m-%d %H:%i:%s')  Endtime ,
+     Name, date_format(Applytime, '%Y-%m-%d %H:%i:%s')  Applytime , Exam_time, Exam_TipTime, Exam_Ids, pass_score,
+    well_score, good_score, examCount, examDoneCount, isdelete,isTest
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_plan
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_plan
+        <where>
+            isdelete = 0
+            <if test="name != null">
+                and Name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="startDate != null">
+                and Starttime >= str_to_date(#{startDate},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDate != null">
+                and str_to_date(#{endDate},'%Y-%m-%d %H:%i:%s') >= Endtime
+            </if>
+            <if test="status != null">
+                <if test='status == "0" '>
+                    and Starttime > NOW()
+                </if>
+                <if test='status == "1" '>
+                    AND NOW() >= Starttime
+                    AND Endtime >= NOW()
+                </if>
+                <if test='status == "2" '>
+                    and NOW() > Endtime
+                </if>
+            </if>
+        </where>
+        order by Applytime desc
+        limit #{start},#{pageSize}
+    </select>
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from tbl_plan
+        <where>
+            isdelete = 0
+            <if test="name != null">
+                and Name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="startDate != null">
+                and Starttime >= str_to_date(#{startDate},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDate != null">
+                and str_to_date(#{endDate},'%Y-%m-%d %H:%i:%s') >= Endtime
+            </if>
+            <if test="status != null">
+                <if test='status == "0" '>
+                    and Starttime > NOW()
+                </if>
+                <if test='status == "1" '>
+                    AND NOW() >= Starttime
+                    AND Endtime >= NOW()
+                </if>
+                <if test='status == "2" '>
+                    and NOW() > Endtime
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByIsTest" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_plan
+        <where>
+            isdelete = 0
+            <if test="isTest != null">
+                and isTest = #{isTest}
+            </if>
+            <if test="isNow != null">
+                and Endtime >=  NOW() and  NOW() >=  Starttime or Starttime >= NOW()
+            </if>
+        </where>
+        order by Applytime desc
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_plan
+        where Exam_Ids in
+        (select tbl_ExamID from tbl_planexaminee where BM_Staff_Tbl_StaffId = #{userId} and State = 0 and IsEnter = 0)
+        and isdelete = 0
+        order by Applytime desc
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update tbl_plan set isdelete = 1
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" keyProperty="id" keyColumn="ID" useGeneratedKeys="true"
+            parameterType="com.hangyu.platform.web.backBusiness.dto.TblPlan">
+    insert into tbl_plan (ID, Starttime, Endtime, 
+      Name, Applytime, Exam_time, 
+      Exam_TipTime, Exam_Ids, pass_score, 
+      well_score, good_score, examCount, 
+      examDoneCount, isdelete,isTest)
+    values (#{id,jdbcType=INTEGER},  str_to_date(#{starttime},'%Y-%m-%d %H:%i:%s'), str_to_date(#{endtime},'%Y-%m-%d %H:%i:%s'),
+      #{name,jdbcType=VARCHAR}, NOW(), #{examTime,jdbcType=INTEGER},
+      #{examTiptime,jdbcType=INTEGER}, #{examIds,jdbcType=VARCHAR}, #{passScore,jdbcType=INTEGER}, 
+      #{wellScore,jdbcType=INTEGER}, #{goodScore,jdbcType=INTEGER}, #{examcount,jdbcType=INTEGER}, 
+     0, 0,#{isTest})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TblPlan">
+    update tbl_plan
+    set Starttime = #{starttime,jdbcType=TIMESTAMP},
+      Endtime = #{endtime,jdbcType=TIMESTAMP},
+      Name = #{name,jdbcType=VARCHAR},
+      Exam_time = #{examTime,jdbcType=INTEGER},
+      Exam_TipTime = #{examTiptime,jdbcType=INTEGER},
+      Exam_Ids = #{examIds,jdbcType=VARCHAR},
+      pass_score = #{passScore,jdbcType=INTEGER},
+      well_score = #{wellScore,jdbcType=INTEGER},
+      good_score = #{goodScore,jdbcType=INTEGER},
+      examCount = #{examcount,jdbcType=INTEGER},
+      isdelete = #{isdelete,jdbcType=INTEGER},
+      isTest = #{isTest,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+    <update id="updateCount" parameterType="java.lang.Integer">
+    update tbl_plan
+    set examDoneCount = examDoneCount + 1
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectByExamId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_plan
+      where Exam_Ids = #{examId} and isdelete = 0
+    </select>
+</mapper>

@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.ComputerinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Computerinfo" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="OrgId" property="orgid" jdbcType="VARCHAR" />
+    <result column="InUseStaffId" property="inusestaffid" jdbcType="VARCHAR" />
+    <result column="SBXH" property="sbxh" jdbcType="VARCHAR" />
+    <result column="SBBM" property="sbbm" jdbcType="VARCHAR" />
+    <result column="Placement" property="placement" jdbcType="VARCHAR" />
+    <result column="SecretLevelId" property="secretlevelid" jdbcType="VARCHAR" />
+    <result column="OsName" property="osname" jdbcType="VARCHAR" />
+    <result column="OSInstallDate" property="osinstalldate" jdbcType="TIMESTAMP" />
+    <result column="HardDiscNo" property="harddiscno" jdbcType="VARCHAR" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="MAC" property="mac" jdbcType="VARCHAR" />
+    <result column="UseStateId" property="usestateid" jdbcType="VARCHAR" />
+    <result column="SwitchIP" property="switchip" jdbcType="VARCHAR" />
+    <result column="SwitchAddress" property="switchaddress" jdbcType="VARCHAR" />
+    <result column="SwitchPort" property="switchport" jdbcType="VARCHAR" />
+    <result column="ComputerInfoMemo" property="computerinfomemo" jdbcType="VARCHAR" />
+    <result column="AreaType" property="areatype" jdbcType="INTEGER" />
+    <result column="EquipTypeId" property="equiptypeid" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="SJGRQ" property="sjgrq" jdbcType="INTEGER" />
+    <result column="GLCZ" property="glcz" jdbcType="INTEGER" />
+    <result column="Remark1" property="remark1" jdbcType="VARCHAR" />
+    <result column="Remark2" property="remark2" jdbcType="VARCHAR" />
+    <result column="Remark3" property="remark3" jdbcType="VARCHAR" />
+    <result column="KeepSecretNumber" property="keepsecretnumber" jdbcType="VARCHAR" />
+    <result column="SynGuidId" property="synguidid" jdbcType="VARCHAR" />
+    <result column="WorkID" property="workid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    c.Id, c.UniqueID, c.OrgId, c.InUseStaffId, c.SBXH, c.SBBM, c.Placement, c.SecretLevelId, c.OsName,
+    date_format(c.OSInstallDate, '%Y-%m-%d')  OSInstallDate , c.HardDiscNo, c.IP, c.MAC, c.UseStateId, c.SwitchIP, c.SwitchAddress, c.SwitchPort,
+    c.ComputerInfoMemo, c.AreaType, c.EquipTypeId, c.IsDelete, c.SJGRQ, c.GLCZ, c.Remark1, c.Remark2,
+    c.Remark3, c.KeepSecretNumber,c.SynGuidId, c.WorkID,o.OrgName orgName,s.UserName userName,
+    b.codename secretName, e.codename useStateName,ba.codename equipTypeName
+
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List"/>
+    from computerinfo c
+    left join basecode b on b.id = c.SecretLevelId
+    left join basecode e on e.id = c.UseStateId
+    left join basecode ba on ba.id = c.EquipTypeId
+    left join organization o on o.UniqueId = c.OrgId
+    left join bm_staff_tbl s on s.StaffId = c.InUseStaffId
+    where c.UniqueID = #{id}
+  </select>
+
+  <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.Computerinfo" parameterType="com.hangyu.platform.web.backBusiness.vo.ComputerQueryVO">
+    select
+    <include refid="Base_Column_List"/>
+    from computerinfo c
+    left join basecode b on b.id = c.SecretLevelId
+    left join basecode e on e.id = c.UseStateId
+    left join basecode ba on ba.id = c.EquipTypeId
+    left join organization o on o.UniqueId = c.OrgId
+    left join bm_staff_tbl s on s.StaffId = c.InUseStaffId
+    <where>
+      c.IsDelete = 0
+      <if test="typeId != null and typeId != ''">
+        and c.EquipTypeId = #{typeId}
+      </if>
+      <if test="orgId != null and orgId != ''">
+        and c.OrgId = #{orgId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and c.InUseStaffId = #{userId}
+      </if>
+      <if test="secretId != null and secretId != ''">
+        and c.SecretLevelId = #{secretId}
+      </if>
+      <if test="userStateId != null and userStateId != ''">
+        and c.UseStateId = #{userStateId}
+      </if>
+      <if test="keyWord != null and keyWord != ''">
+        and c.SBXH like CONCAT("%",#{keyWord},"%")
+      </if>
+    </where>
+    order by c.Id desc
+    limit #{pageNum},#{pageSize}
+  </select>
+
+  <select id="selectAll" resultType="com.hangyu.platform.web.backBusiness.dto.Computerinfo" parameterType="com.hangyu.platform.web.backBusiness.vo.ComputerQueryVO">
+    select
+    <include refid="Base_Column_List"/>
+    from computerinfo c
+    left join basecode b on b.id = c.SecretLevelId
+    left join basecode e on e.id = c.UseStateId
+    left join basecode ba on ba.id = c.EquipTypeId
+    left join organization o on o.UniqueId = c.OrgId
+    left join bm_staff_tbl s on s.StaffId = c.InUseStaffId
+    <where>
+      c.IsDelete = 0
+      <if test="typeId != null and typeId != ''">
+        and c.EquipTypeId = #{typeId}
+      </if>
+      <if test="orgId != null and orgId != ''">
+        and c.OrgId = #{orgId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and c.InUseStaffId = #{userId}
+      </if>
+      <if test="secretId != null and secretId != ''">
+        and c.SecretLevelId = #{secretId}
+      </if>
+      <if test="userStateId != null and userStateId != ''">
+        and c.UseStateId = #{userStateId}
+      </if>
+      <if test="keyWord != null and keyWord != ''">
+        and c.SBXH like CONCAT("%",#{keyWord},"%")
+      </if>
+    </where>
+    order by c.Id desc
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer" parameterType="com.hangyu.platform.web.backBusiness.vo.ComputerQueryVO">
+    select
+    COUNT(c.Id)
+    from computerinfo c
+    left join basecode b on b.id = c.SecretLevelId
+    left join basecode e on e.id = c.UseStateId
+    left join basecode ba on ba.id = c.EquipTypeId
+    left join organization o on o.UniqueId = c.OrgId
+    left join bm_staff_tbl s on s.StaffId = c.InUseStaffId
+    <where>
+      c.IsDelete = 0
+      <if test="typeId != null and typeId != ''">
+        and c.EquipTypeId = #{typeId}
+      </if>
+      <if test="orgId != null and orgId != ''">
+        and c.OrgId = #{orgId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and c.InUseStaffId = #{userId}
+      </if>
+      <if test="secretId != null and secretId != ''">
+        and c.SecretLevelId = #{secretId}
+      </if>
+      <if test="userStateId != null and userStateId != ''">
+        and c.UseStateId = #{userStateId}
+      </if>
+      <if test="keyWord != null and keyWord != ''">
+        and c.SBXH like CONCAT("%",#{keyWord},"%")
+      </if>
+    </where>
+
+  </select>
+
+  <select id="queryComputerInfo" resultType="com.hangyu.platform.web.backBusiness.dto.Computerinfo"
+          parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from computerinfo c
+    left join basecode b on b.id = c.SecretLevelId
+    left join basecode e on e.id = c.UseStateId
+    left join basecode ba on ba.id = c.EquipTypeId
+    left join organization o on o.UniqueId = c.OrgId
+    left join bm_staff_tbl s on s.StaffId = c.InUseStaffId
+    <where>
+      c.IsDelete = 0
+      <if test="userId != null and userId != ''">
+        and c.InUseStaffId = #{userId}
+      </if>
+      <if test="typeId != null and typeId != ''">
+        and c.EquipTypeId = #{typeId}
+      </if>
+    </where>
+    order by c.Id desc
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update computerinfo set IsDelete = 1
+    where UniqueID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Computerinfo" >
+    insert into computerinfo (Id, UniqueID, OrgId, 
+      InUseStaffId, SBXH, SBBM, 
+      Placement, SecretLevelId, OsName, 
+      OSInstallDate, HardDiscNo, IP, 
+      MAC, UseStateId, SwitchIP, 
+      SwitchAddress, SwitchPort, ComputerInfoMemo, 
+      AreaType, EquipTypeId, IsDelete, 
+      SJGRQ, GLCZ, Remark1, 
+      Remark2, Remark3, KeepSecretNumber, 
+      SynGuidId, WorkID)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{orgid,jdbcType=VARCHAR}, 
+      #{inusestaffid,jdbcType=VARCHAR}, #{sbxh,jdbcType=VARCHAR}, #{sbbm,jdbcType=VARCHAR}, 
+      #{placement,jdbcType=VARCHAR}, #{secretlevelid,jdbcType=VARCHAR}, #{osname,jdbcType=VARCHAR}, 
+     str_to_date(#{osinstalldate},'%Y-%m-%d') , #{harddiscno,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR},
+      #{mac,jdbcType=VARCHAR}, #{usestateid,jdbcType=VARCHAR}, #{switchip,jdbcType=VARCHAR}, 
+      #{switchaddress,jdbcType=VARCHAR}, #{switchport,jdbcType=VARCHAR}, #{computerinfomemo,jdbcType=VARCHAR}, 
+      #{areatype,jdbcType=INTEGER}, #{equiptypeid,jdbcType=VARCHAR}, 0,
+      #{sjgrq,jdbcType=INTEGER}, #{glcz,jdbcType=INTEGER}, #{remark1,jdbcType=VARCHAR}, 
+      #{remark2,jdbcType=VARCHAR}, #{remark3,jdbcType=VARCHAR}, #{keepsecretnumber,jdbcType=VARCHAR}, 
+      #{synguidid,jdbcType=VARCHAR}, #{workid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.Computerinfo" >
+    insert into computerinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueID,
+      </if>
+      <if test="orgid != null" >
+        OrgId,
+      </if>
+      <if test="inusestaffid != null" >
+        InUseStaffId,
+      </if>
+      <if test="sbxh != null" >
+        SBXH,
+      </if>
+      <if test="sbbm != null" >
+        SBBM,
+      </if>
+      <if test="placement != null" >
+        Placement,
+      </if>
+      <if test="secretlevelid != null" >
+        SecretLevelId,
+      </if>
+      <if test="osname != null" >
+        OsName,
+      </if>
+      <if test="osinstalldate != null" >
+        OSInstallDate,
+      </if>
+      <if test="harddiscno != null" >
+        HardDiscNo,
+      </if>
+      <if test="ip != null" >
+        IP,
+      </if>
+      <if test="mac != null" >
+        MAC,
+      </if>
+      <if test="usestateid != null" >
+        UseStateId,
+      </if>
+      <if test="switchip != null" >
+        SwitchIP,
+      </if>
+      <if test="switchaddress != null" >
+        SwitchAddress,
+      </if>
+      <if test="switchport != null" >
+        SwitchPort,
+      </if>
+      <if test="computerinfomemo != null" >
+        ComputerInfoMemo,
+      </if>
+      <if test="areatype != null" >
+        AreaType,
+      </if>
+      <if test="equiptypeid != null" >
+        EquipTypeId,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="sjgrq != null" >
+        SJGRQ,
+      </if>
+      <if test="glcz != null" >
+        GLCZ,
+      </if>
+      <if test="remark1 != null" >
+        Remark1,
+      </if>
+      <if test="remark2 != null" >
+        Remark2,
+      </if>
+      <if test="remark3 != null" >
+        Remark3,
+      </if>
+      <if test="keepsecretnumber != null" >
+        KeepSecretNumber,
+      </if>
+      <if test="synguidid != null" >
+        SynGuidId,
+      </if>
+      <if test="workid != null" >
+        WorkID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null" >
+        #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="inusestaffid != null" >
+        #{inusestaffid,jdbcType=VARCHAR},
+      </if>
+      <if test="sbxh != null" >
+        #{sbxh,jdbcType=VARCHAR},
+      </if>
+      <if test="sbbm != null" >
+        #{sbbm,jdbcType=VARCHAR},
+      </if>
+      <if test="placement != null" >
+        #{placement,jdbcType=VARCHAR},
+      </if>
+      <if test="secretlevelid != null" >
+        #{secretlevelid,jdbcType=VARCHAR},
+      </if>
+      <if test="osname != null" >
+        #{osname,jdbcType=VARCHAR},
+      </if>
+      <if test="osinstalldate != null" >
+        #{osinstalldate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="harddiscno != null" >
+        #{harddiscno,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null" >
+        #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="usestateid != null" >
+        #{usestateid,jdbcType=VARCHAR},
+      </if>
+      <if test="switchip != null" >
+        #{switchip,jdbcType=VARCHAR},
+      </if>
+      <if test="switchaddress != null" >
+        #{switchaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="switchport != null" >
+        #{switchport,jdbcType=VARCHAR},
+      </if>
+      <if test="computerinfomemo != null" >
+        #{computerinfomemo,jdbcType=VARCHAR},
+      </if>
+      <if test="areatype != null" >
+        #{areatype,jdbcType=INTEGER},
+      </if>
+      <if test="equiptypeid != null" >
+        #{equiptypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="sjgrq != null" >
+        #{sjgrq,jdbcType=INTEGER},
+      </if>
+      <if test="glcz != null" >
+        #{glcz,jdbcType=INTEGER},
+      </if>
+      <if test="remark1 != null" >
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null" >
+        #{remark3,jdbcType=VARCHAR},
+      </if>
+      <if test="keepsecretnumber != null" >
+        #{keepsecretnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="synguidid != null" >
+        #{synguidid,jdbcType=VARCHAR},
+      </if>
+      <if test="workid != null" >
+        #{workid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.Computerinfo" >
+    update computerinfo
+    <set >
+      <if test="orgid != null" >
+        OrgId = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="inusestaffid != null" >
+        InUseStaffId = #{inusestaffid,jdbcType=VARCHAR},
+      </if>
+      <if test="sbxh != null" >
+        SBXH = #{sbxh,jdbcType=VARCHAR},
+      </if>
+      <if test="sbbm != null" >
+        SBBM = #{sbbm,jdbcType=VARCHAR},
+      </if>
+      <if test="placement != null" >
+        Placement = #{placement,jdbcType=VARCHAR},
+      </if>
+      <if test="secretlevelid != null" >
+        SecretLevelId = #{secretlevelid,jdbcType=VARCHAR},
+      </if>
+      <if test="osname != null" >
+        OsName = #{osname,jdbcType=VARCHAR},
+      </if>
+      <if test="osinstalldate != null" >
+        OSInstallDate = #{osinstalldate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="harddiscno != null" >
+        HardDiscNo = #{harddiscno,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null" >
+        MAC = #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="usestateid != null" >
+        UseStateId = #{usestateid,jdbcType=VARCHAR},
+      </if>
+      <if test="switchip != null" >
+        SwitchIP = #{switchip,jdbcType=VARCHAR},
+      </if>
+      <if test="switchaddress != null" >
+        SwitchAddress = #{switchaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="switchport != null" >
+        SwitchPort = #{switchport,jdbcType=VARCHAR},
+      </if>
+      <if test="computerinfomemo != null" >
+        ComputerInfoMemo = #{computerinfomemo,jdbcType=VARCHAR},
+      </if>
+      <if test="areatype != null" >
+        AreaType = #{areatype,jdbcType=INTEGER},
+      </if>
+      <if test="equiptypeid != null" >
+        EquipTypeId = #{equiptypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="sjgrq != null" >
+        SJGRQ = #{sjgrq,jdbcType=INTEGER},
+      </if>
+      <if test="glcz != null" >
+        GLCZ = #{glcz,jdbcType=INTEGER},
+      </if>
+      <if test="remark1 != null" >
+        Remark1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        Remark2 = #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="remark3 != null" >
+        Remark3 = #{remark3,jdbcType=VARCHAR},
+      </if>
+      <if test="keepsecretnumber != null" >
+        KeepSecretNumber = #{keepsecretnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="synguidid != null" >
+        SynGuidId = #{synguidid,jdbcType=VARCHAR},
+      </if>
+      <if test="workid != null" >
+        WorkID = #{workid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Computerinfo" >
+    update computerinfo
+    set
+      OrgId = #{orgid,jdbcType=VARCHAR},
+      InUseStaffId = #{inusestaffid,jdbcType=VARCHAR},
+      SBXH = #{sbxh,jdbcType=VARCHAR},
+      SBBM = #{sbbm,jdbcType=VARCHAR},
+      Placement = #{placement,jdbcType=VARCHAR},
+      SecretLevelId = #{secretlevelid,jdbcType=VARCHAR},
+      OsName = #{osname,jdbcType=VARCHAR},
+      OSInstallDate = str_to_date(#{osinstalldate},'%Y-%m-%d'),
+      HardDiscNo = #{harddiscno,jdbcType=VARCHAR},
+      IP = #{ip,jdbcType=VARCHAR},
+      MAC = #{mac,jdbcType=VARCHAR},
+      UseStateId = #{usestateid,jdbcType=VARCHAR},
+      SwitchIP = #{switchip,jdbcType=VARCHAR},
+      SwitchAddress = #{switchaddress,jdbcType=VARCHAR},
+      SwitchPort = #{switchport,jdbcType=VARCHAR},
+      ComputerInfoMemo = #{computerinfomemo,jdbcType=VARCHAR},
+      AreaType = #{areatype,jdbcType=INTEGER},
+      EquipTypeId = #{equiptypeid,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      SJGRQ = #{sjgrq,jdbcType=INTEGER},
+      GLCZ = #{glcz,jdbcType=INTEGER},
+      Remark1 = #{remark1,jdbcType=VARCHAR},
+      Remark2 = #{remark2,jdbcType=VARCHAR},
+      Remark3 = #{remark3,jdbcType=VARCHAR},
+      KeepSecretNumber = #{keepsecretnumber,jdbcType=VARCHAR},
+      SynGuidId = #{synguidid,jdbcType=VARCHAR},
+      WorkID = #{workid,jdbcType=VARCHAR}
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

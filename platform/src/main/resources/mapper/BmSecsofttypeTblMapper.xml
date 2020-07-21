@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.BmSecsofttypeTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.BmSecsofttypeTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="TypeName" property="typename" jdbcType="VARCHAR" />
+    <result column="FartherTypeId" property="farthertypeid" jdbcType="VARCHAR" />
+    <result column="TypePath" property="typepath" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="Remark" property="remark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    ID, UniqueId, TypeName, FartherTypeId, TypePath, SortOrder, IsDelete,Remark
+  </sql>
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_secsofttype_tbl
+    where UniqueId = #{id}
+  </select>
+
+  <select id="queryType" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_secsofttype_tbl
+    where IsDelete = 0
+    order by SortOrder
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer" >
+    select
+    COUNT(UniqueId)
+    from bm_secsofttype_tbl
+    where IsDelete = 0
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm_secsofttype_tbl set IsDelete = 1
+    where uniqueid = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSecsofttypeTbl" >
+    insert into bm_secsofttype_tbl (ID, UniqueId, TypeName, 
+      FartherTypeId, TypePath, SortOrder, 
+      IsDelete, Remark)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{typename,jdbcType=VARCHAR}, 
+      #{farthertypeid,jdbcType=VARCHAR}, #{typepath,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, 
+      0, #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSecsofttypeTbl" >
+    insert into bm_secsofttype_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueId,
+      </if>
+      <if test="typename != null" >
+        TypeName,
+      </if>
+      <if test="farthertypeid != null" >
+        FartherTypeId,
+      </if>
+      <if test="typepath != null" >
+        TypePath,
+      </if>
+      <if test="sortorder != null" >
+        SortOrder,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="remark != null" >
+        Remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null" >
+        #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="farthertypeid != null" >
+        #{farthertypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="typepath != null" >
+        #{typepath,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSecsofttypeTbl" >
+    update bm_secsofttype_tbl
+    <set >
+      <if test="typename != null" >
+        TypeName = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="farthertypeid != null" >
+        FartherTypeId = #{farthertypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="typepath != null" >
+        TypePath = #{typepath,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        SortOrder = #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSecsofttypeTbl" >
+    update bm_secsofttype_tbl
+    set UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      TypeName = #{typename,jdbcType=VARCHAR},
+      FartherTypeId = #{farthertypeid,jdbcType=VARCHAR},
+      TypePath = #{typepath,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      Remark = #{remark,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSecsofttypeTbl" >
+    update bm_secsofttype_tbl
+    set UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      TypeName = #{typename,jdbcType=VARCHAR},
+      FartherTypeId = #{farthertypeid,jdbcType=VARCHAR},
+      TypePath = #{typepath,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

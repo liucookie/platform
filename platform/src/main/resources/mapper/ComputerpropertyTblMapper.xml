@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.ComputerpropertyTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.ComputerpropertyTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="ComputerPropertyId" property="computerpropertyid" jdbcType="VARCHAR" />
+    <result column="PropertyName" property="propertyname" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="PropertyRemark" property="propertyremark" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    Id, ComputerPropertyId, PropertyName, SortOrder, PropertyRemark, IsDelete
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from computerproperty_tbl
+    where ComputerPropertyId = #{id}
+  </select>
+
+  <select id="queryProperty" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from computerproperty_tbl
+    where IsDelete = 0
+    order by SortOrder
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer"  >
+    select
+    COUNT(ComputerPropertyId)
+    from computerproperty_tbl
+    where IsDelete = 0
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update computerproperty_tbl set isDelete = 1
+    where computerpropertyid = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.ComputerpropertyTbl" >
+    insert into computerproperty_tbl (Id, ComputerPropertyId, PropertyName, 
+      SortOrder, PropertyRemark, IsDelete
+      )
+    values (#{id,jdbcType=INTEGER}, #{computerpropertyid,jdbcType=VARCHAR}, #{propertyname,jdbcType=VARCHAR}, 
+      #{sortorder,jdbcType=INTEGER}, #{propertyremark,jdbcType=VARCHAR}, 0
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.ComputerpropertyTbl" >
+    insert into computerproperty_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="computerpropertyid != null" >
+        ComputerPropertyId,
+      </if>
+      <if test="propertyname != null" >
+        PropertyName,
+      </if>
+      <if test="sortorder != null" >
+        SortOrder,
+      </if>
+      <if test="propertyremark != null" >
+        PropertyRemark,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="computerpropertyid != null" >
+        #{computerpropertyid,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyname != null" >
+        #{propertyname,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="propertyremark != null" >
+        #{propertyremark,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.ComputerpropertyTbl" >
+    update computerproperty_tbl
+    <set >
+
+      <if test="propertyname != null" >
+        PropertyName = #{propertyname,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        SortOrder = #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="propertyremark != null" >
+        PropertyRemark = #{propertyremark,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ComputerPropertyId = #{computerpropertyid}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.ComputerpropertyTbl" >
+    update computerproperty_tbl
+    set ComputerPropertyId = #{computerpropertyid,jdbcType=VARCHAR},
+      PropertyName = #{propertyname,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      PropertyRemark = #{propertyremark,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

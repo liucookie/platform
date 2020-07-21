@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.GuoneivisitpointTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.GuoneivisitpointTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="AccessName" property="accessname" jdbcType="VARCHAR"/>
+        <result column="ResponsibilityOrg" property="responsibilityorg" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="ApplyTime" property="applytime" jdbcType="VARCHAR"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="IsApprove" property="isapprove" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    Id, AccessName, ResponsibilityOrg, IsDelete, Remark, date_format(ApplyTime, '%Y-%m-%d %H:%i:%s') ApplyTime, UniqueID, IsApprove
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from guoneivisitpoint_tbl
+        where UniqueID = #{id}
+    </select>
+
+
+    <select id="query" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from guoneivisitpoint_tbl
+        <where>
+            IsDelete = 0
+            <if test="accessName != null and accessName != ''">
+                and AccessName like CONCAT('%',#{accessName},'%')
+            </if>
+            <if test="orgName != null and orgName != ''">
+                and ResponsibilityOrg = #{orgName}
+            </if>
+        </where>
+        order by Id desc
+        limit #{start},#{pageSize}
+    </select>
+
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(UniqueID)
+        from guoneivisitpoint_tbl
+        <where>
+            IsDelete = 0
+            <if test="accessName != null and accessName != ''">
+                and AccessName like CONCAT('%',#{accessName},'%')
+            </if>
+            <if test="orgName != null and orgName != ''">
+                and ResponsibilityOrg = #{orgName}
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update guoneivisitpoint_tbl set IsDelete = 1
+    where UniqueID = #{id}
+  </delete>
+
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.GuoneivisitpointTbl">
+    insert into guoneivisitpoint_tbl (Id, AccessName, ResponsibilityOrg, 
+      IsDelete, Remark, ApplyTime, 
+      UniqueID, IsApprove)
+    values (#{id,jdbcType=INTEGER}, #{accessname,jdbcType=VARCHAR}, #{responsibilityorg,jdbcType=VARCHAR}, 
+      0, #{remark,jdbcType=VARCHAR},NOW(),
+      #{uniqueid,jdbcType=VARCHAR}, #{isapprove,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.GuoneivisitpointTbl">
+        insert into guoneivisitpoint_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="accessname != null">
+                AccessName,
+            </if>
+            <if test="responsibilityorg != null">
+                ResponsibilityOrg,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+            <if test="remark != null">
+                Remark,
+            </if>
+            <if test="applytime != null">
+                ApplyTime,
+            </if>
+            <if test="uniqueid != null">
+                UniqueID,
+            </if>
+            <if test="isapprove != null">
+                IsApprove,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="accessname != null">
+                #{accessname,jdbcType=VARCHAR},
+            </if>
+            <if test="responsibilityorg != null">
+                #{responsibilityorg,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="applytime != null">
+                #{applytime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="uniqueid != null">
+                #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="isapprove != null">
+                #{isapprove,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.GuoneivisitpointTbl">
+        update guoneivisitpoint_tbl
+        <set>
+            <if test="accessname != null">
+                AccessName = #{accessname,jdbcType=VARCHAR},
+            </if>
+            <if test="responsibilityorg != null">
+                ResponsibilityOrg = #{responsibilityorg,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                Remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="applytime != null">
+                ApplyTime = str_to_date(#{applytime},'%Y-%m-%d %H:%i:%s'),
+            </if>
+            <if test="isapprove != null">
+                IsApprove = #{isapprove,jdbcType=INTEGER},
+            </if>
+        </set>
+        where UniqueID = #{uniqueid}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.GuoneivisitpointTbl">
+    update guoneivisitpoint_tbl
+    set AccessName = #{accessname,jdbcType=VARCHAR},
+      ResponsibilityOrg = #{responsibilityorg,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      Remark = #{remark,jdbcType=VARCHAR},
+      ApplyTime = #{applytime,jdbcType=TIMESTAMP},
+      UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      IsApprove = #{isapprove,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

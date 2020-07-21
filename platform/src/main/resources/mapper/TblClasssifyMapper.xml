@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TblClasssifyMapper">
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TblClasssify">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="tbl_ExamID" jdbcType="INTEGER" property="tblExamid" />
+    <result column="tbl_Type" jdbcType="VARCHAR" property="tblType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, tbl_ExamID, tbl_Type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_classsify
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByExamId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_classsify
+    where tbl_ExamID = #{examID,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_classsify
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByExamId" parameterType="java.lang.Integer">
+    delete from tbl_classsify
+    where tbl_ExamID = #{examId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyProperty="id" keyColumn="ID" useGeneratedKeys="true"
+          parameterType="com.hangyu.platform.web.backBusiness.dto.TblClasssify">
+    insert into tbl_classsify (ID, tbl_ExamID, tbl_Type
+      )
+    values (#{id,jdbcType=INTEGER}, #{tblExamid,jdbcType=INTEGER}, #{tblType,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+    <foreach collection="list" item="item" index="index" separator=";">
+      insert into tbl_test (id, testContent, createtime,
+      `type`, foranswers, rightanswer,
+      useCount, isDelete, original
+      )
+      values (#{item.id,jdbcType=INTEGER}, #{item.testcontent,jdbcType=VARCHAR}, NOW(),
+      #{item.type,jdbcType=VARCHAR}, #{item.foranswers,jdbcType=VARCHAR}, #{item.rightanswer,jdbcType=VARCHAR},
+      0, 0, 1
+      )
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TblClasssify">
+    update tbl_classsify
+    set tbl_ExamID = #{tblExamid,jdbcType=INTEGER},
+      tbl_Type = #{tblType,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.BmRecordtypeTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.BmRecordtypeTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="TypeId" property="typeid" jdbcType="VARCHAR" />
+    <result column="TypeName" property="typename" jdbcType="VARCHAR" />
+    <result column="TopTypeId" property="toptypeid" jdbcType="VARCHAR" />
+    <result column="TypePath" property="typepath" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="DigitAlias" property="digitalias" jdbcType="VARCHAR" />
+    <result column="PutWay" property="putway" jdbcType="INTEGER" />
+    <result column="RecordType" property="recordtype" jdbcType="INTEGER" />
+    <result column="PutType" property="puttype" jdbcType="INTEGER" />
+    <result column="PutCycleType" property="putcycletype" jdbcType="INTEGER" />
+    <result column="PutCycleMonth" property="putcyclemonth" jdbcType="INTEGER" />
+    <result column="PutCycleDay" property="putcycleday" jdbcType="INTEGER" />
+    <result column="KeyWord" property="keyword" jdbcType="VARCHAR" />
+    <result column="FirstPutTime" property="firstputtime" jdbcType="VARCHAR" />
+    <result column="LastPutTime" property="lastputtime" jdbcType="VARCHAR" />
+    <result column="NextPutTime" property="nextputtime" jdbcType="VARCHAR" />
+    <result column="TypeRemark" property="typeremark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, TypeId, TypeName, TopTypeId, TypePath, SortOrder, IsDelete, DigitAlias, PutWay, 
+    RecordType, PutType, PutCycleType, PutCycleMonth, PutCycleDay, KeyWord, FirstPutTime, 
+    LastPutTime, NextPutTime,TypeRemark
+  </sql>
+
+  <sql id="Base_Column_List1" >
+    r.Id, r.TypeId, r.TypeName, r.TopTypeId, r.TypePath, r.SortOrder, r.IsDelete, r.DigitAlias, r.PutWay,
+    r.RecordType, r.PutType, r.PutCycleType, r.PutCycleMonth, r.PutCycleDay, r.KeyWord, date_format(r.FirstPutTime, '%Y-%m-%d')  FirstPutTime,
+   r.LastPutTime, r.NextPutTime,r.TypeRemark
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List1" />
+    from bm_recordtype_tbl r
+    where r.TypeId = #{id}
+  </select>
+
+  <select id="queryName" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_recordtype_tbl
+    where  IsDelete = 0
+    and TopTypeId = #{topId}
+    and  RecordType = #{type}
+    order by SortOrder
+  </select>
+
+  <select id="queryByType" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List1" />
+    from bm_recordtype_tbl r
+    where  r.IsDelete = 0
+    and r.TopTypeId = #{topId}
+    and  r.RecordType = #{type}
+    order by r.SortOrder
+    limit #{start},#{pageSize}
+  </select>
+
+
+  <select id="selectTotal" resultType="java.lang.Integer" >
+    select
+    COUNT(r.Id)
+    from bm_recordtype_tbl r
+    where  r.IsDelete = 0
+    and r.TopTypeId = #{topId}
+    and  r.RecordType = #{type}
+  </select>
+
+  <select id="selectMaxOrder" resultType="java.lang.Integer" >
+    select
+    MAX(SortOrder)
+    from bm_recordtype_tbl
+    where  IsDelete = 0
+    and TopTypeId = #{topId}
+    and RecordType = #{type}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.util.List" >
+    update bm_recordtype_tbl set IsDelete = 1
+    where TypeId in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+       #{item}
+    </foreach>
+  </delete>
+
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmRecordtypeTbl" >
+    insert into bm_recordtype_tbl (Id, TypeId, TypeName, 
+      TopTypeId, TypePath, SortOrder, 
+      IsDelete, DigitAlias, PutWay, 
+      RecordType, PutType, PutCycleType, 
+      PutCycleMonth, PutCycleDay, KeyWord, 
+      FirstPutTime, LastPutTime, NextPutTime, 
+      TypeRemark)
+    values (#{id,jdbcType=INTEGER}, #{typeid,jdbcType=VARCHAR}, #{typename,jdbcType=VARCHAR}, 
+      #{toptypeid,jdbcType=VARCHAR}, #{typepath,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, 
+      0, #{digitalias,jdbcType=VARCHAR}, #{putway,jdbcType=INTEGER},
+      #{recordtype,jdbcType=INTEGER}, #{puttype,jdbcType=INTEGER}, #{putcycletype,jdbcType=INTEGER}, 
+      #{putcyclemonth,jdbcType=INTEGER}, #{putcycleday,jdbcType=INTEGER}, #{keyword,jdbcType=VARCHAR}, 
+      NOW(), #{lastputtime,jdbcType=TIMESTAMP}, #{nextputtime,jdbcType=TIMESTAMP},
+      #{typeremark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmRecordtypeTbl" >
+    insert into bm_recordtype_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="typeid != null" >
+        TypeId,
+      </if>
+      <if test="typename != null" >
+        TypeName,
+      </if>
+      <if test="toptypeid != null" >
+        TopTypeId,
+      </if>
+      <if test="typepath != null" >
+        TypePath,
+      </if>
+      <if test="sortorder != null" >
+        SortOrder,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="digitalias != null" >
+        DigitAlias,
+      </if>
+      <if test="putway != null" >
+        PutWay,
+      </if>
+      <if test="recordtype != null" >
+        RecordType,
+      </if>
+      <if test="puttype != null" >
+        PutType,
+      </if>
+      <if test="putcycletype != null" >
+        PutCycleType,
+      </if>
+      <if test="putcyclemonth != null" >
+        PutCycleMonth,
+      </if>
+      <if test="putcycleday != null" >
+        PutCycleDay,
+      </if>
+      <if test="keyword != null" >
+        KeyWord,
+      </if>
+      <if test="firstputtime != null" >
+        FirstPutTime,
+      </if>
+      <if test="lastputtime != null" >
+        LastPutTime,
+      </if>
+      <if test="nextputtime != null" >
+        NextPutTime,
+      </if>
+      <if test="typeremark != null" >
+        TypeRemark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="typeid != null" >
+        #{typeid,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null" >
+        #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="toptypeid != null" >
+        #{toptypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="typepath != null" >
+        #{typepath,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="digitalias != null" >
+        #{digitalias,jdbcType=VARCHAR},
+      </if>
+      <if test="putway != null" >
+        #{putway,jdbcType=INTEGER},
+      </if>
+      <if test="recordtype != null" >
+        #{recordtype,jdbcType=INTEGER},
+      </if>
+      <if test="puttype != null" >
+        #{puttype,jdbcType=INTEGER},
+      </if>
+      <if test="putcycletype != null" >
+        #{putcycletype,jdbcType=INTEGER},
+      </if>
+      <if test="putcyclemonth != null" >
+        #{putcyclemonth,jdbcType=INTEGER},
+      </if>
+      <if test="putcycleday != null" >
+        #{putcycleday,jdbcType=INTEGER},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="firstputtime != null" >
+        #{firstputtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastputtime != null" >
+        #{lastputtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nextputtime != null" >
+        #{nextputtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="typeremark != null" >
+        #{typeremark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmRecordtypeTbl" >
+    update bm_recordtype_tbl
+    <set >
+      <if test="typeid != null" >
+        TypeId = #{typeid,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null" >
+        TypeName = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="toptypeid != null" >
+        TopTypeId = #{toptypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="typepath != null" >
+        TypePath = #{typepath,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        SortOrder = #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="digitalias != null" >
+        DigitAlias = #{digitalias,jdbcType=VARCHAR},
+      </if>
+      <if test="putway != null" >
+        PutWay = #{putway,jdbcType=INTEGER},
+      </if>
+      <if test="recordtype != null" >
+        RecordType = #{recordtype,jdbcType=INTEGER},
+      </if>
+      <if test="puttype != null" >
+        PutType = #{puttype,jdbcType=INTEGER},
+      </if>
+      <if test="putcycletype != null" >
+        PutCycleType = #{putcycletype,jdbcType=INTEGER},
+      </if>
+      <if test="putcyclemonth != null" >
+        PutCycleMonth = #{putcyclemonth,jdbcType=INTEGER},
+      </if>
+      <if test="putcycleday != null" >
+        PutCycleDay = #{putcycleday,jdbcType=INTEGER},
+      </if>
+      <if test="keyword != null" >
+        KeyWord = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="firstputtime != null" >
+        FirstPutTime = #{firstputtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastputtime != null" >
+        NOW(),
+      </if>
+      <if test="nextputtime != null" >
+        NextPutTime = #{nextputtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="typeremark != null" >
+        TypeRemark = #{typeremark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TypeId = #{typeid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmRecordtypeTbl" >
+    update bm_recordtype_tbl
+    set TypeId = #{typeid,jdbcType=VARCHAR},
+      TypeName = #{typename,jdbcType=VARCHAR},
+      TopTypeId = #{toptypeid,jdbcType=VARCHAR},
+      TypePath = #{typepath,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      DigitAlias = #{digitalias,jdbcType=VARCHAR},
+      PutWay = #{putway,jdbcType=INTEGER},
+      RecordType = #{recordtype,jdbcType=INTEGER},
+      PutType = #{puttype,jdbcType=INTEGER},
+      PutCycleType = #{putcycletype,jdbcType=INTEGER},
+      PutCycleMonth = #{putcyclemonth,jdbcType=INTEGER},
+      PutCycleDay = #{putcycleday,jdbcType=INTEGER},
+      KeyWord = #{keyword,jdbcType=VARCHAR},
+      FirstPutTime = #{firstputtime,jdbcType=TIMESTAMP},
+      LastPutTime = #{lastputtime,jdbcType=TIMESTAMP},
+      NextPutTime = #{nextputtime,jdbcType=TIMESTAMP},
+      TypeRemark = #{typeremark,jdbcType=LONGVARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmRecordtypeTbl" >
+    update bm_recordtype_tbl
+    set TypeId = #{typeid,jdbcType=VARCHAR},
+      TypeName = #{typename,jdbcType=VARCHAR},
+      TopTypeId = #{toptypeid,jdbcType=VARCHAR},
+      TypePath = #{typepath,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      DigitAlias = #{digitalias,jdbcType=VARCHAR},
+      PutWay = #{putway,jdbcType=INTEGER},
+      RecordType = #{recordtype,jdbcType=INTEGER},
+      PutType = #{puttype,jdbcType=INTEGER},
+      PutCycleType = #{putcycletype,jdbcType=INTEGER},
+      PutCycleMonth = #{putcyclemonth,jdbcType=INTEGER},
+      PutCycleDay = #{putcycleday,jdbcType=INTEGER},
+      KeyWord = #{keyword,jdbcType=VARCHAR},
+      FirstPutTime = #{firstputtime,jdbcType=TIMESTAMP},
+      LastPutTime = #{lastputtime,jdbcType=TIMESTAMP},
+      NextPutTime = #{nextputtime,jdbcType=TIMESTAMP}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

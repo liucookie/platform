@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.WuyuanaccesspointTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.WuyuanaccesspointTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="Building" property="building" jdbcType="VARCHAR"/>
+        <result column="Floor" property="floor" jdbcType="VARCHAR"/>
+        <result column="ResponsibilityOrg" property="responsibilityorg" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="ApplyTime" property="applytime" jdbcType="VARCHAR"/>
+        <result column="AccessName" property="accessname" jdbcType="LONGVARCHAR"/>
+        <result column="Remark" property="remark" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, Building, Floor, ResponsibilityOrg, IsDelete, date_format(ApplyTime,'%Y-%m-%d %H:%m:%s') ApplyTime,AccessName, Remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from wuyuanaccesspoint_tbl
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryByAddition" resultMap="BaseResultMap"
+            parameterType="com.hangyu.platform.web.sysAdmin.vo.WuyuanAccessPointQueryVO">
+        select
+        <include refid="Base_Column_List"/>
+        from wuyuanaccesspoint_tbl
+        <where>
+            IsDelete = 0
+            <if test="building != null and  building != '' ">
+                and Building like CONCAT('%',#{building},'%')
+            </if>
+            <if test="floor != null and  floor != '' ">
+                and Floor like CONCAT('%',#{floor},'%')
+            </if>
+            <if test="orgName != null and  orgName != '' ">
+                and ResponsibilityOrg like CONCAT('%',#{orgName},'%')
+            </if>
+            <if test="accessName != null and  accessName != '' ">
+                and AccessName like CONCAT('%',#{accessName},'%')
+            </if>
+        </where>
+        order by ApplyTime desc
+        limit #{pageNum},#{pageSize}
+    </select>
+
+
+    <select id="selectTotal" resultType="java.lang.Integer"
+            parameterType="com.hangyu.platform.web.sysAdmin.vo.WuyuanAccessPointQueryVO">
+        select
+        COUNT(Id)
+        from wuyuanaccesspoint_tbl
+        <where>
+            IsDelete = 0
+            <if test="building != null and  building != '' ">
+                and Building like CONCAT('%',#{building},'%')
+            </if>
+            <if test="floor != null and  floor != '' ">
+                and Floor like CONCAT('%',#{floor},'%')
+            </if>
+            <if test="orgName != null and  orgName != '' ">
+                and ResponsibilityOrg like CONCAT('%',#{orgName},'%')
+            </if>
+            <if test="accessName != null and  accessName != '' ">
+                and AccessName like CONCAT('%',#{accessName},'%')
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update wuyuanaccesspoint_tbl set IsDelete = 1
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.WuyuanaccesspointTbl">
+    insert into wuyuanaccesspoint_tbl (Id, Building, Floor, 
+      ResponsibilityOrg, IsDelete, ApplyTime, 
+      AccessName, Remark)
+    values (#{id,jdbcType=INTEGER}, #{building,jdbcType=VARCHAR}, #{floor,jdbcType=VARCHAR}, 
+      #{responsibilityorg,jdbcType=VARCHAR}, 0, NOW(),
+      #{accessname,jdbcType=LONGVARCHAR}, #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.WuyuanaccesspointTbl">
+        update wuyuanaccesspoint_tbl
+        <set>
+            <if test="building != null">
+                Building = #{building,jdbcType=VARCHAR},
+            </if>
+            <if test="floor != null">
+                Floor = #{floor,jdbcType=VARCHAR},
+            </if>
+            <if test="responsibilityorg != null">
+                ResponsibilityOrg = #{responsibilityorg,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="applytime != null">
+                ApplyTime = #{applytime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="accessname != null">
+                AccessName = #{accessname,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="remark != null">
+                Remark = #{remark,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.WuyuanaccesspointTbl">
+    update wuyuanaccesspoint_tbl
+    set Building = #{building,jdbcType=VARCHAR},
+      Floor = #{floor,jdbcType=VARCHAR},
+      ResponsibilityOrg = #{responsibilityorg,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      ApplyTime = #{applytime,jdbcType=TIMESTAMP}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

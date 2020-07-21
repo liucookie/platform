@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TblClassifyTestMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TblClassifyTest">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="ClassifyID" property="classifyid" jdbcType="INTEGER"/>
+        <result column="TestID" property="testid" jdbcType="INTEGER"/>
+        <result column="Score" property="score" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, ClassifyID, TestID, Score
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_classify_test
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByClassifyId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_classify_test
+        where ClassifyID = #{classifyId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_classify_test
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <delete id="deleteByClassifyId" parameterType="java.lang.Integer">
+    delete from tbl_classify_test
+    where ClassifyID = #{classifyId,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.TblClassifyTest">
+    insert into tbl_classify_test (ID, ClassifyID, TestID, 
+      Score)
+    values (#{id,jdbcType=INTEGER}, #{classifyid,jdbcType=INTEGER}, #{testid,jdbcType=INTEGER}, 
+      #{score,jdbcType=INTEGER})
+  </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            insert into tbl_classify_test (ID, ClassifyID, TestID,
+            Score)
+            values (#{item.id,jdbcType=INTEGER}, #{item.classifyid,jdbcType=INTEGER}, #{item.testid,jdbcType=INTEGER},
+            #{item.score,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TblClassifyTest">
+    update tbl_classify_test
+    set ClassifyID = #{classifyid,jdbcType=INTEGER},
+      TestID = #{testid,jdbcType=INTEGER},
+      Score = #{score,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+
+    <select id="selectScore" resultType="java.lang.Integer">
+    SELECT
+	score  FROM
+	tbl_classify_test
+     WHERE
+	TestID = #{testId}
+    AND ClassifyID IN (
+	SELECT
+		id
+	FROM
+		tbl_classsify
+	WHERE
+		tbl_ExamID = #{examId}
+     )
+  </select>
+</mapper>

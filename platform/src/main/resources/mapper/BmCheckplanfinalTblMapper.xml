@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmCheckplanfinalTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmCheckplanfinalTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="StaffId" property="staffid" jdbcType="VARCHAR" />
+    <result column="FinalId" property="finalid" jdbcType="VARCHAR" />
+    <result column="PlanId" property="planid" jdbcType="VARCHAR" />
+    <result column="ItemId" property="itemid" jdbcType="VARCHAR" />
+    <result column="CheckDetail" property="checkdetail" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="CheckFinal" property="checkfinal" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, StaffId, FinalId, PlanId, ItemId, CheckDetail, IsDelete, CheckFinal
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_checkplanfinal_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="queryCheckResult" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from bm_checkplanfinal_tbl
+    where IsDelete = 0
+    and StaffId = #{userId}
+    and PlanId = #{planId}
+    and CheckFinal = #{checkFinal}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bm_checkplanfinal_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanfinalTbl" >
+    insert into bm_checkplanfinal_tbl (Id, StaffId, FinalId, 
+      PlanId, ItemId, CheckDetail, 
+      IsDelete, CheckFinal)
+    values (#{id,jdbcType=INTEGER}, #{staffid,jdbcType=VARCHAR}, #{finalid,jdbcType=VARCHAR}, 
+      #{planid,jdbcType=VARCHAR}, #{itemid,jdbcType=VARCHAR}, #{checkdetail,jdbcType=VARCHAR}, 
+      #{isdelete,jdbcType=INTEGER}, #{checkfinal,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanfinalTbl" >
+    update bm_checkplanfinal_tbl
+    set StaffId = #{staffid,jdbcType=VARCHAR},
+      FinalId = #{finalid,jdbcType=VARCHAR},
+      PlanId = #{planid,jdbcType=VARCHAR},
+      ItemId = #{itemid,jdbcType=VARCHAR},
+      CheckDetail = #{checkdetail,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      CheckFinal = #{checkfinal,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

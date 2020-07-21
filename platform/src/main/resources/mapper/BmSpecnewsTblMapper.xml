@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSpecnewsTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSpecnewsTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="SpecNewsId" property="specnewsid" jdbcType="VARCHAR"/>
+        <result column="InfoName" property="infoname" jdbcType="VARCHAR"/>
+        <result column="InfoContent" property="infocontent" jdbcType="VARCHAR"/>
+        <result column="KeyWord" property="keyword" jdbcType="VARCHAR"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="SpecPic" property="specpic" jdbcType="VARCHAR"/>
+        <result column="FileUrl" property="fileurl" jdbcType="VARCHAR"/>
+        <result column="InfoRemark" property="inforemark" jdbcType="VARCHAR"/>
+        <result column="TopSign" property="topsign" jdbcType="INTEGER"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="ReadNum" property="readnum" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="ImportPictures" property="importpictures" jdbcType="VARCHAR"/>
+        <result column="IsPublish" property="ispublish" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, SpecNewsId, InfoName, InfoContent, KeyWord, date_format(UpdateTime, '%Y-%m-%d')  UpdateTime , SpecPic, FileUrl, InfoRemark,
+    TopSign, SortOrder, ReadNum, IsDelete, ImportPictures, IsPublish
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_specnews_tbl
+        where SpecNewsId = #{id}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_specnews_tbl
+        where IsDelete = 0
+        order by Id desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(Id)
+    from bm_specnews_tbl
+    where IsDelete = 0
+  </select>
+    <select id="querySpecNews" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_specnews_tbl
+        <where>
+            IsDelete = 0
+            and IsPublish = 1
+            <if test="topSign != null and topSign != ''">
+                and TopSign = #{topSign}
+            </if>
+        </where>
+        order by TopSign desc
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_specnews_tbl set IsDelete = 1
+    where SpecNewsId = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSpecnewsTbl">
+    insert into bm_specnews_tbl (Id, SpecNewsId, InfoName, 
+      InfoContent, KeyWord, UpdateTime, 
+      SpecPic, FileUrl, InfoRemark, 
+      TopSign, SortOrder, ReadNum, 
+      IsDelete, ImportPictures, IsPublish
+      )
+    values (#{id,jdbcType=INTEGER}, #{specnewsid,jdbcType=VARCHAR}, #{infoname,jdbcType=VARCHAR}, 
+      #{infocontent,jdbcType=VARCHAR}, #{keyword,jdbcType=VARCHAR}, str_to_date(#{updatetime},'%Y-%m-%d'),
+      #{specpic,jdbcType=VARCHAR}, #{fileurl,jdbcType=VARCHAR}, #{inforemark,jdbcType=VARCHAR}, 
+      #{topsign,jdbcType=INTEGER}, #{sortorder,jdbcType=INTEGER}, #{readnum,jdbcType=INTEGER}, 
+     0, #{importpictures,jdbcType=VARCHAR}, 0
+      )
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSpecnewsTbl">
+    update bm_specnews_tbl
+    set
+      InfoName = #{infoname,jdbcType=VARCHAR},
+      InfoContent = #{infocontent,jdbcType=VARCHAR},
+      KeyWord = #{keyword,jdbcType=VARCHAR},
+      UpdateTime = str_to_date(#{updatetime},'%Y-%m-%d'),
+      SpecPic = #{specpic,jdbcType=VARCHAR},
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      InfoRemark = #{inforemark,jdbcType=VARCHAR},
+      TopSign = #{topsign,jdbcType=INTEGER},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      ReadNum = #{readnum,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      ImportPictures = #{importpictures,jdbcType=VARCHAR},
+      IsPublish = #{ispublish,jdbcType=INTEGER}
+    where SpecNewsId = #{specnewsid,jdbcType=VARCHAR}
+  </update>
+
+    <update id="isPublish" >
+        update bm_specnews_tbl
+        set
+        IsPublish = #{status,jdbcType=INTEGER}
+        where SpecNewsId = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

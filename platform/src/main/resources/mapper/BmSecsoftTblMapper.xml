@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSecsoftTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSecsoftTbl">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="SoftName" property="softname" jdbcType="VARCHAR"/>
+        <result column="SoftClassify" property="softclassify" jdbcType="VARCHAR"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="TopSign" property="topsign" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    r.ID, r.UniqueId, r.SoftName, r.SoftClassify, r.SortOrder, r.IsDelete, r.TopSign,c.codeName typeName
+  </sql>
+    <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.backBusiness.dto.BmSecsoftTbl"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secsoft_tbl r
+        left join basecode c on c.id = r.SoftClassify
+        where r.UniqueId = #{id}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.BmSecsoftTbl">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secsoft_tbl r
+        left join basecode c on c.id = r.SoftClassify
+        where
+            r.IsDelete = 0
+        order by r.Id desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(Id)
+        from bm_secsoft_tbl
+        where IsDelete = 0
+    </select>
+
+    <select id="queryByType" resultType="com.hangyu.platform.web.backBusiness.dto.BmSecsoftTbl" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secsoft_tbl r
+        left join basecode c on c.id = r.SoftClassify
+        <where>
+            r.IsDelete = 0
+            <if test="null != type">
+               and  r.SoftClassify = #{type}
+            </if>
+        </where>
+        order by r.Id desc
+    </select>
+
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_secsoft_tbl set IsDelete = 1
+    where UniqueId = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSecsoftTbl">
+    insert into bm_secsoft_tbl (ID, UniqueId, SoftName, 
+      SoftClassify, SortOrder, IsDelete, 
+      TopSign)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{softname,jdbcType=VARCHAR}, 
+      #{softclassify,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, 0,
+      #{topsign,jdbcType=INTEGER})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSecsoftTbl">
+    update bm_secsoft_tbl
+    set
+      SoftName = #{softname,jdbcType=VARCHAR},
+      SoftClassify = #{softclassify,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      TopSign = #{topsign,jdbcType=INTEGER}
+    where UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

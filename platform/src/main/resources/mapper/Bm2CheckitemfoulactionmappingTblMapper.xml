@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2CheckitemfoulactionmappingTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckitemfoulactionmappingTbl" >
+    <id column="MappingID" property="mappingid" jdbcType="VARCHAR" />
+    <result column="CheckType" property="checktype" jdbcType="INTEGER" />
+    <result column="CheckItem" property="checkitem" jdbcType="VARCHAR" />
+    <result column="FoulActionID" property="foulactionid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    MappingID, CheckType, CheckItem, FoulActionID
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.sysAdmin.vo.Bm2FoulactionMappingVO" parameterType="java.lang.String" >
+    select 
+    DISTINCT
+    c.MappingID id,
+    p.ItemName checkItemName,
+    t.FoulActionTypeName violationType,
+    f.FoulActionName violationName,
+    f.DeductLeaderAllow deductleaderallow,
+    f.DeductPersonAllow deductpersonallow,
+    f.AdminPunish adminpunish,
+    f.DeductLeaderCash deductleadercash,
+    f.DeductPersonCash deductpersoncash,
+    f.DeductDeptScore deductdeptscore,
+    f.DeductPersonScore deductpersonscore
+    from bm2_checkitemfoulactionmapping_tbl c
+    left join BM2_FoulAction_Tbl f on c.FoulActionID = f.FoulActionID
+    left join BM2_FoulActionType_Tbl t on f.FoulActionTypeID = t.FoulActionTypeID
+    left join BM_CheckPlanItem_Tbl p on c.CheckItem = p.ItemId
+    where c.MappingID = #{mappingid}
+  </select>
+
+
+  <select id="query" resultType="com.hangyu.platform.web.sysAdmin.vo.Bm2FoulactionMappingVO"  >
+    select
+    DISTINCT
+    c.MappingID id,
+    p.ItemName checkItemName,
+    t.FoulActionTypeName violationType,
+    f.FoulActionName violationName,
+    f.DeductLeaderAllow deductleaderallow,
+    f.DeductPersonAllow deductpersonallow,
+    f.AdminPunish adminpunish,
+    f.DeductLeaderCash deductleadercash,
+    f.DeductPersonCash deductpersoncash,
+    f.DeductDeptScore deductdeptscore,
+    f.DeductPersonScore deductpersonscore
+    from bm2_checkitemfoulactionmapping_tbl c
+    left join BM2_FoulAction_Tbl f on c.FoulActionID = f.FoulActionID
+    left join BM2_FoulActionType_Tbl t on f.FoulActionTypeID = t.FoulActionTypeID
+    left join BM_CheckPlanItem_Tbl p on c.CheckItem = p.ItemId
+    <where>
+      <if test = "checkItemId != null and checkItemId != '' ">
+        c.CheckItem = #{checkItemId}
+      </if>
+      <if test = "checkType != null and checkType != '' ">
+       and   c.CheckType = #{checkType}
+      </if>
+      <if test = "violationType != null and violationType != '' ">
+        and  f.FoulActionTypeID = #{violationType}
+      </if>
+      <if test = "behavior != null and behavior != '' ">
+        and  c.FoulActionID = #{behavior}
+      </if>
+    </where>
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="queryAll" resultType="com.hangyu.platform.web.sysAdmin.vo.Bm2FoulactionMappingVO"  >
+    select
+    DISTINCT
+    p.ItemName checkItemName,
+    t.FoulActionTypeName violationType,
+    f.FoulActionName violationName,
+    f.DeductLeaderAllow deductleaderallow,
+    f.DeductPersonAllow deductpersonallow,
+    f.AdminPunish adminpunish,
+    f.DeductLeaderCash deductleadercash,
+    f.DeductPersonCash deductpersoncash,
+    f.DeductDeptScore deductdeptscore,
+    f.DeductPersonScore deductpersonscore
+    from bm2_checkitemfoulactionmapping_tbl c
+    left join BM2_FoulAction_Tbl f on c.FoulActionID = f.FoulActionID
+    left join BM2_FoulActionType_Tbl t on f.FoulActionTypeID = t.FoulActionTypeID
+    left join BM_CheckPlanItem_Tbl p on c.CheckItem = p.ItemId
+    <where>
+      <if test = "checkItemId != null and checkItemId != '' ">
+        c.CheckItem = #{checkItemId}
+      </if>
+      <if test = "checkType != null and checkType != '' ">
+        and   c.CheckType = #{checkType}
+      </if>
+      <if test = "violationType != null and violationType != '' ">
+        and  f.FoulActionTypeID = #{violationType}
+      </if>
+      <if test = "behavior != null and behavior != '' ">
+        and  c.FoulActionID = #{behavior}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from bm2_checkitemfoulactionmapping_tbl
+    where MappingID in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+  <delete id="deleteByFoulId" parameterType="java.lang.String" >
+    delete from bm2_checkitemfoulactionmapping_tbl
+    where FoulActionID = #{foulactionid}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckitemfoulactionmappingTbl" >
+    insert into bm2_checkitemfoulactionmapping_tbl (MappingID, CheckType, CheckItem, 
+      FoulActionID)
+    values (#{mappingid,jdbcType=VARCHAR}, #{checktype,jdbcType=INTEGER}, #{checkitem,jdbcType=VARCHAR}, 
+      #{foulactionid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckitemfoulactionmappingTbl" >
+    insert into bm2_checkitemfoulactionmapping_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mappingid != null" >
+        MappingID,
+      </if>
+      <if test="checktype != null" >
+        CheckType,
+      </if>
+      <if test="checkitem != null" >
+        CheckItem,
+      </if>
+      <if test="foulactionid != null" >
+        FoulActionID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mappingid != null" >
+        #{mappingid,jdbcType=VARCHAR},
+      </if>
+      <if test="checktype != null" >
+        #{checktype,jdbcType=INTEGER},
+      </if>
+      <if test="checkitem != null" >
+        #{checkitem,jdbcType=VARCHAR},
+      </if>
+      <if test="foulactionid != null" >
+        #{foulactionid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckitemfoulactionmappingTbl" >
+    update bm2_checkitemfoulactionmapping_tbl
+    <set >
+      <if test="checktype != null" >
+        CheckType = #{checktype,jdbcType=INTEGER},
+      </if>
+      <if test="checkitem != null" >
+        CheckItem = #{checkitem,jdbcType=VARCHAR},
+      </if>
+      <if test="foulactionid != null" >
+        FoulActionID = #{foulactionid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where MappingID = #{mappingid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckitemfoulactionmappingTbl" >
+    update bm2_checkitemfoulactionmapping_tbl
+    set CheckType = #{checktype,jdbcType=INTEGER},
+      CheckItem = #{checkitem,jdbcType=VARCHAR},
+      FoulActionID = #{foulactionid,jdbcType=VARCHAR}
+    where MappingID = #{mappingid,jdbcType=VARCHAR}
+  </update>
+</mapper>

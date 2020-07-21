@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.YirenduogangMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Yirenduogang">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="StaffId" property="staffid" jdbcType="VARCHAR"/>
+        <result column="DeptId" property="deptid" jdbcType="VARCHAR"/>
+        <result column="Gangwei" property="gangwei" jdbcType="VARCHAR"/>
+        <result column="Zhize" property="zhize" jdbcType="VARCHAR"/>
+        <result column="Isdelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="IsCommon" property="iscommon" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    a.UniqueID, a.StaffId, a.Gangwei,a.DeptId , a.Zhize, a.Isdelete, a.IsCommon,b.OrgName
+  </sql>
+
+    <!-- 条件查询数据量 -->
+    <select id="selectTotal" resultType="integer" parameterType="com.hangyu.platform.web.backBusiness.dto.Yirenduogang">
+        select count(UniqueID) from yirenduogang
+        <where>
+            isdelete = 0
+            <if test="gangwei != null and gangwei != ''">
+                and Gangwei LIKE concat('%',#{gangwei},'%')
+            </if>
+            <if test="zhize != null and zhize != ''">
+                and Zhize LIKE concat('%',#{zhize},'%')
+            </if>
+            <if test="deptid != null and deptid != ''">
+                and DeptId = #{deptid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 批量和条件查询 -->
+    <select id="selectAllFactor" resultType="com.hangyu.platform.web.backBusiness.dto.Yirenduogang">
+        select
+        <include refid="Base_Column_List"/>
+        from yirenduogang a
+        LEFT JOIN organization b ON a.DeptId = b.UniqueID
+        <where>
+            a.isdelete = 0
+            <if test="factor.gangwei != null and factor.gangwei != ''">
+                and Gangwei LIKE concat('%',#{factor.gangwei},'%')
+            </if>
+            <if test="factor.zhize != null and factor.zhize != ''">
+                and Zhize LIKE concat('%',#{factor.zhize},'%')
+            </if>
+            <if test="factor.deptid != null and factor.deptid != ''">
+                and DeptId = #{factor.deptid}
+            </if>
+        </where>
+        order by a.Id desc
+        limit #{star},#{pgSize}
+    </select>
+
+    <!-- 单条查询 -->
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.Yirenduogang" parameterType="string">
+        select
+        <include refid="Base_Column_List"/>
+        from yirenduogang a LEFT JOIN organization b ON a.DeptId = b.UniqueID
+        where a.isdelete = 0 and a.UniqueID = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id='selectByUserId' resultMap="BaseResultMap" parameterType="java.lang.String">
+          select  *
+          from yirenduogang
+          WHERE
+          Isdelete = 0
+          and StaffId = #{userId}
+  </select>
+
+    <!-- 批量删除 -->
+    <delete id="delete" parameterType="string">
+        update yirenduogang set isdelete = 1 where UniqueID in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- 信息添加 -->
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Yirenduogang">
+    insert into yirenduogang (UniqueID, StaffId, DeptId, Gangwei, Zhize, Isdelete, IsCommon)
+    values (#{uniqueid,jdbcType=VARCHAR}, #{staffid,jdbcType=VARCHAR}, #{deptid,jdbcType=VARCHAR},
+    #{gangwei,jdbcType=VARCHAR}, #{zhize,jdbcType=VARCHAR}, 0, #{iscommon,jdbcType=INTEGER})
+  </insert>
+
+    <!-- 修改信息 -->
+    <update id="update" parameterType="com.hangyu.platform.web.backBusiness.dto.Yirenduogang">
+    update yirenduogang
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      StaffId = #{staffid,jdbcType=VARCHAR},
+      DeptId = #{deptid,jdbcType=VARCHAR},
+      Gangwei = #{gangwei,jdbcType=VARCHAR},
+      Zhize = #{zhize,jdbcType=VARCHAR},
+      IsCommon = #{iscommon,jdbcType=INTEGER}
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+
+    <!-- Excel导入：部门ID查询 -->
+    <select id="selectOrgId" parameterType="string" resultType="string">
+    select UniqueID from organization where isdelete = 0 and OrgName = #{orgName}
+  </select>
+
+</mapper>

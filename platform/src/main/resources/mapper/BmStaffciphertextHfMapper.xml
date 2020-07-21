@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmStaffciphertextHfMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextHf" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="HfDate" property="hfdate" jdbcType="TIMESTAMP" />
+    <result column="HfCotent" property="hfcotent" jdbcType="VARCHAR" />
+    <result column="HfAtt" property="hfatt" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="TbId" property="tbid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, UniqueId,date_format(HfDate, '%Y-%m-%d') HfDate, HfCotent, HfAtt, IsDelete, UpdateTime, TbId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_staffciphertext_hf
+    where UniqueId = #{id}
+  </select>
+
+  <select id="select" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_staffciphertext_hf
+    where TbId = #{id} and IsDelete = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update  bm_staffciphertext_hf set IsDelete = 1
+    where UniqueId = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextHf" >
+    insert into bm_staffciphertext_hf (Id, UniqueId, HfDate, 
+      HfCotent, HfAtt, IsDelete, 
+      UpdateTime, TbId)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR},str_to_date(#{hfdate},'%Y-%m-%d'),
+      #{hfcotent,jdbcType=VARCHAR},#{hfatt}, 0,
+      NOW(), #{tbid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextHf" >
+    insert into bm_staffciphertext_hf
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueId,
+      </if>
+      <if test="hfdate != null" >
+        HfDate,
+      </if>
+      <if test="hfcotent != null" >
+        HfCotent,
+      </if>
+      <if test="hfatt != null" >
+        HfAtt,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime,
+      </if>
+      <if test="tbid != null" >
+        TbId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="hfdate != null" >
+        #{hfdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hfcotent != null" >
+        #{hfcotent,jdbcType=VARCHAR},
+      </if>
+      <if test="hfatt != null" >
+        #{hfatt,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tbid != null" >
+        #{tbid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextHf" >
+    update bm_staffciphertext_hf
+    <set >
+      <if test="uniqueid != null" >
+        UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="hfdate != null" >
+        HfDate = #{hfdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hfcotent != null" >
+        HfCotent = #{hfcotent,jdbcType=VARCHAR},
+      </if>
+      <if test="hfatt != null" >
+        HfAtt = #{hfatt,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tbid != null" >
+        TbId = #{tbid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextHf" >
+    update bm_staffciphertext_hf
+    set
+      HfDate = #{hfdate,jdbcType=TIMESTAMP},
+      HfCotent = #{hfcotent,jdbcType=VARCHAR},
+      HfAtt = #{hfatt,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      UpdateTime = NOW(),
+      TbId = #{tbid,jdbcType=VARCHAR}
+    where  UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

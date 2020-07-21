@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmNotifyTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmNotifyTbl">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="NotifyId" property="notifyid" jdbcType="VARCHAR"/>
+        <result column="InfoName" property="infoname" jdbcType="VARCHAR"/>
+        <result column="InfoContent" property="infocontent" jdbcType="VARCHAR"/>
+        <result column="KeyWord" property="keyword" jdbcType="VARCHAR"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="FileUrl" property="fileurl" jdbcType="VARCHAR"/>
+        <result column="InfoRemark" property="inforemark" jdbcType="VARCHAR"/>
+        <result column="TopSign" property="topsign" jdbcType="INTEGER"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="IsPublish" property="ispublish" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, NotifyId, InfoName, InfoContent, KeyWord,date_format(UpdateTime, '%Y-%m-%d')  UpdateTime  , FileUrl, InfoRemark, TopSign,
+    SortOrder, IsDelete, IsPublish
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_notify_tbl
+        where NotifyId = #{id}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_notify_tbl
+        <where>
+            IsDelete = 0
+            <if test="name != null and name != ''">
+                and InfoName like CONCAT("%",#{name},"%")
+            </if>
+            <if test="keyWords != null and keyWords != ''">
+                and KeyWord like CONCAT("%",#{keyWords},"%")
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and UpdateTime >= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and str_to_date(#{endDate},'%Y-%m-%d') >= UpdateTime
+            </if>
+            order by Id desc
+            limit #{start},#{pageSize}
+        </where>
+    </select>
+
+    <select id="queryNotify" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_notify_tbl
+        <where>
+            IsDelete = 0
+            and IsPublish = 1
+            <if test="topSign != null and topSign != ''">
+                and TopSign = #{topSign}
+            </if>
+        </where>
+        order by TopSign desc
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from bm_notify_tbl
+        <where>
+            IsDelete = 0
+            <if test="name != null and name != ''">
+                and InfoName like CONCAT("%",#{name},"%")
+            </if>
+            <if test="keyWords != null and keyWords != ''">
+                and KeyWord like CONCAT("%",#{keyWords},"%")
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and UpdateTime >= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and str_to_date(#{endDate},'%Y-%m-%d') >= UpdateTime
+            </if>
+
+        </where>
+    </select>
+    <update id="isPublish">
+        update bm_notify_tbl
+        set
+        IsPublish = #{status,jdbcType=INTEGER}
+        where notifyid = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_notify_tbl set IsDelete = 1
+    where notifyid = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmNotifyTbl">
+    insert into bm_notify_tbl (ID, NotifyId, InfoName, 
+      InfoContent, KeyWord, UpdateTime, 
+      FileUrl, InfoRemark, TopSign, 
+      SortOrder, IsDelete, IsPublish
+      )
+    values (#{id,jdbcType=INTEGER}, #{notifyid,jdbcType=VARCHAR}, #{infoname,jdbcType=VARCHAR}, 
+      #{infocontent,jdbcType=VARCHAR}, #{keyword,jdbcType=VARCHAR}, str_to_date(#{updatetime},'%Y-%m-%d') ,
+      #{fileurl,jdbcType=VARCHAR}, #{inforemark,jdbcType=VARCHAR}, #{topsign,jdbcType=INTEGER}, 
+      #{sortorder,jdbcType=INTEGER},0, #{ispublish,jdbcType=INTEGER}
+      )
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmNotifyTbl">
+    update bm_notify_tbl
+    set
+      InfoName = #{infoname,jdbcType=VARCHAR},
+      InfoContent = #{infocontent,jdbcType=VARCHAR},
+      KeyWord = #{keyword,jdbcType=VARCHAR},
+      UpdateTime = str_to_date(#{updatetime},'%Y-%m-%d') ,
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      InfoRemark = #{inforemark,jdbcType=VARCHAR},
+      TopSign = #{topsign,jdbcType=INTEGER},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      IsPublish = #{ispublish,jdbcType=INTEGER}
+    where  NotifyId = #{notifyid,jdbcType=VARCHAR}
+  </update>
+</mapper>

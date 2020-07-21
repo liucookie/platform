@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.PortablemanagementapprovalMapper">
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Portablemanagementapproval">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="UniqueID" jdbcType="VARCHAR" property="uniqueid" />
+    <result column="StaffNamer" jdbcType="VARCHAR" property="staffnamer" />
+    <result column="AccoutNamer" jdbcType="VARCHAR" property="accoutnamer" />
+    <result column="JobNumber" jdbcType="VARCHAR" property="jobnumber" />
+    <result column="SecretLevelNamer" jdbcType="VARCHAR" property="secretlevelnamer" />
+    <result column="OrganizationNamer" jdbcType="VARCHAR" property="organizationnamer" />
+    <result column="ApplyUserPhone" jdbcType="VARCHAR" property="applyuserphone" />
+    <result column="WorkFLowID" jdbcType="VARCHAR" property="workflowid" />
+    <result column="FormID" jdbcType="VARCHAR" property="formid" />
+    <result column="Isdelete" jdbcType="INTEGER" property="isdelete" />
+    <result column="ApplyTime" jdbcType="TIMESTAMP" property="applytime" />
+    <result column="Operation" jdbcType="INTEGER" property="operation" />
+    <result column="IsApproved" jdbcType="INTEGER" property="isapproved" />
+    <result column="loginUserID" jdbcType="VARCHAR" property="loginuserid" />
+    <result column="loginUserOrgName" jdbcType="VARCHAR" property="loginuserorgname" />
+    <result column="loginUserSecretLevel" jdbcType="VARCHAR" property="loginusersecretlevel" />
+    <result column="loginUserAccount" jdbcType="VARCHAR" property="loginuseraccount" />
+    <result column="rFileUrl" jdbcType="VARCHAR" property="rfileurl" />
+    <result column="OfficePhone" jdbcType="VARCHAR" property="officephone" />
+    <result column="PortableSecretLevel" jdbcType="VARCHAR" property="portablesecretlevel" />
+    <result column="Usage" jdbcType="VARCHAR" property="usage" />
+    <result column="UseField" jdbcType="VARCHAR" property="usefield" />
+    <result column="UsePlot" jdbcType="VARCHAR" property="useplot" />
+    <result column="BorrowTime" jdbcType="VARCHAR" property="borrowtime" />
+    <result column="UseAffair" jdbcType="VARCHAR" property="useaffair" />
+    <result column="OutLinkRight" jdbcType="VARCHAR" property="outlinkright" />
+    <result column="MatchedMedia" jdbcType="VARCHAR" property="matchedmedia" />
+    <result column="PortableAssetNum" jdbcType="VARCHAR" property="portableassetnum" />
+    <result column="PortableUsage" jdbcType="VARCHAR" property="portableusage" />
+    <result column="IsJimi" jdbcType="INTEGER" property="isjimi" />
+    <result column="IsSelect" jdbcType="INTEGER" property="isselect" />
+    <result column="CheckInfo" jdbcType="VARCHAR" property="checkinfo" />
+    <result column="RenewDays" jdbcType="INTEGER" property="renewdays" />
+    <result column="RenewReason" jdbcType="VARCHAR" property="renewreason" />
+    <result column="DeviceSecurity" jdbcType="VARCHAR" property="devicesecurity" />
+    <result column="FileSecurity" jdbcType="VARCHAR" property="filesecurity" />
+    <result column="RWSecretLevel" jdbcType="VARCHAR" property="rwsecretlevel" />
+    <result column="CLXXSecretLevel" jdbcType="VARCHAR" property="clxxsecretlevel" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, UniqueID, StaffNamer, AccoutNamer, JobNumber, SecretLevelNamer, OrganizationNamer, 
+    ApplyUserPhone, WorkFLowID, FormID, Isdelete, date_format(ApplyTime, '%Y-%m-%d %H:%i:%s')  ApplyTime, Operation, IsApproved, loginUserID,
+    loginUserOrgName, loginUserSecretLevel, loginUserAccount, rFileUrl, OfficePhone, 
+    PortableSecretLevel, `Usage`, UseField, UsePlot, BorrowTime, UseAffair, OutLinkRight,
+    MatchedMedia, PortableAssetNum, PortableUsage, IsJimi, IsSelect, CheckInfo, RenewDays, 
+    RenewReason, DeviceSecurity, FileSecurity, RWSecretLevel, CLXXSecretLevel
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from portablemanagementapproval
+    where UniqueID = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from portablemanagementapproval
+    where UniqueID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Portablemanagementapproval">
+    insert into portablemanagementapproval (ID, UniqueID, StaffNamer, 
+      AccoutNamer, JobNumber, SecretLevelNamer, 
+      OrganizationNamer, ApplyUserPhone, WorkFLowID, 
+      FormID, Isdelete, ApplyTime, 
+      Operation, IsApproved, loginUserID, 
+      loginUserOrgName, loginUserSecretLevel, 
+      loginUserAccount, rFileUrl, OfficePhone, 
+      PortableSecretLevel, `Usage`, UseField,
+      UsePlot, BorrowTime, UseAffair, 
+      OutLinkRight, MatchedMedia, PortableAssetNum, 
+      PortableUsage, IsJimi, IsSelect, 
+      CheckInfo, RenewDays, RenewReason, 
+      DeviceSecurity, FileSecurity, RWSecretLevel, 
+      CLXXSecretLevel)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{staffnamer,jdbcType=VARCHAR}, 
+      #{accoutnamer,jdbcType=VARCHAR}, #{jobnumber,jdbcType=VARCHAR}, #{secretlevelnamer,jdbcType=VARCHAR}, 
+      #{organizationnamer,jdbcType=VARCHAR}, #{applyuserphone,jdbcType=VARCHAR}, #{workflowid,jdbcType=VARCHAR}, 
+      #{formid,jdbcType=VARCHAR}, 0, NOW(),
+      #{operation,jdbcType=INTEGER}, 0, #{loginuserid,jdbcType=VARCHAR},
+      #{loginuserorgname,jdbcType=VARCHAR}, #{loginusersecretlevel,jdbcType=VARCHAR}, 
+      #{loginuseraccount,jdbcType=VARCHAR}, #{rfileurl,jdbcType=VARCHAR}, #{officephone,jdbcType=VARCHAR}, 
+      #{portablesecretlevel,jdbcType=VARCHAR}, #{usage,jdbcType=VARCHAR}, #{usefield,jdbcType=VARCHAR}, 
+      #{useplot,jdbcType=VARCHAR}, #{borrowtime,jdbcType=VARCHAR}, #{useaffair,jdbcType=VARCHAR}, 
+      #{outlinkright,jdbcType=VARCHAR}, #{matchedmedia,jdbcType=VARCHAR}, #{portableassetnum,jdbcType=VARCHAR}, 
+      #{portableusage,jdbcType=VARCHAR}, #{isjimi,jdbcType=INTEGER}, #{isselect,jdbcType=INTEGER}, 
+      #{checkinfo,jdbcType=VARCHAR}, #{renewdays,jdbcType=INTEGER}, #{renewreason,jdbcType=VARCHAR}, 
+      #{devicesecurity,jdbcType=VARCHAR}, #{filesecurity,jdbcType=VARCHAR}, #{rwsecretlevel,jdbcType=VARCHAR}, 
+      #{clxxsecretlevel,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Portablemanagementapproval">
+    update portablemanagementapproval
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      StaffNamer = #{staffnamer,jdbcType=VARCHAR},
+      AccoutNamer = #{accoutnamer,jdbcType=VARCHAR},
+      JobNumber = #{jobnumber,jdbcType=VARCHAR},
+      SecretLevelNamer = #{secretlevelnamer,jdbcType=VARCHAR},
+      OrganizationNamer = #{organizationnamer,jdbcType=VARCHAR},
+      ApplyUserPhone = #{applyuserphone,jdbcType=VARCHAR},
+      WorkFLowID = #{workflowid,jdbcType=VARCHAR},
+      FormID = #{formid,jdbcType=VARCHAR},
+      Isdelete = #{isdelete,jdbcType=INTEGER},
+      ApplyTime = #{applytime,jdbcType=TIMESTAMP},
+      Operation = #{operation,jdbcType=INTEGER},
+      IsApproved = #{isapproved,jdbcType=INTEGER},
+      loginUserID = #{loginuserid,jdbcType=VARCHAR},
+      loginUserOrgName = #{loginuserorgname,jdbcType=VARCHAR},
+      loginUserSecretLevel = #{loginusersecretlevel,jdbcType=VARCHAR},
+      loginUserAccount = #{loginuseraccount,jdbcType=VARCHAR},
+      rFileUrl = #{rfileurl,jdbcType=VARCHAR},
+      OfficePhone = #{officephone,jdbcType=VARCHAR},
+      PortableSecretLevel = #{portablesecretlevel,jdbcType=VARCHAR},
+      `Usage` = #{usage,jdbcType=VARCHAR},
+      UseField = #{usefield,jdbcType=VARCHAR},
+      UsePlot = #{useplot,jdbcType=VARCHAR},
+      BorrowTime = #{borrowtime,jdbcType=VARCHAR},
+      UseAffair = #{useaffair,jdbcType=VARCHAR},
+      OutLinkRight = #{outlinkright,jdbcType=VARCHAR},
+      MatchedMedia = #{matchedmedia,jdbcType=VARCHAR},
+      PortableAssetNum = #{portableassetnum,jdbcType=VARCHAR},
+      PortableUsage = #{portableusage,jdbcType=VARCHAR},
+      IsJimi = #{isjimi,jdbcType=INTEGER},
+      IsSelect = #{isselect,jdbcType=INTEGER},
+      CheckInfo = #{checkinfo,jdbcType=VARCHAR},
+      RenewDays = #{renewdays,jdbcType=INTEGER},
+      RenewReason = #{renewreason,jdbcType=VARCHAR},
+      DeviceSecurity = #{devicesecurity,jdbcType=VARCHAR},
+      FileSecurity = #{filesecurity,jdbcType=VARCHAR},
+      RWSecretLevel = #{rwsecretlevel,jdbcType=VARCHAR},
+      CLXXSecretLevel = #{clxxsecretlevel,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByInstanceId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from portablemanagementapproval
+    where WorkFlowID = #{instanceId}
+  </select>
+  <update id="updateByInstanceId">
+    update portablemanagementapproval
+    set
+      IsApproved = #{status}
+    where WorkFlowID = #{instanceId}
+  </update>
+
+</mapper>

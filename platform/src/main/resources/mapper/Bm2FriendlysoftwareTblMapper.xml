@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.Bm2FriendlysoftwareTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Bm2FriendlysoftwareTbl">
+        <id column="SoftId" property="softid" jdbcType="VARCHAR"/>
+        <result column="TypeId" property="typeid" jdbcType="VARCHAR"/>
+        <result column="SoftName" property="softname" jdbcType="VARCHAR"/>
+        <result column="SoftVer" property="softver" jdbcType="VARCHAR"/>
+        <result column="Manufacturer" property="manufacturer" jdbcType="VARCHAR"/>
+        <result column="SourceFrom" property="sourcefrom" jdbcType="VARCHAR"/>
+        <result column="UseDate" property="usedate" jdbcType="TIMESTAMP"/>
+        <result column="Useage" property="useage" jdbcType="VARCHAR"/>
+        <result column="SoftRemark" property="softremark" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="KeyWord" property="keyword" jdbcType="VARCHAR"/>
+        <result column="AuthorizationUse" property="authorizationuse" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    SoftId, TypeId, SoftName, SoftVer, Manufacturer, SourceFrom, date_format(UseDate,'%Y-%m-%d') UseDate, Useage, SoftRemark,
+    IsDelete, CreateTime, UpdateTime, KeyWord, AuthorizationUse
+  </sql>
+    <sql id="Base_Column_List1">
+        f.SoftId,  f.TypeId,  f.SoftName,  f.SoftVer,  f.Manufacturer,  f.SourceFrom, date_format( f.UseDate,'%Y-%m-%d') UseDate,  f.Useage,  f.SoftRemark,
+         f.IsDelete,  f.CreateTime,  f.UpdateTime,  f.KeyWord,  f.AuthorizationUse,b.codeName typeName
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_friendlysoftware_tbl
+        where SoftId = #{softid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.Bm2FriendlysoftwareTbl" parameterType="com.hangyu.platform.web.backBusiness.vo.SoftWareQueryVO">
+        select
+        <include refid="Base_Column_List1"/>
+        from bm2_friendlysoftware_tbl f
+        left join basecode b on f.TypeId = b.id
+        <where>
+            f.IsDelete = 0
+            <if test="softTypeId != null and softTypeId != ''">
+                and f.TypeId = #{softTypeId}
+            </if>
+            <if test="keyWord != null and keyWord != ''">
+                and f.KeyWord like CONCAT("%",#{keyWord},"%")
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and f.UseDate >= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and str_to_date(#{endDate},'%Y-%m-%d') >= f.UseDate
+            </if>
+        </where>
+        order by f.UpdateTime desc
+        limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer" parameterType="com.hangyu.platform.web.backBusiness.vo.SoftWareQueryVO">
+        select
+        COUNT(SoftId)
+        from bm2_friendlysoftware_tbl
+        <where>
+            IsDelete = 0
+            <if test="softTypeId != null and softTypeId != ''">
+                and TypeId = #{softTypeId}
+            </if>
+            <if test="keyWord != null and keyWord != ''">
+                and KeyWord like CONCAT("%",#{keyWord},"%")
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and UseDate >= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and str_to_date(#{endDate},'%Y-%m-%d') >= UseDate
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm2_friendlysoftware_tbl set IsDelete = 1
+    where SoftId = #{softid,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2FriendlysoftwareTbl">
+    insert into bm2_friendlysoftware_tbl (SoftId, TypeId, SoftName, 
+      SoftVer, Manufacturer, SourceFrom, 
+      UseDate, Useage, SoftRemark, 
+      IsDelete, CreateTime, UpdateTime, 
+      KeyWord, AuthorizationUse)
+    values (#{softid,jdbcType=VARCHAR}, #{typeid,jdbcType=VARCHAR}, #{softname,jdbcType=VARCHAR}, 
+      #{softver,jdbcType=VARCHAR}, #{manufacturer,jdbcType=VARCHAR}, #{sourcefrom,jdbcType=VARCHAR}, 
+       str_to_date(#{usedate},'%Y-%m-%d'), #{useage,jdbcType=VARCHAR}, #{softremark,jdbcType=VARCHAR},
+     0, NOW(),NOW(),
+      #{keyword,jdbcType=VARCHAR}, #{authorizationuse,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2FriendlysoftwareTbl">
+    update bm2_friendlysoftware_tbl
+    set TypeId = #{typeid,jdbcType=VARCHAR},
+      SoftName = #{softname,jdbcType=VARCHAR},
+      SoftVer = #{softver,jdbcType=VARCHAR},
+      Manufacturer = #{manufacturer,jdbcType=VARCHAR},
+      SourceFrom = #{sourcefrom,jdbcType=VARCHAR},
+      UseDate = str_to_date(#{usedate},'%Y-%m-%d'),
+      Useage = #{useage,jdbcType=VARCHAR},
+      SoftRemark = #{softremark,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      UpdateTime = NOW(),
+      KeyWord = #{keyword,jdbcType=VARCHAR},
+      AuthorizationUse = #{authorizationuse,jdbcType=VARCHAR}
+    where SoftId = #{softid,jdbcType=VARCHAR}
+  </update>
+
+    <select id="exportExcel" resultType="com.hangyu.platform.web.backBusiness.dto.Bm2FriendlysoftwareTbl" parameterType="com.hangyu.platform.web.backBusiness.vo.SoftWareQueryVO">
+        select
+        <include refid="Base_Column_List1"/>
+        from bm2_friendlysoftware_tbl f
+        left join basecode b on f.TypeId = b.id
+        <where>
+            f.IsDelete = 0
+            <if test="softTypeId != null and softTypeId != ''">
+                and f.TypeId = #{softTypeId}
+            </if>
+            <if test="keyWord != null and keyWord != ''">
+                and f.KeyWord like CONCAT("%",#{keyWord},"%")
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and f.UseDate >= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and str_to_date(#{endDate},'%Y-%m-%d') >= f.UseDate
+            </if>
+        </where>
+    </select>
+</mapper>

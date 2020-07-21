@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.UserhzMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Userhz">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="UserID" property="userid" jdbcType="VARCHAR"/>
+        <result column="HZYear" property="hzyear" jdbcType="INTEGER"/>
+        <result column="HZMonth" property="hzmonth" jdbcType="INTEGER"/>
+        <result column="HZType" property="hztype" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    n.ID,  n.UserID,  n.HZYear,  n.HZMonth,  n.HZType,s.UserName userName,o.OrgName orgName,d.OrgName deptName
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from userhz
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryIsCheck" resultMap="BaseResultMap" >
+        select
+        *
+        from userhz
+        where UserID = #{userId}
+        and HZType = #{type}
+        and HZYear = #{year}
+        and HZMonth = #{month}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.Userhz">
+        select
+        <include refid="Base_Column_List"/>
+        from userhz n
+        left join bm_staff_tbl s on s.StaffId = n.UserID
+        left join organization o on o.UniqueId = s.DeptId
+        left join organization d on d.UniqueId = o.ParentId
+        <where>
+            1 = 1
+            <if test="orgId != null and userId == null ">
+                and  n.UserID in (select StaffId from bm_staff_tbl where DeptId = #{orgId})
+            </if>
+            <if test="userId != null and userId != ''">
+                and n.UserID = #{userId}
+            </if>
+            order by n.HZYear DESC ,n.HZMonth  DESC
+            limit #{start},#{pageSize}
+        </where>
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from userhz
+        <where>
+            1 = 1
+            <if test="orgId != null and userId == null ">
+              and   UserID in (select StaffId from bm_staff_tbl where DeptId = #{orgId})
+            </if>
+            <if test="userId != null and userId != ''">
+                and UserID = #{userId}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from userhz
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Userhz">
+    insert into userhz (ID, UserID, HZYear, 
+      HZMonth, HZType)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{hzyear,jdbcType=INTEGER}, 
+      #{hzmonth,jdbcType=INTEGER}, #{hztype,jdbcType=INTEGER})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Userhz">
+    update userhz
+    set UserID = #{userid,jdbcType=VARCHAR},
+      HZYear = #{hzyear,jdbcType=INTEGER},
+      HZMonth = #{hzmonth,jdbcType=INTEGER},
+      HZType = #{hztype,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

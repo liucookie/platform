@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2MessageInFormStrMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2MessageinformstrTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="BasicInfoID" property="basicinfoid" jdbcType="VARCHAR" />
+    <result column="StrategyType" property="strategytype" jdbcType="INTEGER" />
+    <result column="SendType" property="sendtype" jdbcType="INTEGER" />
+    <result column="SendObject" property="sendobject" jdbcType="VARCHAR" />
+    <result column="SendTime_IsPlanBegin" property="sendtimeIsplanbegin" jdbcType="INTEGER" />
+    <result column="SendTime_PlanBegin_DayNum" property="sendtimePlanbeginDaynum" jdbcType="INTEGER" />
+    <result column="SendTime_PlanBegin_ExactTime" property="sendtimePlanbeginExacttime" jdbcType="VARCHAR" />
+    <result column="SendTime_IsPlanEnd" property="sendtimeIsplanend" jdbcType="INTEGER" />
+    <result column="SendTime_PlanEnd_DayNum" property="sendtimePlanendDaynum" jdbcType="INTEGER" />
+    <result column="SendTime_PlanEnd_ExactTime" property="sendtimePlanendExacttime" jdbcType="VARCHAR" />
+    <result column="SendTime_IsDeviceReturn" property="sendtimeIsdevicereturn" jdbcType="INTEGER" />
+    <result column="SendTime_DeviceReturn_DayNum" property="sendtimeDevicereturnDaynum" jdbcType="INTEGER" />
+    <result column="SendTime_DeviceReturn_ExactTime" property="sendtimeDevicereturnExacttime" jdbcType="VARCHAR" />
+    <result column="SendContent" property="sendcontent" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="SendTitle" property="sendtitle" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!-- 总数据量查询 -->
+  <select id="selectTotal" resultType="integer">
+    select count(uniqueid) from bm2_messageinformstrategysetting_tbl where isdelete = 0 and StrategyType = #{type};
+  </select>
+
+  <!-- 邮件基本设置查询 -->
+  <select id="basicSelect" parameterType="integer" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2MessagebasicinfoTbl" >
+    select UniqueID,ServerAddress,MailServerPort,ServerLoginAccount,ServerLoginPassword,DefaultSendAccount,Remark
+    from bm2_messagebasicinfo_tbl  where isdelete = 0  and StrategyType = #{type}
+  </select>
+
+  <!-- 邮件和OCS信息修改 -->
+  <update id="basicUpdate" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2MessagebasicinfoTbl" >
+    update  bm2_messagebasicinfo_tbl
+    <set>
+      <if test="serveraddress != null and serveraddress != ''" >
+        ServerAddress = #{serveraddress},
+      </if>
+      <if test="mailserverport != null and mailserverport != ''" >
+        MailServerPort = #{mailserverport},
+      </if>
+      <if test="serverloginaccount != null and serverloginaccount != ''" >
+        ServerLoginAccount = #{serverloginaccount},
+      </if>
+      <if test="serverloginpassword != null and serverloginpassword != ''" >
+        ServerLoginPassword = #{serverloginpassword},
+      </if>
+      <if test="defaultsendaccount != null and defaultsendaccount != ''" >
+        DefaultSendAccount = #{defaultsendaccount},
+      </if>
+      <if test="remark != null and remark != ''" >
+        Remark = #{remark}
+      </if>
+    </set>
+    <where>
+      StrategyType = #{strategytype}
+    </where>
+  </update>
+
+  <!-- 批量查询 -->
+  <select id="selectAll" parameterType="integer" resultMap="BaseResultMap" >
+    select UniqueID,SendType,SendObject,SendTime_IsPlanBegin,SendTime_PlanBegin_DayNum,SendTime_PlanBegin_ExactTime,
+    SendTime_IsPlanEnd,SendTime_PlanEnd_DayNum,SendTime_PlanEnd_ExactTime,SendTime_IsDeviceReturn,
+    SendTime_DeviceReturn_DayNum,SendTime_DeviceReturn_ExactTime,SendTitle,SendContent
+    from bm2_messageinformstrategysetting_tbl
+    where isdelete = 0 and strategytype = #{type } order by CreateTime desc limit #{start},#{pageSize}
+  </select>
+
+  <!-- 添加 -->
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2MessageinformstrTbl" >
+    insert into
+    bm2_messageinformstrategysetting_tbl(UniqueID,basicinfoid,strategytype,SendType,SendObject,SendTime_IsPlanBegin,
+    SendTime_PlanBegin_DayNum,SendTime_PlanBegin_ExactTime,SendTime_IsPlanEnd,SendTime_PlanEnd_DayNum,
+    SendTime_PlanEnd_ExactTime,SendTime_IsDeviceReturn,SendTime_DeviceReturn_DayNum,SendTime_DeviceReturn_ExactTime,
+    CreateTime,SendContent,SendTitle)
+    values(#{uniqueid},#{basicinfoid},#{strategytype},#{sendtype},#{sendobject},#{sendtimeIsplanbegin},
+    #{sendtimePlanbeginDaynum},#{sendtimePlanbeginExacttime},#{sendtimeIsplanend},#{sendtimePlanendDaynum},#{sendtimePlanendExacttime},
+    #{sendtimeIsdevicereturn},#{sendtimeDevicereturnDaynum},#{sendtimeDevicereturnExacttime},NOW(),#{sendcontent,jdbcType=LONGVARCHAR},
+    #{sendtitle})
+  </insert>
+
+  <!-- 删除 -->
+  <delete id="delete" >
+    update bm2_messageinformstrategysetting_tbl set isdelete = 1 where  uniqueid in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")" >
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- 消息通知机制策略单条查询 -->
+  <select id="select" parameterType="string" resultMap="BaseResultMap" >
+    select SendType,SendObject,SendTime_IsPlanBegin,SendTime_PlanBegin_DayNum,SendTime_PlanBegin_ExactTime,
+    SendTime_IsPlanEnd,SendTime_PlanEnd_DayNum,SendTime_PlanEnd_ExactTime,SendTime_IsDeviceReturn,
+    SendTime_DeviceReturn_DayNum,SendTime_DeviceReturn_ExactTime,SendTitle,SendContent
+    from bm2_messageinformstrategysetting_tbl where uniqueid = #{id}
+  </select>
+
+  <!-- 消息通知机制策略修改 -->
+  <update id="update" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2MessageinformstrTbl" >
+    update bm2_messageinformstrategysetting_tbl
+    set SendType = #{sendtype},SendObject = #{sendobject},
+    SendTime_IsPlanBegin = #{sendtimeIsplanbegin},SendTime_PlanBegin_DayNum = #{sendtimePlanbeginDaynum},
+    SendTime_PlanBegin_ExactTime = #{sendtimePlanbeginExacttime},SendTime_IsPlanEnd = #{sendtimeIsplanend},
+    SendTime_PlanEnd_DayNum = #{sendtimePlanendDaynum},sendtime_planend_exacttime = #{sendtimePlanendExacttime},
+    SendContent = #{sendcontent},SendTitle = #{sendtitle}
+    where uniqueid = #{uniqueid}
+  </update>
+
+</mapper>

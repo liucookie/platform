@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2RecordmodulerelationTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2RecordmodulerelationTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="RecordTypeId" property="recordtypeid" jdbcType="VARCHAR" />
+    <result column="ModuleId" property="moduleid" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, RecordTypeId, ModuleId, SortOrder, IsDelete
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm2_recordmodulerelation_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm2_recordmodulerelation_tbl set IsDelete = 1
+    where RecordTypeId = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2RecordmodulerelationTbl" >
+    insert into bm2_recordmodulerelation_tbl (Id, RecordTypeId, ModuleId, 
+      SortOrder, IsDelete)
+    values (#{id,jdbcType=INTEGER}, #{recordtypeid,jdbcType=VARCHAR}, #{moduleid,jdbcType=VARCHAR}, 
+      #{sortorder,jdbcType=INTEGER}, 0)
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2RecordmodulerelationTbl" >
+    insert into bm2_recordmodulerelation_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="recordtypeid != null" >
+        RecordTypeId,
+      </if>
+      <if test="moduleid != null" >
+        ModuleId,
+      </if>
+      <if test="sortorder != null" >
+        SortOrder,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="recordtypeid != null" >
+        #{recordtypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleid != null" >
+        #{moduleid,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2RecordmodulerelationTbl" >
+    update bm2_recordmodulerelation_tbl
+    <set >
+      <if test="recordtypeid != null" >
+        RecordTypeId = #{recordtypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleid != null" >
+        ModuleId = #{moduleid,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        SortOrder = #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2RecordmodulerelationTbl" >
+    update bm2_recordmodulerelation_tbl
+    set RecordTypeId = #{recordtypeid,jdbcType=VARCHAR},
+      ModuleId = #{moduleid,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

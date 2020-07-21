@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2HistoryremovablestoragetypeTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragetypeTbl">
+        <id column="TypeID" property="typeid" jdbcType="VARCHAR"/>
+        <result column="TypeName" property="typename" jdbcType="VARCHAR"/>
+        <result column="TypeMemo" property="typememo" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="InUseUnit" property="inuseunit" jdbcType="VARCHAR"/>
+        <result column="TypeColorID" property="typecolorid" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    TypeID, TypeName, TypeMemo, IsDelete, InUseUnit,TypeColorID
+  </sql>
+
+    <sql id="Base_Column_List1">
+    h.TypeID,  h.TypeName,  h.TypeMemo,  h.IsDelete, h.InUseUnit, h.TypeColorID,c.ColorName colorName,c.ColorCode colorCode
+  </sql>
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List1"/>
+        from bm2_historyremovablestoragetype_tbl h
+        left join bm2_historyremovablestoragecolor_tbl c on h.TypeColorID = c.ColorID
+        where TypeID = #{typeid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByName" resultType="java.lang.String" parameterType="java.lang.String">
+        select
+        TypeID
+        from bm2_historyremovablestoragetype_tbl
+        where TypeName = #{name}
+        limit 1
+    </select>
+
+    <select id="queryClassify" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_historyremovablestoragetype_tbl
+        where isDelete = 0
+    </select>
+
+    <select id="queryType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List1"/>
+        from bm2_historyremovablestoragetype_tbl h
+        left join bm2_historyremovablestoragecolor_tbl c on h.TypeColorID = c.ColorID
+        where h.isDelete = 0
+        limit #{start},#{pageSize}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm2_historyremovablestoragetype_tbl set isDelete = 1
+    where TypeID = #{typeid,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragetypeTbl">
+    insert into bm2_historyremovablestoragetype_tbl (TypeID, TypeName, TypeMemo, 
+      IsDelete, InUseUnit, TypeColorID
+      )
+    values (#{typeid,jdbcType=VARCHAR}, #{typename,jdbcType=VARCHAR}, #{typememo,jdbcType=VARCHAR}, 
+      0, #{inuseunit,jdbcType=VARCHAR}, #{typecolorid,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragetypeTbl">
+        insert into bm2_historyremovablestoragetype_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeid != null">
+                TypeID,
+            </if>
+            <if test="typename != null">
+                TypeName,
+            </if>
+            <if test="typememo != null">
+                TypeMemo,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+            <if test="inuseunit != null">
+                InUseUnit,
+            </if>
+            <if test="typecolorid != null">
+                TypeColorID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeid != null">
+                #{typeid,jdbcType=VARCHAR},
+            </if>
+            <if test="typename != null">
+                #{typename,jdbcType=VARCHAR},
+            </if>
+            <if test="typememo != null">
+                #{typememo,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="inuseunit != null">
+                #{inuseunit,jdbcType=VARCHAR},
+            </if>
+            <if test="typecolorid != null">
+                #{typecolorid,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragetypeTbl">
+        update bm2_historyremovablestoragetype_tbl
+        <set>
+            <if test="typename != null">
+                TypeName = #{typename,jdbcType=VARCHAR},
+            </if>
+            <if test="typememo != null">
+                TypeMemo = #{typememo,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="inuseunit != null">
+                InUseUnit = #{inuseunit,jdbcType=VARCHAR},
+            </if>
+            <if test="typecolorid != null">
+                TypeColorID = #{typecolorid,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where TypeID = #{typeid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs"
+            parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragetypeTbl">
+    update bm2_historyremovablestoragetype_tbl
+    set TypeName = #{typename,jdbcType=VARCHAR},
+      TypeMemo = #{typememo,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      InUseUnit = #{inuseunit,jdbcType=VARCHAR},
+      TypeColorID = #{typecolorid,jdbcType=LONGVARCHAR}
+    where TypeID = #{typeid,jdbcType=VARCHAR}
+  </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragetypeTbl">
+    update bm2_historyremovablestoragetype_tbl
+    set TypeName = #{typename,jdbcType=VARCHAR},
+      TypeMemo = #{typememo,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      InUseUnit = #{inuseunit,jdbcType=VARCHAR}
+    where TypeID = #{typeid,jdbcType=VARCHAR}
+  </update>
+</mapper>

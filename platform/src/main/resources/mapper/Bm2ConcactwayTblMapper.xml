@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.Bm2ConcactwayTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Bm2ConcactwayTbl" >
+    <id column="ConcactWayID" property="concactwayid" jdbcType="VARCHAR" />
+    <result column="DeptId" property="deptid" jdbcType="VARCHAR" />
+    <result column="UserId" property="userid" jdbcType="VARCHAR" />
+    <result column="Telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="MobilePhone" property="mobilephone" jdbcType="VARCHAR" />
+    <result column="Email" property="email" jdbcType="VARCHAR" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="OrderTax" property="ordertax" jdbcType="INTEGER" />
+    <result column="TypeId" property="typeid" jdbcType="INTEGER" />
+    <result column="TypeName" property="typename" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ConcactWayID, DeptId, UserId, Telephone, MobilePhone, Email, Remark, IsDelete, date_format(CreateTime, '%Y-%m-%d %H:%i:%s')  CreateTime ,
+    date_format(UpdateTime, '%Y-%m-%d %H:%i:%s')  UpdateTime  , OrderTax, TypeId, TypeName
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm2_concactway_tbl
+    where ConcactWayID = #{concactwayid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="select" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from bm2_concactway_tbl
+    <where>
+      IsDelete = 0
+      <if test="orgName != null">
+        and DeptId = #{orgName}
+      </if>
+      <if test="userName != null">
+        and UserId like CONCAT('%',#{userName},'%')
+      </if>
+      <if test="typeName != null">
+        and TypeName = #{typeName}
+      </if>
+    </where>
+    order by UpdateTime desc
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer"  >
+    select
+    COUNT(ConcactWayID)
+    from bm2_concactway_tbl
+    <where>
+      IsDelete = 0
+      <if test="orgName != null">
+        and DeptId = #{orgName}
+      </if>
+      <if test="userName != null">
+        and UserId like CONCAT('%',#{userName},'%')
+      </if>
+      <if test="typeName != null">
+        and TypeName = #{typeName}
+      </if>
+    </where>
+  </select>
+  <select id="selectTotal" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from bm2_concactway_tbl
+    <where>
+      IsDelete = 0
+      <if test="orgName != null">
+        and DeptId = #{orgName}
+      </if>
+      <if test="name != null">
+        and UserId like CONCAT('%',#{name},'%')
+      </if>
+    </where>
+    order by UpdateTime desc
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm2_concactway_tbl set  IsDelete = 1
+    where ConcactWayID = #{concactwayid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2ConcactwayTbl" >
+    insert into bm2_concactway_tbl (ConcactWayID, DeptId, UserId, 
+      Telephone, MobilePhone, Email, 
+      Remark, IsDelete, CreateTime, 
+      UpdateTime, OrderTax, TypeId, 
+      TypeName)
+    values (#{concactwayid,jdbcType=VARCHAR}, #{deptid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, 
+      #{telephone,jdbcType=VARCHAR}, #{mobilephone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, 0, NOW(),
+        NOW(), #{ordertax,jdbcType=INTEGER}, #{typeid,jdbcType=INTEGER},
+      #{typename,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2ConcactwayTbl" >
+    update bm2_concactway_tbl
+    set DeptId = #{deptid,jdbcType=VARCHAR},
+      UserId = #{userid,jdbcType=VARCHAR},
+      Telephone = #{telephone,jdbcType=VARCHAR},
+      MobilePhone = #{mobilephone,jdbcType=VARCHAR},
+      Email = #{email,jdbcType=VARCHAR},
+      Remark = #{remark,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      CreateTime = str_to_date(#{createtime},'%Y-%m-%d %H:%i:%s'),
+      UpdateTime = NOW(),
+      OrderTax = #{ordertax,jdbcType=INTEGER},
+      TypeId = #{typeid,jdbcType=INTEGER},
+      TypeName = #{typename,jdbcType=VARCHAR}
+    where ConcactWayID = #{concactwayid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2HistoryremovablestoragecolorTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragecolorTbl">
+        <id column="ColorID" property="colorid" jdbcType="VARCHAR"/>
+        <result column="ColorName" property="colorname" jdbcType="VARCHAR"/>
+        <result column="ColorMemo" property="colormemo" jdbcType="VARCHAR"/>
+        <result column="ColorCode" property="colorcode" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ColorID, ColorName, ColorMemo, ColorCode, IsDelete
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_historyremovablestoragecolor_tbl
+        where ColorID = #{colorid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectColor" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_historyremovablestoragecolor_tbl
+        where IsDelete = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bm2_historyremovablestoragecolor_tbl
+    where ColorID = #{colorid,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragecolorTbl">
+    insert into bm2_historyremovablestoragecolor_tbl (ColorID, ColorName, ColorMemo, 
+      ColorCode, IsDelete)
+    values (#{colorid,jdbcType=VARCHAR}, #{colorname,jdbcType=VARCHAR}, #{colormemo,jdbcType=VARCHAR}, 
+      #{colorcode,jdbcType=VARCHAR}, #{isdelete,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective"
+            parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragecolorTbl">
+        insert into bm2_historyremovablestoragecolor_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="colorid != null">
+                ColorID,
+            </if>
+            <if test="colorname != null">
+                ColorName,
+            </if>
+            <if test="colormemo != null">
+                ColorMemo,
+            </if>
+            <if test="colorcode != null">
+                ColorCode,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="colorid != null">
+                #{colorid,jdbcType=VARCHAR},
+            </if>
+            <if test="colorname != null">
+                #{colorname,jdbcType=VARCHAR},
+            </if>
+            <if test="colormemo != null">
+                #{colormemo,jdbcType=VARCHAR},
+            </if>
+            <if test="colorcode != null">
+                #{colorcode,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragecolorTbl">
+        update bm2_historyremovablestoragecolor_tbl
+        <set>
+            <if test="colorname != null">
+                ColorName = #{colorname,jdbcType=VARCHAR},
+            </if>
+            <if test="colormemo != null">
+                ColorMemo = #{colormemo,jdbcType=VARCHAR},
+            </if>
+            <if test="colorcode != null">
+                ColorCode = #{colorcode,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+        </set>
+        where ColorID = #{colorid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestoragecolorTbl">
+    update bm2_historyremovablestoragecolor_tbl
+    set ColorName = #{colorname,jdbcType=VARCHAR},
+      ColorMemo = #{colormemo,jdbcType=VARCHAR},
+      ColorCode = #{colorcode,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where ColorID = #{colorid,jdbcType=VARCHAR}
+  </update>
+</mapper>

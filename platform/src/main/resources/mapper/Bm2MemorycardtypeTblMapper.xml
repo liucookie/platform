@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2MemorycardtypeTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2MemorycardtypeTbl">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="MemoryCardName" property="memorycardname" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="OrderTax" property="ordertax" jdbcType="INTEGER"/>
+        <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    ID, UniqueID, MemoryCardName, IsDelete, OrderTax, Remark
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_memorycardtype_tbl
+        where UniqueID = #{id}
+    </select>
+
+    <select id="selectType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_memorycardtype_tbl
+        where isDelete = 0
+        order by OrderTax
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    count(UniqueID)
+    from bm2_memorycardtype_tbl
+    where isDelete = 0
+  </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        update bm2_memorycardtype_tbl
+        set isDelete = 1
+         where UniqueID = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2MemorycardtypeTbl">
+    insert into bm2_memorycardtype_tbl (ID, UniqueID, MemoryCardName, 
+      IsDelete, OrderTax, Remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{memorycardname,jdbcType=VARCHAR}, 
+      0, #{ordertax,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2MemorycardtypeTbl">
+        insert into bm2_memorycardtype_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="uniqueid != null">
+                UniqueID,
+            </if>
+            <if test="memorycardname != null">
+                MemoryCardName,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+            <if test="ordertax != null">
+                OrderTax,
+            </if>
+            <if test="remark != null">
+                Remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="uniqueid != null">
+                #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="memorycardname != null">
+                #{memorycardname,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="ordertax != null">
+                #{ordertax,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2MemorycardtypeTbl">
+        update bm2_memorycardtype_tbl
+        <set>
+            <if test="uniqueid != null">
+                UniqueID = #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="memorycardname != null">
+                MemoryCardName = #{memorycardname,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="ordertax != null">
+                OrderTax = #{ordertax,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                Remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where UniqueID = #{uniqueid}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2MemorycardtypeTbl">
+    update bm2_memorycardtype_tbl
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      MemoryCardName = #{memorycardname,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      OrderTax = #{ordertax,jdbcType=INTEGER},
+      Remark = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

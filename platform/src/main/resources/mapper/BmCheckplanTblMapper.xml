@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmCheckplanTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmCheckplanTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="PlanId" property="planid" jdbcType="VARCHAR" />
+    <result column="PlanName" property="planname" jdbcType="VARCHAR" />
+    <result column="PlanCheckType" property="planchecktype" jdbcType="INTEGER" />
+    <result column="PlanBeginDate" property="planbegindate" jdbcType="TIMESTAMP" />
+    <result column="PlanEndDate" property="planenddate" jdbcType="TIMESTAMP" />
+    <result column="PlanState" property="planstate" jdbcType="INTEGER" />
+    <result column="FileUrl" property="fileurl" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="IsYearPlan" property="isyearplan" jdbcType="INTEGER" />
+    <result column="PlanRemark" property="planremark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, PlanId, PlanName, PlanCheckType, date_format(PlanBeginDate, '%Y-%m-%d')  PlanBeginDate,
+    date_format(PlanEndDate, '%Y-%m-%d')  PlanEndDate , PlanState, FileUrl,
+    IsDelete, IsYearPlan,PlanRemark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_checkplan_tbl
+    where PlanId = #{id}
+  </select>
+
+  <select id="selectByDate" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_checkplan_tbl
+    where IsDelete = 0
+    and PlanState = 1
+    and  PlanEndDate >= str_to_date(#{date},'%Y-%m-%d')
+    and  str_to_date(#{date},'%Y-%m-%d')  >= PlanBeginDate
+  </select>
+
+  <select id="select" resultMap="BaseResultMap" parameterType="com.hangyu.platform.web.backBusiness.vo.CheckPlanQueryVO" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_checkplan_tbl
+    <where>
+      IsDelete = 0
+      <if test="startDate != null and startDate != ''">
+        and PlanBeginDate >= str_to_date(#{startDate},'%Y-%m-%d')
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and str_to_date(#{endDate},'%Y-%m-%d') >= PlanEndDate
+      </if>
+      <if test="checkType != null and checkType != ''">
+        and PlanState = #{checkType}
+      </if>
+      <if test="name != null and name != ''">
+        and PlanName like CONCAT("%",#{name},"%")
+      </if>
+    </where>
+    order by Id desc
+    limit #{pageNum},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer" parameterType="com.hangyu.platform.web.backBusiness.vo.CheckPlanQueryVO" >
+    select
+    COUNT(Id)
+    from bm_checkplan_tbl
+    <where>
+      IsDelete = 0
+      <if test="startDate != null and startDate != ''">
+        and PlanBeginDate >= str_to_date(#{startDate},'%Y-%m-%d')
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and str_to_date(#{endDate},'%Y-%m-%d') >= PlanEndDate
+      </if>
+      <if test="checkType != null and checkType != ''">
+        and PlanState = #{checkType}
+      </if>
+      <if test="name != null and name != ''">
+        and PlanName like CONCAT("%",#{name},"%")
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update  bm_checkplan_tbl set IsDelete = 1
+    where PlanId = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanTbl" >
+    insert into bm_checkplan_tbl (Id, PlanId, PlanName, 
+      PlanCheckType, PlanBeginDate, PlanEndDate, 
+      PlanState, FileUrl, IsDelete, 
+      IsYearPlan, PlanRemark)
+    values (#{id,jdbcType=INTEGER}, #{planid,jdbcType=VARCHAR}, #{planname,jdbcType=VARCHAR}, 
+      #{planchecktype,jdbcType=INTEGER},str_to_date(#{planbegindate},'%Y-%m-%d') , str_to_date(#{planenddate},'%Y-%m-%d'),
+      #{planstate,jdbcType=INTEGER}, #{fileurl,jdbcType=VARCHAR}, 0,
+      #{isyearplan,jdbcType=INTEGER}, #{planremark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanTbl" >
+    insert into bm_checkplan_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="planid != null" >
+        PlanId,
+      </if>
+      <if test="planname != null" >
+        PlanName,
+      </if>
+      <if test="planchecktype != null" >
+        PlanCheckType,
+      </if>
+      <if test="planbegindate != null" >
+        PlanBeginDate,
+      </if>
+      <if test="planenddate != null" >
+        PlanEndDate,
+      </if>
+      <if test="planstate != null" >
+        PlanState,
+      </if>
+      <if test="fileurl != null" >
+        FileUrl,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="isyearplan != null" >
+        IsYearPlan,
+      </if>
+      <if test="planremark != null" >
+        PlanRemark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="planid != null" >
+        #{planid,jdbcType=VARCHAR},
+      </if>
+      <if test="planname != null" >
+        #{planname,jdbcType=VARCHAR},
+      </if>
+      <if test="planchecktype != null" >
+        #{planchecktype,jdbcType=INTEGER},
+      </if>
+      <if test="planbegindate != null" >
+        #{planbegindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planenddate != null" >
+        #{planenddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planstate != null" >
+        #{planstate,jdbcType=INTEGER},
+      </if>
+      <if test="fileurl != null" >
+        #{fileurl,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="isyearplan != null" >
+        #{isyearplan,jdbcType=INTEGER},
+      </if>
+      <if test="planremark != null" >
+        #{planremark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanTbl" >
+    update bm_checkplan_tbl
+    <set >
+
+      <if test="planname != null" >
+        PlanName = #{planname,jdbcType=VARCHAR},
+      </if>
+      <if test="planchecktype != null" >
+        PlanCheckType = #{planchecktype,jdbcType=INTEGER},
+      </if>
+      <if test="planbegindate != null" >
+        PlanBeginDate =str_to_date(#{planbegindate},'%Y-%m-%d'),
+      </if>
+      <if test="planenddate != null" >
+        PlanEndDate = str_to_date(#{planenddate},'%Y-%m-%d'),
+      </if>
+      <if test="planstate != null" >
+        PlanState = #{planstate,jdbcType=INTEGER},
+      </if>
+      <if test="fileurl != null" >
+        FileUrl = #{fileurl,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="isyearplan != null" >
+        IsYearPlan = #{isyearplan,jdbcType=INTEGER},
+      </if>
+      <if test="planremark != null" >
+        PlanRemark = #{planremark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where
+    PlanId = #{planid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanTbl" >
+    update bm_checkplan_tbl
+    set
+      PlanName = #{planname,jdbcType=VARCHAR},
+      PlanCheckType = #{planchecktype,jdbcType=INTEGER},
+      PlanBeginDate = str_to_date(#{planbegindate},'%Y-%m-%d'),
+      PlanEndDate =str_to_date(#{planenddate},'%Y-%m-%d'),
+      PlanState = #{planstate,jdbcType=INTEGER},
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      IsYearPlan = #{isyearplan,jdbcType=INTEGER}
+    where PlanId = #{planid,jdbcType=VARCHAR}
+  </update>
+</mapper>

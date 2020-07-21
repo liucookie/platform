@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmOrgTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmOrgTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="OrgId" property="orgid" jdbcType="NVARCHAR"/>
+        <result column="OrgName" property="orgname" jdbcType="NVARCHAR"/>
+        <result column="OrgDate" property="orgdate" jdbcType="NVARCHAR"/>
+        <result column="OrgFunction" property="orgfunction" jdbcType="LONGNVARCHAR"/>
+        <result column="OrgRule" property="orgrule" jdbcType="LONGNVARCHAR"/>
+        <result column="OrgUser" property="orguser" jdbcType="LONGNVARCHAR"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="StateR" property="stater" jdbcType="INTEGER"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="NVARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    Id, OrgId, OrgName, date_format(OrgDate, '%Y-%m-%d') OrgDate, OrgFunction, OrgRule, OrgUser, SortOrder, IsDelete,
+    StateR, date_format(UpdateTime, '%Y-%m-%d %H:%i:%s') updatetime
+  </sql>
+
+
+
+    <select id="getBmOrgInfo" resultType="com.hangyu.platform.web.backBusiness.dto.BmOrgTbl">
+        select
+        <include refid="Base_Column_List"/>
+        from BM_Org_Tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null and orgName != ''">
+                and OrgName like CONCAT('%',#{orgName},'%')
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and OrgDate >= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and str_to_date(#{endDate},'%Y-%m-%d') >= OrgDate
+            </if>
+        </where>
+        order by updatetime  desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(OrgId)
+        from BM_Org_Tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null and orgName != ''">
+                and OrgName like CONCAT('%',#{orgName},'%')
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and OrgDate >= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and str_to_date(#{endDate},'%Y-%m-%d') >= OrgDate
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+      update BM_Org_Tbl
+      set IsDelete = 1 , StateR = 0
+     where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <delete id="deleteHistroy" parameterType="java.lang.Integer">
+      update BM_Org_Tbl
+      set IsDelete = 1 , StateR = 1
+      where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgTbl">
+    insert into BM_Org_Tbl (Id, OrgId, OrgName, 
+      OrgDate, OrgFunction, OrgRule, 
+      OrgUser, SortOrder, IsDelete, 
+      StateR, UpdateTime)
+    values (#{id,jdbcType=INTEGER}, #{orgid,jdbcType=NVARCHAR}, #{orgname,jdbcType=NVARCHAR}, 
+     str_to_date(#{orgdate},'%Y-%m-%d'), #{orgfunction,jdbcType=LONGNVARCHAR}, #{orgrule,jdbcType=LONGNVARCHAR},
+      #{orguser,jdbcType=LONGNVARCHAR}, #{sortorder,jdbcType=INTEGER},0,
+     #{stater}, NOW())
+  </insert>
+
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgTbl">
+        insert into BM_Org_Tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="orgid != null">
+                OrgId,
+            </if>
+            <if test="orgname != null">
+                OrgName,
+            </if>
+            <if test="orgdate != null">
+                OrgDate,
+            </if>
+            <if test="orgfunction != null">
+                OrgFunction,
+            </if>
+            <if test="orgrule != null">
+                OrgRule,
+            </if>
+            <if test="orguser != null">
+                OrgUser,
+            </if>
+            <if test="sortorder != null">
+                SortOrder,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+            <if test="stater != null">
+                StateR,
+            </if>
+            <if test="updatetime != null">
+                UpdateTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="orgid != null">
+                #{orgid,jdbcType=NVARCHAR},
+            </if>
+            <if test="orgname != null">
+                #{orgname,jdbcType=NVARCHAR},
+            </if>
+            <if test="orgdate != null">
+                #{orgdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgfunction != null">
+                #{orgfunction,jdbcType=LONGNVARCHAR},
+            </if>
+            <if test="orgrule != null">
+                #{orgrule,jdbcType=LONGNVARCHAR},
+            </if>
+            <if test="orguser != null">
+                #{orguser,jdbcType=LONGNVARCHAR},
+            </if>
+            <if test="sortorder != null">
+                #{sortorder,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="stater != null">
+                #{stater,jdbcType=INTEGER},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByOrgIdSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgTbl">
+        update BM_Org_Tbl
+        <set>
+            <if test="orgname != null">
+                OrgName = #{orgname,jdbcType=NVARCHAR},
+            </if>
+            <if test="orgdate != null">
+                OrgDate = str_to_date(#{orgdate},'%Y-%m-%d'),
+            </if>
+            <if test="orgfunction != null">
+                OrgFunction = #{orgfunction,jdbcType=LONGNVARCHAR},
+            </if>
+            <if test="orgrule != null">
+                OrgRule = #{orgrule,jdbcType=LONGNVARCHAR},
+            </if>
+            <if test="orguser != null">
+                OrgUser = #{orguser,jdbcType=LONGNVARCHAR},
+            </if>
+            <if test="sortorder != null">
+                SortOrder = #{sortorder,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="stater != null">
+                StateR = #{stater,jdbcType=INTEGER},
+            </if>
+            <if test="updatetime != null">
+                NOW()
+            </if>
+        </set>
+        where Id = #{id}
+    </update>
+
+
+    <update id="updateByOrgId" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgTbl">
+    update BM_Org_Tbl
+    set OrgId = #{orgid,jdbcType=NVARCHAR},
+      OrgName = #{orgname,jdbcType=NVARCHAR},
+      OrgDate = #{orgdate,jdbcType=TIMESTAMP},
+      OrgFunction = #{orgfunction,jdbcType=LONGNVARCHAR},
+      OrgRule = #{orgrule,jdbcType=LONGNVARCHAR},
+      OrgUser = #{orguser,jdbcType=LONGNVARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      StateR = #{stater,jdbcType=INTEGER},
+      UpdateTime = NOW()
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+    <update id="delByOrgId" parameterType="java.lang.String">
+    update BM_Org_Tbl
+      set IsDelete = 1 , StateR = 0
+    where OrgId = #{orgId}
+  </update>
+
+    <select id="queryByOrgId" parameterType="java.lang.String"
+            resultType="com.hangyu.platform.web.backBusiness.dto.BmOrgTbl">
+        select
+        <include refid="Base_Column_List"/>
+        from BM_Org_Tbl
+        where OrgId = #{orgId} and IsDelete = 0
+    </select>
+
+    <select id="queryHistory" parameterType="java.lang.String"
+            resultType="com.hangyu.platform.web.backBusiness.dto.BmOrgTbl">
+        select
+        <include refid="Base_Column_List"/>
+        from BM_Org_Tbl
+        where OrgId = #{orgId} and StateR = 0
+    </select>
+</mapper>

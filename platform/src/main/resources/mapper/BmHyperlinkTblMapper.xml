@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmHyperlinkTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmHyperlinkTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="HyperLinkText" property="hyperlinktext" jdbcType="VARCHAR"/>
+        <result column="LinkUrl" property="linkurl" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="TopSign" property="topsign" jdbcType="INTEGER"/>
+        <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, UniqueId, HyperLinkText, LinkUrl, IsDelete, SortOrder, TopSign, Remark, date_format(UpdateTime, '%Y-%m-%d')  UpdateTime
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_hyperlink_tbl
+        where UniqueId = #{id}
+    </select>
+
+    <select id="queryHyperLink" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_hyperlink_tbl
+        <where>
+            IsDelete = 0
+            <if test="topSign != null and topSign != ''">
+                and TopSign = #{topSign}
+            </if>
+        </where>
+        order by TopSign desc
+    </select>
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_hyperlink_tbl
+        where IsDelete = 0
+        order by Id desc
+        limit #{start},#{pageSize}
+    </select>
+    <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(Id)
+    from bm_hyperlink_tbl
+    where IsDelete = 0
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update   bm_hyperlink_tbl set IsDelete  = 1
+    where UniqueId = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmHyperlinkTbl">
+    insert into bm_hyperlink_tbl (Id, UniqueId, HyperLinkText, 
+      LinkUrl, IsDelete, SortOrder, 
+      TopSign, Remark, UpdateTime
+      )
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{hyperlinktext,jdbcType=VARCHAR}, 
+      #{linkurl,jdbcType=VARCHAR}, 0, #{sortorder,jdbcType=INTEGER},
+      #{topsign,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, NOW()
+      )
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmHyperlinkTbl">
+    update bm_hyperlink_tbl
+    set
+      HyperLinkText = #{hyperlinktext,jdbcType=VARCHAR},
+      LinkUrl = #{linkurl,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      TopSign = #{topsign,jdbcType=INTEGER},
+      Remark = #{remark,jdbcType=VARCHAR},
+      UpdateTime =  str_to_date(#{updatetime},'%Y-%m-%d')
+    where UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2ViolationrectificationinstructionTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2ViolationrectificationinstructionTbl" >
+    <id column="InstructionID" property="instructionid" jdbcType="VARCHAR" />
+    <result column="CheckType" property="checktype" jdbcType="INTEGER" />
+    <result column="ItemId" property="itemid" jdbcType="VARCHAR" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+    <result column="OrderTax" property="ordertax" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="HtmlItemId" property="htmlitemid" jdbcType="VARCHAR" />
+    <result column="InstructionContent" property="instructioncontent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    InstructionID, CheckType, ItemId, Remark, OrderTax, IsDelete, CreateTime, UpdateTime, 
+    HtmlItemId,
+    InstructionContent
+  </sql>
+
+  <sql id="Base_Column_List1" >
+    b.InstructionID, b.CheckType, c.ItemName ItemId, b.Remark, b.OrderTax, b.IsDelete, b.CreateTime, b.UpdateTime,
+    b.HtmlItemId,b.InstructionContent
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    distinct
+    <include refid="Base_Column_List1" />
+    from bm2_violationrectificationinstruction_tbl b
+    left join BM_CheckPlanItem_Tbl c on b.ItemId = c.ItemId
+    where InstructionID = #{instructionid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="query" resultMap="BaseResultMap" >
+    select
+    distinct
+    <include refid="Base_Column_List1" />
+    from bm2_violationrectificationinstruction_tbl b
+    left join BM_CheckPlanItem_Tbl c on b.ItemId = c.ItemId
+    where b.IsDelete = 0 order by b.OrderTax
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer" >
+    select
+    COUNT(InstructionID)
+    from bm2_violationrectificationinstruction_tbl
+     where IsDelete = 0
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+   update bm2_violationrectificationinstruction_tbl set  IsDelete = 1
+    where InstructionID = #{instructionid,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2ViolationrectificationinstructionTbl" >
+    insert into bm2_violationrectificationinstruction_tbl (InstructionID, CheckType, ItemId, 
+      Remark, OrderTax, IsDelete, 
+      CreateTime, UpdateTime, HtmlItemId, 
+      InstructionContent)
+    values (#{instructionid,jdbcType=VARCHAR}, #{checktype,jdbcType=INTEGER}, #{itemid,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{ordertax,jdbcType=INTEGER},0,
+      NOW(), #{updatetime,jdbcType=TIMESTAMP}, #{htmlitemid,jdbcType=VARCHAR},
+      #{instructioncontent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2ViolationrectificationinstructionTbl" >
+    insert into bm2_violationrectificationinstruction_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="instructionid != null" >
+        InstructionID,
+      </if>
+      <if test="checktype != null" >
+        CheckType,
+      </if>
+      <if test="itemid != null" >
+        ItemId,
+      </if>
+      <if test="remark != null" >
+        Remark,
+      </if>
+      <if test="ordertax != null" >
+        OrderTax,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime,
+      </if>
+      <if test="htmlitemid != null" >
+        HtmlItemId,
+      </if>
+      <if test="instructioncontent != null" >
+        InstructionContent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="instructionid != null" >
+        #{instructionid,jdbcType=VARCHAR},
+      </if>
+      <if test="checktype != null" >
+        #{checktype,jdbcType=INTEGER},
+      </if>
+      <if test="itemid != null" >
+        #{itemid,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertax != null" >
+        #{ordertax,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="htmlitemid != null" >
+        #{htmlitemid,jdbcType=VARCHAR},
+      </if>
+      <if test="instructioncontent != null" >
+        #{instructioncontent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2ViolationrectificationinstructionTbl" >
+    update bm2_violationrectificationinstruction_tbl
+    <set >
+      <if test="checktype != null" >
+        CheckType = #{checktype,jdbcType=INTEGER},
+      </if>
+      <if test="itemid != null" >
+        ItemId = #{itemid,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="ordertax != null" >
+        OrderTax = #{ordertax,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+       NOW(),
+      </if>
+      <if test="htmlitemid != null" >
+        HtmlItemId = #{htmlitemid,jdbcType=VARCHAR},
+      </if>
+      <if test="instructioncontent != null" >
+        InstructionContent = #{instructioncontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where InstructionID = #{instructionid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2ViolationrectificationinstructionTbl" >
+    update bm2_violationrectificationinstruction_tbl
+    set CheckType = #{checktype,jdbcType=INTEGER},
+      ItemId = #{itemid,jdbcType=VARCHAR},
+      Remark = #{remark,jdbcType=VARCHAR},
+      OrderTax = #{ordertax,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      HtmlItemId = #{htmlitemid,jdbcType=VARCHAR},
+      InstructionContent = #{instructioncontent,jdbcType=LONGVARCHAR}
+    where InstructionID = #{instructionid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2ViolationrectificationinstructionTbl" >
+    update bm2_violationrectificationinstruction_tbl
+    set CheckType = #{checktype,jdbcType=INTEGER},
+      ItemId = #{itemid,jdbcType=VARCHAR},
+      Remark = #{remark,jdbcType=VARCHAR},
+      OrderTax = #{ordertax,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      HtmlItemId = #{htmlitemid,jdbcType=VARCHAR}
+    where InstructionID = #{instructionid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.Bm2CreditmanagerorgsTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Bm2CreditmanagerorgsTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="StaffID" property="staffid" jdbcType="VARCHAR"/>
+        <result column="StaffName" property="staffname" jdbcType="VARCHAR"/>
+        <result column="RoleType" property="roletype" jdbcType="INTEGER"/>
+        <result column="OrgsName" property="orgsname" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, StaffID, StaffName, RoleType,
+    OrgsName
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_creditmanagerorgs_tbl
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="querySecretPerson" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_creditmanagerorgs_tbl
+        where RoleType = 2
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bm2_creditmanagerorgs_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2CreditmanagerorgsTbl">
+    insert into bm2_creditmanagerorgs_tbl (Id, StaffID, StaffName, 
+      RoleType, OrgsName)
+    values (#{id,jdbcType=INTEGER}, #{staffid,jdbcType=VARCHAR}, #{staffname,jdbcType=VARCHAR}, 
+      #{roletype,jdbcType=INTEGER}, #{orgsname,jdbcType=LONGVARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2CreditmanagerorgsTbl">
+    update bm2_creditmanagerorgs_tbl
+    set StaffID = #{staffid,jdbcType=VARCHAR},
+      StaffName = #{staffname,jdbcType=VARCHAR},
+      RoleType = #{roletype,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

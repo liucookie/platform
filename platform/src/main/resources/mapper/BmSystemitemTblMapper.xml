@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSystemitemTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSystemitemTbl">
+        <id column="ID" jdbcType="INTEGER" property="id"/>
+        <result column="ItemID" jdbcType="VARCHAR" property="itemid"/>
+        <result column="SysID" jdbcType="VARCHAR" property="sysid"/>
+        <result column="DScore" jdbcType="INTEGER" property="dscore"/>
+        <result column="DConSub" jdbcType="INTEGER" property="dconsub"/>
+        <result column="Dwages" jdbcType="INTEGER" property="dwages"/>
+        <result column="SortOrder" jdbcType="INTEGER" property="sortorder"/>
+        <result column="IsDelete" jdbcType="INTEGER" property="isdelete"/>
+        <result column="IsHistory" jdbcType="INTEGER" property="ishistory"/>
+        <result column="CreaterID" jdbcType="VARCHAR" property="createrid"/>
+        <result column="CreateTime" jdbcType="TIMESTAMP" property="createtime"/>
+        <result column="OldId" jdbcType="INTEGER" property="oldid"/>
+        <result column="ItemContent" jdbcType="LONGVARCHAR" property="itemcontent"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, ItemID, SysID, DScore, DConSub, Dwages, SortOrder, IsDelete, IsHistory, CreaterID, 
+    CreateTime, OldId,ItemContent
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_systemitem_tbl
+        where ItemID = #{id}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_systemitem_tbl
+        <where>
+            IsDelete = 0
+            <if test="name != null and name != ''">
+                and ItemContent like CONCAT("%",#{name},"%")
+            </if>
+            <if test="id != null and id != ''">
+                and SysID = #{id}
+            </if>
+        </where>
+        order by CreateTime desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from bm_systemitem_tbl
+        <where>
+            IsDelete = 0
+            <if test="name != null and name != ''">
+                and ItemContent like CONCAT("%",#{name},"%")
+            </if>
+            <if test="id != null and id != ''">
+                and SysID = #{id}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_systemitem_tbl set IsDelete = 1
+    where ItemID = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSystemitemTbl">
+    insert into bm_systemitem_tbl (ID, ItemID, SysID, 
+      DScore, DConSub, Dwages, 
+      SortOrder, IsDelete, IsHistory, 
+      CreaterID, CreateTime, OldId, 
+      ItemContent)
+    values (#{id,jdbcType=INTEGER}, #{itemid,jdbcType=VARCHAR}, #{sysid,jdbcType=VARCHAR}, 
+      #{dscore,jdbcType=INTEGER}, #{dconsub,jdbcType=INTEGER}, #{dwages,jdbcType=INTEGER}, 
+      #{sortorder,jdbcType=INTEGER}, 0, #{ishistory,jdbcType=INTEGER},
+      #{createrid,jdbcType=VARCHAR}, NOW(), #{oldid,jdbcType=INTEGER},
+      #{itemcontent,jdbcType=LONGVARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSystemitemTbl">
+    update bm_systemitem_tbl
+    set
+      SysID = #{sysid,jdbcType=VARCHAR},
+      DScore = #{dscore,jdbcType=INTEGER},
+      DConSub = #{dconsub,jdbcType=INTEGER},
+      Dwages = #{dwages,jdbcType=INTEGER},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      IsHistory = #{ishistory,jdbcType=INTEGER},
+      CreaterID = #{createrid,jdbcType=VARCHAR},
+      OldId = #{oldid,jdbcType=INTEGER},
+       ItemContent = #{itemcontent,jdbcType=LONGVARCHAR}
+    where ItemID = #{itemid,jdbcType=VARCHAR}
+  </update>
+
+    <select id="selectContent" resultType="com.hangyu.platform.web.backBusiness.dto.BmSystemitemTbl">
+        select
+        b.SysType sysType,b.SysName sysName, s.ItemContent itemcontent,s.ItemID itemid
+        from bm_systemitem_tbl s
+        left JOIN bm_system_tbl b on b.SysId = s.SysId
+        <where>
+            s.IsDelete=0
+            <if test="type != null and type != '' and sysId == null ">
+                and s.SysId in (SELECT SysId from bm_system_tbl where SysType = #{type} and IsDelete = 0 )
+            </if>
+            <if test="sysId != null and sysId != ''">
+                and s.SysId = #{sysId}
+            </if>
+            <if test="content != null and content != ''">
+                and s.ItemContent like concat('%',#{content},'%')
+            </if>
+        </where>
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectContentTotal" resultType="java.lang.Integer">
+        select
+        COUNT(s.ID)
+        from bm_systemitem_tbl s
+        left JOIN bm_system_tbl b on b.SysId = s.SysId
+        <where>
+            s.IsDelete=0
+            <if test="type != null and type != '' and sysId == null ">
+                and s.SysId in (SELECT SysId from bm_system_tbl where SysType = #{type} and IsDelete = 0 )
+            </if>
+            <if test="sysId != null and sysId != ''">
+                and s.SysId = #{sysId}
+            </if>
+            <if test="content != null and content != ''">
+                and s.ItemContent like concat('%',#{content},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBatch" resultType="com.hangyu.platform.web.backBusiness.dto.BmSystemitemTbl"
+            parameterType="java.util.List">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_systemitem_tbl
+        where
+        ItemId in
+        <foreach collection="list" separator="," item="item" open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

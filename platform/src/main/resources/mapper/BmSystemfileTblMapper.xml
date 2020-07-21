@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSystemfileTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSystemfileTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="AttachId" property="attachid" jdbcType="VARCHAR" />
+    <result column="SystemId" property="systemid" jdbcType="VARCHAR" />
+    <result column="AttachName" property="attachname" jdbcType="VARCHAR" />
+    <result column="AttachUrl" property="attachurl" jdbcType="VARCHAR" />
+    <result column="AttachRemark" property="attachremark" jdbcType="VARCHAR" />
+    <result column="Order" property="order" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="AttachVer" property="attachver" jdbcType="VARCHAR" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="Operator" property="operator" jdbcType="VARCHAR" />
+    <result column="OperType" property="opertype" jdbcType="INTEGER" />
+    <result column="OldId" property="oldid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, AttachId, SystemId, AttachName, AttachUrl, AttachRemark, `Order`, IsDelete, AttachVer,
+    UpdateTime, Operator, OperType, OldId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_systemfile_tbl
+    where SystemId = #{id} and IsDelete = 0
+  </select>
+
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_systemfile_tbl
+    where SystemId = #{id} and IsDelete = 0
+  </select>
+
+  <select id="selectByAttrId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_systemfile_tbl
+    where AttachId = #{id}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update  bm_systemfile_tbl set IsDelete = 1
+    where SystemId = #{id}
+  </delete>
+
+  <delete id="deleteFile" parameterType="java.lang.String" >
+    update  bm_systemfile_tbl set IsDelete = 1
+    where AttachId = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSystemfileTbl" >
+    insert into bm_systemfile_tbl (Id, AttachId, SystemId, 
+      AttachName, AttachUrl, AttachRemark, 
+      `Order`, IsDelete, AttachVer,
+      UpdateTime, Operator, OperType, 
+      OldId)
+    values (#{id,jdbcType=INTEGER}, #{attachid,jdbcType=VARCHAR}, #{systemid,jdbcType=VARCHAR}, 
+      #{attachname,jdbcType=VARCHAR}, #{attachurl,jdbcType=VARCHAR}, #{attachremark,jdbcType=VARCHAR}, 
+      #{order,jdbcType=INTEGER}, 0, #{attachver,jdbcType=VARCHAR},
+      NOW(), #{operator,jdbcType=VARCHAR}, #{opertype,jdbcType=INTEGER},
+      #{oldid,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSystemfileTbl" >
+    update bm_systemfile_tbl
+    set AttachId = #{attachid,jdbcType=VARCHAR},
+      SystemId = #{systemid,jdbcType=VARCHAR},
+      AttachName = #{attachname,jdbcType=VARCHAR},
+      AttachUrl = #{attachurl,jdbcType=VARCHAR},
+      AttachRemark = #{attachremark,jdbcType=VARCHAR},
+      `Order` = #{order,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      AttachVer = #{attachver,jdbcType=VARCHAR},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      Operator = #{operator,jdbcType=VARCHAR},
+      OperType = #{opertype,jdbcType=INTEGER},
+      OldId = #{oldid,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

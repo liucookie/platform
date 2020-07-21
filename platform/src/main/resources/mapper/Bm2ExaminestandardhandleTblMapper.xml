@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2ExaminestandardhandleTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2ExaminestandardhandleTbl" >
+    <id column="ExStdHandleID" property="exstdhandleid" jdbcType="VARCHAR" />
+    <result column="HandleType" property="handletype" jdbcType="INTEGER" />
+    <result column="HandleContent" property="handlecontent" jdbcType="VARCHAR" />
+    <result column="ScoreUpper" property="scoreupper" jdbcType="DOUBLE" />
+    <result column="ScoreLower" property="scorelower" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ExStdHandleID, HandleType, HandleContent, ScoreUpper, ScoreLower
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm2_examinestandardhandle_tbl
+    where ExStdHandleID = #{exstdhandleid,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="query" resultMap="BaseResultMap"  parameterType="com.hangyu.platform.web.sysAdmin.vo.ExamHandleQueryVO">
+    select
+    <include refid="Base_Column_List" />
+    from bm2_examinestandardhandle_tbl
+    <where>
+    <if test="type != null and type != ''">
+     and HandleType = #{type}
+    </if>
+    <if test="handleContent != null and handleContent != ''">
+      and HandleContent like CONCAT('%',#{handleContent},'%')
+    </if>
+      <if test="scoreStart != null and scoreStart != ''">
+        and   scorelower >= #{scoreStart}
+      </if>
+      <if test="scoreBegin != null and scoreBegin != ''">
+        and  #{scoreBegin} >= ScoreUpper
+      </if>
+    </where>
+    limit #{pageNum},#{pageSize}
+  </select>
+
+
+  <select id="selectTotal" resultType="java.lang.Integer"   parameterType="com.hangyu.platform.web.sysAdmin.vo.ExamHandleQueryVO">
+    select
+    COUNT(ExStdHandleID)
+    from bm2_examinestandardhandle_tbl
+    <where>
+      <if test="type != null and type != ''">
+        and HandleType = #{type}
+      </if>
+      <if test="handleContent != null and handleContent != ''">
+        and HandleContent like CONCAT('%',#{handleContent},'%')
+      </if>
+      <if test="scoreStart != null and scoreStart != ''">
+        and   scorelower >= #{scoreStart}
+      </if>
+      <if test="scoreBegin != null and scoreBegin != ''">
+        and  #{scoreBegin} >= ScoreUpper
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.util.List" >
+    delete from bm2_examinestandardhandle_tbl
+    where ExStdHandleID in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2ExaminestandardhandleTbl" >
+    insert into bm2_examinestandardhandle_tbl (ExStdHandleID, HandleType, HandleContent, 
+      ScoreUpper, ScoreLower)
+    values (#{exstdhandleid,jdbcType=VARCHAR}, #{handletype,jdbcType=INTEGER}, #{handlecontent,jdbcType=VARCHAR}, 
+      #{scoreupper,jdbcType=DOUBLE}, #{scorelower,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2ExaminestandardhandleTbl" >
+    insert into bm2_examinestandardhandle_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="exstdhandleid != null" >
+        ExStdHandleID,
+      </if>
+      <if test="handletype != null" >
+        HandleType,
+      </if>
+      <if test="handlecontent != null" >
+        HandleContent,
+      </if>
+      <if test="scoreupper != null" >
+        ScoreUpper,
+      </if>
+      <if test="scorelower != null" >
+        ScoreLower,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="exstdhandleid != null" >
+        #{exstdhandleid,jdbcType=VARCHAR},
+      </if>
+      <if test="handletype != null" >
+        #{handletype,jdbcType=INTEGER},
+      </if>
+      <if test="handlecontent != null" >
+        #{handlecontent,jdbcType=VARCHAR},
+      </if>
+      <if test="scoreupper != null" >
+        #{scoreupper,jdbcType=DOUBLE},
+      </if>
+      <if test="scorelower != null" >
+        #{scorelower,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2ExaminestandardhandleTbl" >
+    update bm2_examinestandardhandle_tbl
+    <set >
+      <if test="handletype != null" >
+        HandleType = #{handletype,jdbcType=INTEGER},
+      </if>
+      <if test="handlecontent != null" >
+        HandleContent = #{handlecontent,jdbcType=VARCHAR},
+      </if>
+      <if test="scoreupper != null" >
+        ScoreUpper = #{scoreupper,jdbcType=DOUBLE},
+      </if>
+      <if test="scorelower != null" >
+        ScoreLower = #{scorelower,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where ExStdHandleID = #{exstdhandleid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2ExaminestandardhandleTbl" >
+    update bm2_examinestandardhandle_tbl
+    set HandleType = #{handletype,jdbcType=INTEGER},
+      HandleContent = #{handlecontent,jdbcType=VARCHAR},
+      ScoreUpper = #{scoreupper,jdbcType=DOUBLE},
+      ScoreLower = #{scorelower,jdbcType=DOUBLE}
+    where ExStdHandleID = #{exstdhandleid,jdbcType=VARCHAR}
+  </update>
+</mapper>

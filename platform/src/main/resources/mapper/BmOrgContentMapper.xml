@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmOrgContentMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmOrgContent" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="ContentType" property="contenttype" jdbcType="INTEGER" />
+    <result column="ContentRemark" property="contentremark" jdbcType="VARCHAR" />
+    <result column="UpdateTime" property="updatetime" jdbcType="VARCHAR" />
+    <result column="AttFile" property="attfile" jdbcType="VARCHAR" />
+    <result column="OrgId" property="orgid" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="UserID" property="userid" jdbcType="VARCHAR" />
+    <result column="ContentId" property="contentid" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    Id, ContentType, ContentRemark, date_format(UpdateTime, '%Y-%m-%d %H:%i:%s') UpdateTime, AttFile, OrgId, IsDelete, UserID, ContentId
+  </sql>
+
+  <sql id="Column_List" >
+    o.Id, o.ContentType, o.ContentRemark,date_format(o.UpdateTime, '%Y-%m-%d') UpdateTime, o.AttFile, o.OrgId, o.IsDelete, o.UserID, o.ContentId,
+    s.UserName userName
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BM_Org_Content
+    where ContentId = #{id}
+  </select>
+
+  <select id="selectByOrgId" resultType="com.hangyu.platform.web.backBusiness.dto.BmOrgContent"
+          parameterType="java.lang.String" >
+    select
+    DISTINCT
+    <include refid="Column_List" />
+    from BM_Org_Content o
+    LEFT JOIN BM_Staff_Tbl s
+    on o.UserId = s.StaffId
+    where o.OrgId = #{orgId} and o.IsDelete = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update BM_Org_Content set IsDelete = 1
+    where ContentId = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgContent" >
+    insert into BM_Org_Content (Id, ContentType, ContentRemark, 
+      UpdateTime, AttFile, OrgId, 
+      IsDelete, UserID, ContentId
+      )
+    values (#{id,jdbcType=INTEGER}, #{contenttype,jdbcType=INTEGER}, #{contentremark,jdbcType=VARCHAR}, 
+     NOW(), #{attfile,jdbcType=VARCHAR}, #{orgid,jdbcType=VARCHAR},
+     0, #{userid,jdbcType=VARCHAR}, #{contentid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgContent" >
+    insert into BM_Org_Content
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="contenttype != null" >
+        ContentType,
+      </if>
+      <if test="contentremark != null" >
+        ContentRemark,
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime,
+      </if>
+      <if test="attfile != null" >
+        AttFile,
+      </if>
+      <if test="orgid != null" >
+        OrgId,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="userid != null" >
+        UserID,
+      </if>
+      <if test="contentid != null" >
+        ContentId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="contenttype != null" >
+        #{contenttype,jdbcType=INTEGER},
+      </if>
+      <if test="contentremark != null" >
+        #{contentremark,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attfile != null" >
+        #{attfile,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null" >
+        #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="contentid != null" >
+        #{contentid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgContent" >
+    update BM_Org_Content
+    <set >
+      <if test="contenttype != null" >
+        ContentType = #{contenttype,jdbcType=INTEGER},
+      </if>
+      <if test="contentremark != null" >
+        ContentRemark = #{contentremark,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="attfile != null" >
+        AttFile = #{attfile,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null" >
+        OrgId = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        UserID = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="contentid != null" >
+        ContentId = #{contentid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgContent" >
+    update BM_Org_Content
+    set ContentType = #{contenttype,jdbcType=INTEGER},
+      ContentRemark = #{contentremark,jdbcType=VARCHAR},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      AttFile = #{attfile,jdbcType=VARCHAR},
+      OrgId = #{orgid,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      UserID = #{userid,jdbcType=VARCHAR},
+      ContentId = #{contentid,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="deleteByOrgId" parameterType="java.lang.String">
+    update BM_Org_Content
+    set
+    IsDelete = 1
+    where OrgId = #{orgId}
+  </update>
+
+</mapper>

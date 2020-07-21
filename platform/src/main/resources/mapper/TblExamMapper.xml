@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TblExamMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TblExam">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="Name" property="name" jdbcType="VARCHAR"/>
+        <result column="Applytime" property="applytime" jdbcType="TIMESTAMP"/>
+        <result column="ClassifyID" property="classifyid" jdbcType="INTEGER"/>
+        <result column="isoriginal" property="isoriginal" jdbcType="INTEGER"/>
+        <result column="Jsoncontent" property="jsoncontent" jdbcType="VARCHAR"/>
+        <result column="UseCount" property="usecount" jdbcType="INTEGER"/>
+        <result column="Score" property="score" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, Name, date_format(Applytime, '%Y-%m-%d %H:%i:%s')  Applytime  , ClassifyID, Jsoncontent, UseCount, Score,isoriginal
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_exam
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryAllExam" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_exam
+        where  isoriginal = 0
+        order by Applytime desc
+    </select>
+
+    <select id="randomExam" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_exam
+        where ClassifyID = #{type} and isoriginal = 0
+        order by Applytime desc
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_exam
+        <where>
+            isoriginal = 0
+            <if test="name != null">
+                and Name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="minScore != null">
+                and Score >= #{minScore}
+            </if>
+            <if test="maxScore != null">
+                and #{maxScore} >= Score
+            </if>
+        </where>
+        order by Applytime desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from tbl_exam
+        <where>
+            isoriginal = 0
+            <if test="name != null">
+                and Name like CONCAT('%',#{name},'%')
+            </if>
+            <if test="minScore != null">
+                and Score >= #{minScore}
+            </if>
+            <if test="maxScore != null">
+                and #{maxScore} >= Score
+            </if>
+        </where>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_exam
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" keyProperty="id" keyColumn="ID" useGeneratedKeys="true"
+            parameterType="com.hangyu.platform.web.backBusiness.dto.TblExam">
+        insert into tbl_exam (ID, `Name`, Applytime,
+        ClassifyID, Jsoncontent, UseCount,
+        Score,isoriginal)
+        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, NOW(),
+        #{classifyid,jdbcType=INTEGER}, #{jsoncontent,jdbcType=VARCHAR}, 0,
+        #{score,jdbcType=INTEGER},#{isoriginal})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TblExam">
+    update tbl_exam
+    set `Name` = #{name,jdbcType=VARCHAR},
+      ClassifyID = #{classifyid,jdbcType=INTEGER},
+      Jsoncontent = #{jsoncontent,jdbcType=VARCHAR},
+      UseCount = #{usecount,jdbcType=INTEGER},
+      Score = #{score,jdbcType=INTEGER},
+      isoriginal = #{isoriginal}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+    <update id="updateCount" parameterType="java.lang.Integer">
+    update tbl_exam
+    set
+      UseCount = UseCount + 1
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

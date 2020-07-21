@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmCheckplanpeasonTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmCheckplanpeasonTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="PlanId" property="planid" jdbcType="VARCHAR"/>
+        <result column="DeptId" property="deptid" jdbcType="VARCHAR"/>
+        <result column="UserId" property="userid" jdbcType="VARCHAR"/>
+        <result column="CheckState" property="checkstate" jdbcType="INTEGER"/>
+        <result column="CheckRes" property="checkres" jdbcType="INTEGER"/>
+        <result column="CheckTime" property="checktime" jdbcType="TIMESTAMP"/>
+        <result column="ReCheckRes" property="recheckres" jdbcType="VARCHAR"/>
+        <result column="ReCheckTime" property="rechecktime" jdbcType="TIMESTAMP"/>
+        <result column="ReCheckUser" property="recheckuser" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="UserIP" property="userip" jdbcType="VARCHAR"/>
+        <result column="DeptName" property="deptname" jdbcType="VARCHAR"/>
+        <result column="UserName" property="username" jdbcType="VARCHAR"/>
+        <result column="AccountName" property="accountname" jdbcType="VARCHAR"/>
+        <result column="AbsenceDesc" property="absencedesc" jdbcType="VARCHAR"/>
+        <result column="DescUser" property="descuser" jdbcType="VARCHAR"/>
+        <result column="DescTime" property="desctime" jdbcType="TIMESTAMP"/>
+        <result column="ExamineStatus" property="examinestatus" jdbcType="INTEGER"/>
+        <result column="LeaveTypeId" property="leavetypeid" jdbcType="VARCHAR"/>
+        <result column="AbsenceTypeId" property="absencetypeid" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, PlanId, DeptId, UserId, CheckState, CheckRes, date_format(CheckTime, '%Y-%m-%d %H:%i:%s')  CheckTime
+    , ReCheckRes,date_format(ReCheckTime, '%Y-%m-%d %H:%i:%s')  ReCheckTime   ,
+    ReCheckUser, IsDelete, UserIP, DeptName, UserName, AccountName, AbsenceDesc, DescUser, 
+    DescTime, ExamineStatus, LeaveTypeId, AbsenceTypeId
+  </sql>
+
+    <sql id="Base_Column_List1">
+    c.Id, c.PlanId, c.DeptId, c.UserId, c.CheckState, c.CheckRes, date_format(c.CheckTime, '%Y-%m-%d %H:%i:%s')  CheckTime,
+     c.ReCheckRes, date_format(c.ReCheckTime, '%Y-%m-%d %H:%i:%s')  ReCheckTime,
+    c.ReCheckUser, c.IsDelete, c.UserIP, c.DeptName, c.UserName, c.AccountName, c.AbsenceDesc, c.DescUser,
+    c.DescTime, c.ExamineStatus, c.LeaveTypeId, c.AbsenceTypeId,s.UserName checkUserName
+  </sql>
+    <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanpeasonTbl"
+            parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List1"/>
+        from bm_checkplanpeason_tbl c
+        left join bm_staff_tbl s on s.StaffId= c.ReCheckUser
+        where c.Id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByDateAndUser" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_checkplanpeason_tbl
+        where PlanId = #{planId}
+        and UserId = #{userId}
+        and IsDelete = 0
+    </select>
+
+    <select id="selectByPlanId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_checkplanpeason_tbl
+        where IsDelete = 0
+        and PlanId = #{id}
+    </select>
+
+    <select id="queryCheckUserDetail" resultType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanpeasonTbl" >
+        select
+        <include refid="Base_Column_List"/>
+        from bm_checkplanpeason_tbl
+        where
+         IsDelete = 0
+        and PlanId = #{planId}
+        and DeptId = #{orgId}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update  bm_checkplanpeason_tbl set IsDelete = 1
+    where PlanId = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanpeasonTbl">
+    insert into bm_checkplanpeason_tbl (Id, PlanId, DeptId, 
+      UserId, CheckState, CheckRes, 
+      CheckTime, ReCheckRes, ReCheckTime, 
+      ReCheckUser, IsDelete, UserIP, 
+      DeptName, UserName, AccountName, 
+      AbsenceDesc, DescUser, DescTime, 
+      ExamineStatus, LeaveTypeId, AbsenceTypeId
+      )
+    values (#{id,jdbcType=INTEGER}, #{planid,jdbcType=VARCHAR}, #{deptid,jdbcType=VARCHAR}, 
+      #{userid,jdbcType=VARCHAR}, #{checkstate,jdbcType=INTEGER}, #{checkres,jdbcType=INTEGER}, 
+      #{checktime,jdbcType=TIMESTAMP}, #{recheckres,jdbcType=VARCHAR}, #{rechecktime,jdbcType=TIMESTAMP}, 
+      #{recheckuser,jdbcType=VARCHAR}, 0, #{userip,jdbcType=VARCHAR},
+      #{deptname,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{accountname,jdbcType=VARCHAR}, 
+      #{absencedesc,jdbcType=VARCHAR}, #{descuser,jdbcType=VARCHAR}, #{desctime,jdbcType=TIMESTAMP}, 
+      #{examinestatus,jdbcType=INTEGER}, #{leavetypeid,jdbcType=VARCHAR}, #{absencetypeid,jdbcType=VARCHAR}
+      )
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckplanpeasonTbl">
+    update bm_checkplanpeason_tbl
+    set PlanId = #{planid,jdbcType=VARCHAR},
+      DeptId = #{deptid,jdbcType=VARCHAR},
+      UserId = #{userid,jdbcType=VARCHAR},
+      CheckState = #{checkstate,jdbcType=INTEGER},
+      CheckRes = #{checkres,jdbcType=INTEGER},
+      CheckTime = str_to_date(#{checktime},'%Y-%m-%d %H:%i:%s'),
+      ReCheckRes = #{recheckres,jdbcType=VARCHAR},
+      ReCheckTime = NOW(),
+      ReCheckUser = #{recheckuser,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      UserIP = #{userip,jdbcType=VARCHAR},
+      DeptName = #{deptname,jdbcType=VARCHAR},
+      UserName = #{username,jdbcType=VARCHAR},
+      AccountName = #{accountname,jdbcType=VARCHAR},
+      AbsenceDesc = #{absencedesc,jdbcType=VARCHAR},
+      DescUser = #{descuser,jdbcType=VARCHAR},
+      DescTime = #{desctime,jdbcType=TIMESTAMP},
+      ExamineStatus = #{examinestatus,jdbcType=INTEGER},
+      LeaveTypeId = #{leavetypeid,jdbcType=VARCHAR},
+      AbsenceTypeId = #{absencetypeid,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="queryCheckUser" resultType="java.lang.Integer">
+        select
+        COUNT(*)
+        from bm_checkplanpeason_tbl
+        <where>
+            PlanId = #{planId}
+            and IsDelete = 0
+            <if test="checkState != null">
+                and CheckState = #{checkState}
+            </if>
+            <if test="checkRes != null">
+                and CheckRes = #{checkRes}
+            </if>
+        </where>
+    </select>
+
+</mapper>

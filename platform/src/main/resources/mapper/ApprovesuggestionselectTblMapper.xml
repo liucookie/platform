@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.ApprovesuggestionselectTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.ApprovesuggestionselectTbl">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="FromID" property="fromid" jdbcType="VARCHAR"/>
+        <result column="ApproveOrg" property="approveorg" jdbcType="VARCHAR"/>
+        <result column="ApproveSuggestion" property="approvesuggestion" jdbcType="VARCHAR"/>
+        <result column="FormName" property="formname" jdbcType="VARCHAR"/>
+        <result column="Isdeleted" property="isdeleted" jdbcType="INTEGER"/>
+        <result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, FromID, ApproveOrg, ApproveSuggestion, FormName, Isdeleted, date_format(ModifyTime,'%Y-%m-%d') ModifyTime
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from approvesuggestionselect_tbl
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from approvesuggestionselect_tbl
+        <where>Isdeleted = 0
+            <if test="formId != null and formId != ''">
+                and FromID = #{formId}
+            </if>
+            <if test="orgName != null and orgName != ''">
+                and ApproveOrg = #{orgName}
+            </if>
+        </where>
+        order by modifytime desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from approvesuggestionselect_tbl
+        <where>
+            Isdeleted = 0
+            <if test="formId != null and formId != ''">
+                and FromID = #{formId}
+            </if>
+            <if test="orgName != null and orgName != ''">
+                and ApproveOrg = #{orgName}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update approvesuggestionselect_tbl set Isdeleted = 1
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.ApprovesuggestionselectTbl">
+    insert into approvesuggestionselect_tbl (ID, FromID, ApproveOrg, 
+      ApproveSuggestion, FormName, Isdeleted, 
+      ModifyTime)
+    values (#{id,jdbcType=INTEGER}, #{fromid,jdbcType=VARCHAR}, #{approveorg,jdbcType=VARCHAR}, 
+      #{approvesuggestion,jdbcType=VARCHAR}, #{formname,jdbcType=VARCHAR}, 0,
+       NOW())
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.ApprovesuggestionselectTbl">
+        insert into approvesuggestionselect_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="fromid != null">
+                FromID,
+            </if>
+            <if test="approveorg != null">
+                ApproveOrg,
+            </if>
+            <if test="approvesuggestion != null">
+                ApproveSuggestion,
+            </if>
+            <if test="formname != null">
+                FormName,
+            </if>
+            <if test="isdeleted != null">
+                Isdeleted,
+            </if>
+            <if test="modifytime != null">
+                ModifyTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="fromid != null">
+                #{fromid,jdbcType=VARCHAR},
+            </if>
+            <if test="approveorg != null">
+                #{approveorg,jdbcType=VARCHAR},
+            </if>
+            <if test="approvesuggestion != null">
+                #{approvesuggestion,jdbcType=VARCHAR},
+            </if>
+            <if test="formname != null">
+                #{formname,jdbcType=VARCHAR},
+            </if>
+            <if test="isdeleted != null">
+                #{isdeleted,jdbcType=INTEGER},
+            </if>
+            <if test="modifytime != null">
+                #{modifytime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.hangyu.platform.web.backBusiness.dto.ApprovesuggestionselectTbl">
+        update approvesuggestionselect_tbl
+        <set>
+            <if test="fromid != null">
+                FromID = #{fromid,jdbcType=VARCHAR},
+            </if>
+            <if test="approveorg != null">
+                ApproveOrg = #{approveorg,jdbcType=VARCHAR},
+            </if>
+            <if test="approvesuggestion != null">
+                ApproveSuggestion = #{approvesuggestion,jdbcType=VARCHAR},
+            </if>
+            <if test="formname != null">
+                FormName = #{formname,jdbcType=VARCHAR},
+            </if>
+            <if test="isdeleted != null">
+                Isdeleted = #{isdeleted,jdbcType=INTEGER},
+            </if>
+            <if test="modifytime != null">
+               NOW(),
+            </if>
+        </set>
+        where ID = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.ApprovesuggestionselectTbl">
+    update approvesuggestionselect_tbl
+    set FromID = #{fromid,jdbcType=VARCHAR},
+      ApproveOrg = #{approveorg,jdbcType=VARCHAR},
+      ApproveSuggestion = #{approvesuggestion,jdbcType=VARCHAR},
+      FormName = #{formname,jdbcType=VARCHAR},
+      Isdeleted = #{isdeleted,jdbcType=INTEGER},
+      ModifyTime = #{modifytime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

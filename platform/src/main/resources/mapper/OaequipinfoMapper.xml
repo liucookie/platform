@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.OaequipinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Oaequipinfo" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="OrgId" property="orgid" jdbcType="VARCHAR" />
+    <result column="StaffId" property="staffid" jdbcType="VARCHAR" />
+    <result column="SBXH" property="sbxh" jdbcType="VARCHAR" />
+    <result column="SBBM" property="sbbm" jdbcType="VARCHAR" />
+    <result column="OaEquipName" property="oaequipname" jdbcType="VARCHAR" />
+    <result column="SecretLevelId" property="secretlevelid" jdbcType="VARCHAR" />
+    <result column="Placement" property="placement" jdbcType="VARCHAR" />
+    <result column="UseStateId" property="usestateid" jdbcType="VARCHAR" />
+    <result column="InfoMemo" property="infomemo" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="SJGRQ" property="sjgrq" jdbcType="INTEGER" />
+    <result column="GLCZ" property="glcz" jdbcType="INTEGER" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="Gateway" property="gateway" jdbcType="VARCHAR" />
+    <result column="SubAddr" property="subaddr" jdbcType="VARCHAR" />
+    <result column="Mac" property="mac" jdbcType="VARCHAR" />
+    <result column="FloorNum" property="floornum" jdbcType="VARCHAR" />
+    <result column="RoomNum" property="roomnum" jdbcType="VARCHAR" />
+    <result column="EquipTypeId" property="equiptypeid" jdbcType="VARCHAR" />
+    <result column="AreaType" property="areatype" jdbcType="INTEGER" />
+    <result column="SwitchIP" property="switchip" jdbcType="VARCHAR" />
+    <result column="SwitchPort" property="switchport" jdbcType="VARCHAR" />
+    <result column="SwitchAddress" property="switchaddress" jdbcType="CHAR" />
+    <result column="KeepSecretNumber" property="keepsecretnumber" jdbcType="VARCHAR" />
+    <result column="ZTEquipNO" property="ztequipno" jdbcType="VARCHAR" />
+    <result column="EquipName" property="equipname" jdbcType="VARCHAR" />
+    <result column="DeptName" property="deptname" jdbcType="VARCHAR" />
+    <result column="EquipUser" property="equipuser" jdbcType="VARCHAR" />
+    <result column="TypeName" property="typename" jdbcType="VARCHAR" />
+    <result column="BanGongXLH" property="bangongxlh" jdbcType="VARCHAR" />
+    <result column="LevelName" property="levelname" jdbcType="VARCHAR" />
+    <result column="HardDiskSN" property="harddisksn" jdbcType="VARCHAR" />
+    <result column="State" property="state" jdbcType="INTEGER" />
+    <result column="WorkID" property="workid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    c.Id, c.UniqueID, c.OrgId, c.StaffId, c.SBXH, c.SBBM, c.SecretLevelId, c.Placement,
+    c.UseStateId, c.InfoMemo, c.IsDelete, c.SJGRQ, c.GLCZ, c.IP, c.Gateway, c.SubAddr, c.Mac, c.FloorNum,
+    c.RoomNum, c.EquipTypeId, c.AreaType, c.SwitchIP, c.SwitchPort, c.SwitchAddress, c.KeepSecretNumber,
+    c.ZTEquipNO, c.EquipName, c.DeptName, c.EquipUser, c.TypeName, c.BanGongXLH, c.LevelName, c.HardDiskSN,
+    c.State, c.WorkID,o.OrgName orgName,s.UserName userName,
+    b.codename secretName, e.codename useStateName,ba.codename oaequipname
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from oaequipinfo c
+    left join basecode b on b.id = c.SecretLevelId
+    left join basecode e on e.id = c.UseStateId
+    left join basecode ba on ba.id = c.EquipTypeId
+    left join organization o on o.UniqueId = c.OrgId
+    left join bm_staff_tbl s on s.StaffId = c.StaffId
+    where c.UniqueID = #{id}
+  </select>
+
+  <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.Oaequipinfo"
+                   parameterType="com.hangyu.platform.web.backBusiness.vo.ServerManageQueryVO">
+  select
+  <include refid="Base_Column_List"/>
+  from oaequipinfo c
+  left join basecode b on b.id = c.SecretLevelId
+  left join basecode e on e.id = c.UseStateId
+  left join basecode ba on ba.id = c.EquipTypeId
+  left join organization o on o.UniqueId = c.OrgId
+  left join bm_staff_tbl s on s.StaffId = c.StaffId
+  <where>
+    c.IsDelete = 0
+    <if test="equipId != null and equipId != ''">
+      and c.EquipTypeId = #{equipId}
+    </if>
+    <if test="orgId != null and orgId != ''">
+      and c.OrgId = #{orgId}
+    </if>
+    <if test="secretLevelId != null and secretLevelId != ''">
+      and c.SecretLevelId = #{secretLevelId}
+    </if>
+    <if test="userId != null and userId != ''">
+      and c.StaffId = #{userId}
+    </if>
+    <if test="userStateId != null and userStateId != ''">
+      and c.UseStateId = #{userStateId}
+    </if>
+    <if test="name != null and name != ''">
+      and c.SBXH like CONCAT("%",#{name},"%")
+    </if>
+  </where>
+  order by c.Id desc
+  limit #{pageNum},#{pageSize}
+</select>
+
+  <select id="selectTotal" resultType="java.lang.Integer"
+          parameterType="com.hangyu.platform.web.backBusiness.vo.ServerManageQueryVO">
+    select
+    COUNT(c.Id)
+    from oaequipinfo c
+    <where>
+      c.IsDelete = 0
+      <if test="equipId != null and equipId != ''">
+        and c.EquipTypeId = #{equipId}
+      </if>
+      <if test="orgId != null and orgId != ''">
+        and c.OrgId = #{orgId}
+      </if>
+      <if test="secretLevelId != null and secretLevelId != ''">
+        and c.SecretLevelId = #{secretLevelId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and c.StaffId = #{userId}
+      </if>
+      <if test="userStateId != null and userStateId != ''">
+        and c.UseStateId = #{userStateId}
+      </if>
+      <if test="name != null and name != ''">
+        and c.SBXH like CONCAT("%",#{name},"%")
+      </if>
+    </where>
+  </select>
+
+  <select id="queryOAInfo" resultType="com.hangyu.platform.web.backBusiness.dto.Oaequipinfo"
+          parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from oaequipinfo c
+    left join basecode b on b.id = c.SecretLevelId
+    left join basecode e on e.id = c.UseStateId
+    left join basecode ba on ba.id = c.EquipTypeId
+    left join organization o on o.UniqueId = c.OrgId
+    left join bm_staff_tbl s on s.StaffId = c.StaffId
+    <where>
+      c.IsDelete = 0
+      <if test="userId != null and userId != ''">
+        and c.StaffId = #{userId}
+      </if>
+      <if test="typeId != null and typeId != ''">
+        and c.EquipTypeId = #{typeId}
+      </if>
+    </where>
+    order by c.Id desc
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update oaequipinfo set IsDelete = 1
+    where UniqueID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Oaequipinfo" >
+    insert into oaequipinfo (Id, UniqueID, OrgId, 
+      StaffId, SBXH, SBBM, 
+      OaEquipName, SecretLevelId, Placement, 
+      UseStateId, InfoMemo, IsDelete, 
+      SJGRQ, GLCZ, IP, Gateway, 
+      SubAddr, Mac, FloorNum, 
+      RoomNum, EquipTypeId, AreaType, 
+      SwitchIP, SwitchPort, SwitchAddress, 
+      KeepSecretNumber, ZTEquipNO, EquipName, 
+      DeptName, EquipUser, TypeName, 
+      BanGongXLH, LevelName, HardDiskSN, 
+      State, WorkID)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{orgid,jdbcType=VARCHAR}, 
+      #{staffid,jdbcType=VARCHAR}, #{sbxh,jdbcType=VARCHAR}, #{sbbm,jdbcType=VARCHAR}, 
+      #{oaequipname,jdbcType=VARCHAR}, #{secretlevelid,jdbcType=VARCHAR}, #{placement,jdbcType=VARCHAR}, 
+      #{usestateid,jdbcType=VARCHAR}, #{infomemo,jdbcType=VARCHAR}, 0,
+      #{sjgrq,jdbcType=INTEGER}, #{glcz,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR}, #{gateway,jdbcType=VARCHAR}, 
+      #{subaddr,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR}, #{floornum,jdbcType=VARCHAR}, 
+      #{roomnum,jdbcType=VARCHAR}, #{equiptypeid,jdbcType=VARCHAR}, #{areatype,jdbcType=INTEGER}, 
+      #{switchip,jdbcType=VARCHAR}, #{switchport,jdbcType=VARCHAR}, #{switchaddress,jdbcType=CHAR}, 
+      #{keepsecretnumber,jdbcType=VARCHAR}, #{ztequipno,jdbcType=VARCHAR}, #{equipname,jdbcType=VARCHAR}, 
+      #{deptname,jdbcType=VARCHAR}, #{equipuser,jdbcType=VARCHAR}, #{typename,jdbcType=VARCHAR}, 
+      #{bangongxlh,jdbcType=VARCHAR}, #{levelname,jdbcType=VARCHAR}, #{harddisksn,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{workid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.Oaequipinfo" >
+    insert into oaequipinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueID,
+      </if>
+      <if test="orgid != null" >
+        OrgId,
+      </if>
+      <if test="staffid != null" >
+        StaffId,
+      </if>
+      <if test="sbxh != null" >
+        SBXH,
+      </if>
+      <if test="sbbm != null" >
+        SBBM,
+      </if>
+      <if test="oaequipname != null" >
+        OaEquipName,
+      </if>
+      <if test="secretlevelid != null" >
+        SecretLevelId,
+      </if>
+      <if test="placement != null" >
+        Placement,
+      </if>
+      <if test="usestateid != null" >
+        UseStateId,
+      </if>
+      <if test="infomemo != null" >
+        InfoMemo,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="sjgrq != null" >
+        SJGRQ,
+      </if>
+      <if test="glcz != null" >
+        GLCZ,
+      </if>
+      <if test="ip != null" >
+        IP,
+      </if>
+      <if test="gateway != null" >
+        Gateway,
+      </if>
+      <if test="subaddr != null" >
+        SubAddr,
+      </if>
+      <if test="mac != null" >
+        Mac,
+      </if>
+      <if test="floornum != null" >
+        FloorNum,
+      </if>
+      <if test="roomnum != null" >
+        RoomNum,
+      </if>
+      <if test="equiptypeid != null" >
+        EquipTypeId,
+      </if>
+      <if test="areatype != null" >
+        AreaType,
+      </if>
+      <if test="switchip != null" >
+        SwitchIP,
+      </if>
+      <if test="switchport != null" >
+        SwitchPort,
+      </if>
+      <if test="switchaddress != null" >
+        SwitchAddress,
+      </if>
+      <if test="keepsecretnumber != null" >
+        KeepSecretNumber,
+      </if>
+      <if test="ztequipno != null" >
+        ZTEquipNO,
+      </if>
+      <if test="equipname != null" >
+        EquipName,
+      </if>
+      <if test="deptname != null" >
+        DeptName,
+      </if>
+      <if test="equipuser != null" >
+        EquipUser,
+      </if>
+      <if test="typename != null" >
+        TypeName,
+      </if>
+      <if test="bangongxlh != null" >
+        BanGongXLH,
+      </if>
+      <if test="levelname != null" >
+        LevelName,
+      </if>
+      <if test="harddisksn != null" >
+        HardDiskSN,
+      </if>
+      <if test="state != null" >
+        State,
+      </if>
+      <if test="workid != null" >
+        WorkID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null" >
+        #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="sbxh != null" >
+        #{sbxh,jdbcType=VARCHAR},
+      </if>
+      <if test="sbbm != null" >
+        #{sbbm,jdbcType=VARCHAR},
+      </if>
+      <if test="oaequipname != null" >
+        #{oaequipname,jdbcType=VARCHAR},
+      </if>
+      <if test="secretlevelid != null" >
+        #{secretlevelid,jdbcType=VARCHAR},
+      </if>
+      <if test="placement != null" >
+        #{placement,jdbcType=VARCHAR},
+      </if>
+      <if test="usestateid != null" >
+        #{usestateid,jdbcType=VARCHAR},
+      </if>
+      <if test="infomemo != null" >
+        #{infomemo,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="sjgrq != null" >
+        #{sjgrq,jdbcType=INTEGER},
+      </if>
+      <if test="glcz != null" >
+        #{glcz,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="gateway != null" >
+        #{gateway,jdbcType=VARCHAR},
+      </if>
+      <if test="subaddr != null" >
+        #{subaddr,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null" >
+        #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="floornum != null" >
+        #{floornum,jdbcType=VARCHAR},
+      </if>
+      <if test="roomnum != null" >
+        #{roomnum,jdbcType=VARCHAR},
+      </if>
+      <if test="equiptypeid != null" >
+        #{equiptypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="areatype != null" >
+        #{areatype,jdbcType=INTEGER},
+      </if>
+      <if test="switchip != null" >
+        #{switchip,jdbcType=VARCHAR},
+      </if>
+      <if test="switchport != null" >
+        #{switchport,jdbcType=VARCHAR},
+      </if>
+      <if test="switchaddress != null" >
+        #{switchaddress,jdbcType=CHAR},
+      </if>
+      <if test="keepsecretnumber != null" >
+        #{keepsecretnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="ztequipno != null" >
+        #{ztequipno,jdbcType=VARCHAR},
+      </if>
+      <if test="equipname != null" >
+        #{equipname,jdbcType=VARCHAR},
+      </if>
+      <if test="deptname != null" >
+        #{deptname,jdbcType=VARCHAR},
+      </if>
+      <if test="equipuser != null" >
+        #{equipuser,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null" >
+        #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="bangongxlh != null" >
+        #{bangongxlh,jdbcType=VARCHAR},
+      </if>
+      <if test="levelname != null" >
+        #{levelname,jdbcType=VARCHAR},
+      </if>
+      <if test="harddisksn != null" >
+        #{harddisksn,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="workid != null" >
+        #{workid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.Oaequipinfo" >
+    update oaequipinfo
+    <set >
+      <if test="uniqueid != null" >
+        UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null" >
+        OrgId = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        StaffId = #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="sbxh != null" >
+        SBXH = #{sbxh,jdbcType=VARCHAR},
+      </if>
+      <if test="sbbm != null" >
+        SBBM = #{sbbm,jdbcType=VARCHAR},
+      </if>
+      <if test="oaequipname != null" >
+        OaEquipName = #{oaequipname,jdbcType=VARCHAR},
+      </if>
+      <if test="secretlevelid != null" >
+        SecretLevelId = #{secretlevelid,jdbcType=VARCHAR},
+      </if>
+      <if test="placement != null" >
+        Placement = #{placement,jdbcType=VARCHAR},
+      </if>
+      <if test="usestateid != null" >
+        UseStateId = #{usestateid,jdbcType=VARCHAR},
+      </if>
+      <if test="infomemo != null" >
+        InfoMemo = #{infomemo,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="sjgrq != null" >
+        SJGRQ = #{sjgrq,jdbcType=INTEGER},
+      </if>
+      <if test="glcz != null" >
+        GLCZ = #{glcz,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="gateway != null" >
+        Gateway = #{gateway,jdbcType=VARCHAR},
+      </if>
+      <if test="subaddr != null" >
+        SubAddr = #{subaddr,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null" >
+        Mac = #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="floornum != null" >
+        FloorNum = #{floornum,jdbcType=VARCHAR},
+      </if>
+      <if test="roomnum != null" >
+        RoomNum = #{roomnum,jdbcType=VARCHAR},
+      </if>
+      <if test="equiptypeid != null" >
+        EquipTypeId = #{equiptypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="areatype != null" >
+        AreaType = #{areatype,jdbcType=INTEGER},
+      </if>
+      <if test="switchip != null" >
+        SwitchIP = #{switchip,jdbcType=VARCHAR},
+      </if>
+      <if test="switchport != null" >
+        SwitchPort = #{switchport,jdbcType=VARCHAR},
+      </if>
+      <if test="switchaddress != null" >
+        SwitchAddress = #{switchaddress,jdbcType=CHAR},
+      </if>
+      <if test="keepsecretnumber != null" >
+        KeepSecretNumber = #{keepsecretnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="ztequipno != null" >
+        ZTEquipNO = #{ztequipno,jdbcType=VARCHAR},
+      </if>
+      <if test="equipname != null" >
+        EquipName = #{equipname,jdbcType=VARCHAR},
+      </if>
+      <if test="deptname != null" >
+        DeptName = #{deptname,jdbcType=VARCHAR},
+      </if>
+      <if test="equipuser != null" >
+        EquipUser = #{equipuser,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null" >
+        TypeName = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="bangongxlh != null" >
+        BanGongXLH = #{bangongxlh,jdbcType=VARCHAR},
+      </if>
+      <if test="levelname != null" >
+        LevelName = #{levelname,jdbcType=VARCHAR},
+      </if>
+      <if test="harddisksn != null" >
+        HardDiskSN = #{harddisksn,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        State = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="workid != null" >
+        WorkID = #{workid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Oaequipinfo" >
+    update oaequipinfo
+    set
+      OrgId = #{orgid,jdbcType=VARCHAR},
+      StaffId = #{staffid,jdbcType=VARCHAR},
+      SBXH = #{sbxh,jdbcType=VARCHAR},
+      SBBM = #{sbbm,jdbcType=VARCHAR},
+      OaEquipName = #{oaequipname,jdbcType=VARCHAR},
+      SecretLevelId = #{secretlevelid,jdbcType=VARCHAR},
+      Placement = #{placement,jdbcType=VARCHAR},
+      UseStateId = #{usestateid,jdbcType=VARCHAR},
+      InfoMemo = #{infomemo,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      SJGRQ = #{sjgrq,jdbcType=INTEGER},
+      GLCZ = #{glcz,jdbcType=INTEGER},
+      IP = #{ip,jdbcType=VARCHAR},
+      Gateway = #{gateway,jdbcType=VARCHAR},
+      SubAddr = #{subaddr,jdbcType=VARCHAR},
+      Mac = #{mac,jdbcType=VARCHAR},
+      FloorNum = #{floornum,jdbcType=VARCHAR},
+      RoomNum = #{roomnum,jdbcType=VARCHAR},
+      EquipTypeId = #{equiptypeid,jdbcType=VARCHAR},
+      AreaType = #{areatype,jdbcType=INTEGER},
+      SwitchIP = #{switchip,jdbcType=VARCHAR},
+      SwitchPort = #{switchport,jdbcType=VARCHAR},
+      SwitchAddress = #{switchaddress,jdbcType=CHAR},
+      KeepSecretNumber = #{keepsecretnumber,jdbcType=VARCHAR},
+      ZTEquipNO = #{ztequipno,jdbcType=VARCHAR},
+      EquipName = #{equipname,jdbcType=VARCHAR},
+      DeptName = #{deptname,jdbcType=VARCHAR},
+      EquipUser = #{equipuser,jdbcType=VARCHAR},
+      TypeName = #{typename,jdbcType=VARCHAR},
+      BanGongXLH = #{bangongxlh,jdbcType=VARCHAR},
+      LevelName = #{levelname,jdbcType=VARCHAR},
+      HardDiskSN = #{harddisksn,jdbcType=VARCHAR},
+      State = #{state,jdbcType=INTEGER},
+      WorkID = #{workid,jdbcType=VARCHAR}
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectAll" resultType="com.hangyu.platform.web.backBusiness.dto.Oaequipinfo"
+          parameterType="com.hangyu.platform.web.backBusiness.vo.ServerManageQueryVO">
+    select
+    <include refid="Base_Column_List"/>
+    from oaequipinfo c
+    left join basecode b on b.id = c.SecretLevelId
+    left join basecode e on e.id = c.UseStateId
+    left join basecode ba on ba.id = c.EquipTypeId
+    left join organization o on o.UniqueId = c.OrgId
+    left join bm_staff_tbl s on s.StaffId = c.StaffId
+    <where>
+      c.IsDelete = 0
+      <if test="equipId != null and equipId != ''">
+        and c.EquipTypeId = #{equipId}
+      </if>
+      <if test="orgId != null and orgId != ''">
+        and c.OrgId = #{orgId}
+      </if>
+      <if test="secretLevelId != null and secretLevelId != ''">
+        and c.SecretLevelId = #{secretLevelId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and c.StaffId = #{userId}
+      </if>
+      <if test="userStateId != null and userStateId != ''">
+        and c.UseStateId = #{userStateId}
+      </if>
+      <if test="name != null and name != ''">
+        and c.SBXH like CONCAT("%",#{name},"%")
+      </if>
+    </where>
+    order by c.Id desc
+  </select>
+</mapper>

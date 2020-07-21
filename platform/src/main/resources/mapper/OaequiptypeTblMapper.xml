@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.OaequiptypeTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.OaequiptypeTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="OaEquipTypeName" property="oaequiptypename" jdbcType="VARCHAR"/>
+        <result column="OaEquipTypeDetail" property="oaequiptypedetail" jdbcType="VARCHAR"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    Id, UniqueID, OaEquipTypeName, OaEquipTypeDetail, SortOrder, IsDelete
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from oaequiptype_tbl
+        where UniqueID = #{id}
+    </select>
+
+  <select id="selectAllType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from oaequiptype_tbl
+    where isDelete = 0
+    order by SortOrder
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(UniqueID)
+    from oaequiptype_tbl
+    where isDelete = 0
+  </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update  oaequiptype_tbl set isDelete = 1
+    where UniqueID = #{uniqueid}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.OaequiptypeTbl">
+    insert into oaequiptype_tbl (Id, UniqueID, OaEquipTypeName, 
+      OaEquipTypeDetail, SortOrder, IsDelete
+      )
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{oaequiptypename,jdbcType=VARCHAR}, 
+      #{oaequiptypedetail,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER},0
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.OaequiptypeTbl">
+        insert into oaequiptype_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="uniqueid != null">
+                UniqueID,
+            </if>
+            <if test="oaequiptypename != null">
+                OaEquipTypeName,
+            </if>
+            <if test="oaequiptypedetail != null">
+                OaEquipTypeDetail,
+            </if>
+            <if test="sortorder != null">
+                SortOrder,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="uniqueid != null">
+                #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="oaequiptypename != null">
+                #{oaequiptypename,jdbcType=VARCHAR},
+            </if>
+            <if test="oaequiptypedetail != null">
+                #{oaequiptypedetail,jdbcType=VARCHAR},
+            </if>
+            <if test="sortorder != null">
+                #{sortorder,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.OaequiptypeTbl">
+        update oaequiptype_tbl
+        <set>
+            <if test="oaequiptypename != null">
+                OaEquipTypeName = #{oaequiptypename,jdbcType=VARCHAR},
+            </if>
+            <if test="oaequiptypedetail != null">
+                OaEquipTypeDetail = #{oaequiptypedetail,jdbcType=VARCHAR},
+            </if>
+            <if test="sortorder != null">
+                SortOrder = #{sortorder,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+        </set>
+        where UniqueID = #{uniqueid}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.OaequiptypeTbl">
+    update oaequiptype_tbl
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      OaEquipTypeName = #{oaequiptypename,jdbcType=VARCHAR},
+      OaEquipTypeDetail = #{oaequiptypedetail,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

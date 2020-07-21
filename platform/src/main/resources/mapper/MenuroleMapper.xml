@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.safeAdmin.mapper.MenuroleMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.safeAdmin.dto.Menurole" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="menuid" property="menuid" jdbcType="INTEGER" />
+    <result column="roleid" property="roleid" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, menuid, roleid
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from menurole
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from menurole
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByRoleId" parameterType="java.lang.Integer" >
+    delete from menurole
+    where roleid = #{roleid}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.safeAdmin.dto.Menurole" >
+    insert into menurole (id, menuid, roleid
+      )
+    values (#{id,jdbcType=INTEGER}, #{menuid,jdbcType=INTEGER}, #{roleid,jdbcType=INTEGER}
+      )
+  </insert>
+
+  <insert id="insertBatch" parameterType="java.util.List" >
+    insert into menurole (menuid, roleid)
+    values
+      <foreach collection="list" separator="," index="index" item="item">
+       (#{item.menuid,jdbcType=INTEGER}, #{item.roleid,jdbcType=INTEGER})
+      </foreach>
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.safeAdmin.dto.Menurole" >
+    insert into menurole
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="menuid != null" >
+        menuid,
+      </if>
+      <if test="roleid != null" >
+        roleid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="menuid != null" >
+        #{menuid,jdbcType=INTEGER},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.safeAdmin.dto.Menurole" >
+    update menurole
+    <set >
+      <if test="menuid != null" >
+        menuid = #{menuid,jdbcType=INTEGER},
+      </if>
+      <if test="roleid != null" >
+        roleid = #{roleid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.safeAdmin.dto.Menurole" >
+    update menurole
+    set menuid = #{menuid,jdbcType=INTEGER},
+      roleid = #{roleid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

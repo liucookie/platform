@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.Bm2YearplanspecialcheckTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Bm2YearplanspecialcheckTbl">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="YearPlanID" property="yearplanid" jdbcType="VARCHAR"/>
+        <result column="YearNum" property="yearnum" jdbcType="INTEGER"/>
+        <result column="MonthNum" property="monthnum" jdbcType="INTEGER"/>
+        <result column="PlanName" property="planname" jdbcType="VARCHAR"/>
+        <result column="BeginDate" property="begindate" jdbcType="TIMESTAMP"/>
+        <result column="EndDate" property="enddate" jdbcType="TIMESTAMP"/>
+        <result column="CheckRate" property="checkrate" jdbcType="DOUBLE"/>
+        <result column="ChargerOrgID" property="chargerorgid" jdbcType="VARCHAR"/>
+        <result column="PlanChargerID" property="planchargerid" jdbcType="VARCHAR"/>
+        <result column="CreatorID" property="creatorid" jdbcType="VARCHAR"/>
+        <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="PlanCheckTypeID" property="planchecktypeid" jdbcType="VARCHAR"/>
+        <result column="PlanCheckOrgID" property="plancheckorgid" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, YearPlanID, YearNum, MonthNum, PlanName, BeginDate, EndDate, CheckRate, ChargerOrgID, 
+    PlanChargerID, CreatorID, CreateTime, IsDelete, PlanCheckTypeID, PlanCheckOrgID
+  </sql>
+    <sql id="Base_Column_List1">
+    y.ID, y.YearPlanID, y.YearNum, y.MonthNum, y.PlanName, date_format(y.BeginDate, '%Y-%m-%d')  BeginDate ,
+    date_format(y.EndDate, '%Y-%m-%d')  EndDate  ,y.CheckRate, y.ChargerOrgID,
+    y.PlanChargerID, y.CreatorID, date_format(y.CreateTime, '%Y-%m-%d')  CreateTime ,y. IsDelete,
+     y.PlanCheckTypeID, PlanCheckOrgID,
+    s.UserName chargeName,c.UserName creatName,e.PlanState planState
+  </sql>
+    <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.backBusiness.dto.Bm2YearplanspecialcheckTbl"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List1"/>
+        from bm2_yearplanspecialcheck_tbl y
+        left join bm_staff_tbl s on s.StaffId = y.PlanChargerID
+        left join bm_staff_tbl c on c.StaffId = y.CreatorID
+        left join bm_checkplan_tbl e on e.PlanId = y.YearPlanId
+        where y.YearPlanID = #{id}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.Bm2YearplanspecialcheckTbl">
+        select
+        <include refid="Base_Column_List1"/>
+        from bm2_yearplanspecialcheck_tbl y
+        left join bm_checkplan_tbl e on e.PlanId = y.YearPlanId
+        left join bm_staff_tbl s on s.StaffId = y.PlanChargerID
+        left join bm_staff_tbl c on c.StaffId = y.CreatorID
+        <where>
+            y.IsDelete = 0
+            <if test="year != null and year != ''">
+                and y.YearNum = #{year}
+            </if>
+        </where>
+        order by y.ID desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from bm2_yearplanspecialcheck_tbl
+        <where>
+            IsDelete = 0
+            <if test="year != null and year != ''">
+                and YearNum = #{year}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update  bm2_yearplanspecialcheck_tbl set IsDelete = 1
+    where YearPlanID = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2YearplanspecialcheckTbl">
+        insert into bm2_yearplanspecialcheck_tbl (ID, YearPlanID, YearNum,
+      MonthNum, PlanName, BeginDate, 
+      EndDate, CheckRate, ChargerOrgID, 
+      PlanChargerID, CreatorID, CreateTime, 
+      IsDelete, PlanCheckTypeID, PlanCheckOrgID
+      )
+    values (#{id,jdbcType=INTEGER}, #{yearplanid,jdbcType=VARCHAR}, #{yearnum,jdbcType=INTEGER}, 
+      #{monthnum,jdbcType=INTEGER}, #{planname,jdbcType=VARCHAR},str_to_date(#{begindate},'%Y-%m-%d'),
+     str_to_date(#{enddate},'%Y-%m-%d') , #{checkrate,jdbcType=DOUBLE}, #{chargerorgid,jdbcType=VARCHAR},
+      #{planchargerid,jdbcType=VARCHAR}, #{creatorid,jdbcType=VARCHAR}, NOW(),
+     0, #{planchecktypeid,jdbcType=VARCHAR}, #{plancheckorgid,jdbcType=VARCHAR}
+      )
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2YearplanspecialcheckTbl">
+    update bm2_yearplanspecialcheck_tbl
+    set
+      YearNum = #{yearnum,jdbcType=INTEGER},
+      MonthNum = #{monthnum,jdbcType=INTEGER},
+      PlanName = #{planname,jdbcType=VARCHAR},
+      BeginDate = str_to_date(#{begindate},'%Y-%m-%d'),
+      EndDate =  str_to_date(#{enddate},'%Y-%m-%d') ,
+      CheckRate = #{checkrate,jdbcType=DOUBLE},
+      ChargerOrgID = #{chargerorgid,jdbcType=VARCHAR},
+      PlanChargerID = #{planchargerid,jdbcType=VARCHAR},
+      CreatorID = #{creatorid,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      PlanCheckTypeID = #{planchecktypeid,jdbcType=VARCHAR},
+      PlanCheckOrgID = #{plancheckorgid,jdbcType=VARCHAR}
+    where YearPlanID = #{yearplanid,jdbcType=VARCHAR}
+  </update>
+</mapper>

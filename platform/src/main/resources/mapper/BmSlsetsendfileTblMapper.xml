@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSlsetsendfileTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSlsetsendfileTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="SendFName" property="sendfname" jdbcType="VARCHAR" />
+    <result column="SendFDate" property="sendfdate" jdbcType="TIMESTAMP" />
+    <result column="SendFCode" property="sendfcode" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="IsHistory" property="ishistory" jdbcType="INTEGER" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="Creater" property="creater" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, UniqueID, SendFName,date_format(SendFDate, '%Y-%m-%d %H:%i:%s')  SendFDate  , SendFCode, IsDelete, IsHistory, CreateTime, Creater
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_slsetsendfile_tbl
+    where UniqueID = #{id}
+    and   IsDelete = 0
+  </select>
+
+  <select id="selectHistory" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_slsetsendfile_tbl
+    where UniqueID = #{id}
+    and  IsHistory = 0
+  </select>
+
+  <select id="select" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from bm_slsetsendfile_tbl
+    <where>
+      IsDelete = 0
+      <if test="name != null">
+        and SendFName = #{name}
+      </if>
+    </where>
+    order by id desc
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(id)
+    from bm_slsetsendfile_tbl
+    <where>
+      IsDelete = 0
+      <if test="name != null">
+        and SendFName = #{name}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm_slsetsendfile_tbl set IsDelete = 1
+     where UniqueID = #{id}
+  </delete>
+
+  <delete id="deleteHistory" parameterType="java.lang.String" >
+    update bm_slsetsendfile_tbl set IsHistory = 1
+    where UniqueID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetsendfileTbl" >
+    insert into bm_slsetsendfile_tbl (Id, UniqueID, SendFName, 
+      SendFDate, SendFCode, IsDelete, 
+      IsHistory, CreateTime, Creater
+      )
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{sendfname,jdbcType=VARCHAR}, 
+    str_to_date(#{sendfdate},'%Y-%m-%d %H:%i:%s'), #{sendfcode,jdbcType=VARCHAR}, 0,
+      #{ishistory}, NOW(), #{creater,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetsendfileTbl" >
+    insert into bm_slsetsendfile_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueID,
+      </if>
+      <if test="sendfname != null" >
+        SendFName,
+      </if>
+      <if test="sendfdate != null" >
+        SendFDate,
+      </if>
+      <if test="sendfcode != null" >
+        SendFCode,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="ishistory != null" >
+        IsHistory,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+      <if test="creater != null" >
+        Creater,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="sendfname != null" >
+        #{sendfname,jdbcType=VARCHAR},
+      </if>
+      <if test="sendfdate != null" >
+        #{sendfdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendfcode != null" >
+        #{sendfcode,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="ishistory != null" >
+        #{ishistory,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creater != null" >
+        #{creater,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetsendfileTbl" >
+    update bm_slsetsendfile_tbl
+    <set >
+      <if test="uniqueid != null" >
+        UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="sendfname != null" >
+        SendFName = #{sendfname,jdbcType=VARCHAR},
+      </if>
+      <if test="sendfdate != null" >
+        SendFDate = #{sendfdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendfcode != null" >
+        SendFCode = #{sendfcode,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="ishistory != null" >
+        IsHistory = #{ishistory,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creater != null" >
+        Creater = #{creater,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetsendfileTbl" >
+    update bm_slsetsendfile_tbl
+    set
+      SendFName = #{sendfname,jdbcType=VARCHAR},
+      SendFDate = str_to_date(#{sendfdate},'%Y-%m-%d %H:%i:%s'),
+      SendFCode = #{sendfcode,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      IsHistory = #{ishistory,jdbcType=INTEGER},
+      CreateTime = NOW(),
+      Creater = #{creater,jdbcType=VARCHAR}
+    where  UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

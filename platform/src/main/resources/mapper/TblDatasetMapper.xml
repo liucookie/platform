@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TblDatasetMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TblDataset" >
+    <id column="tId" property="tid" jdbcType="INTEGER" />
+    <result column="tPass" property="tpass" jdbcType="INTEGER" />
+    <result column="tComPass" property="tcompass" jdbcType="INTEGER" />
+    <result column="tGoodPass" property="tgoodpass" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tId, tPass, tComPass, tGoodPass
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_dataset
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tbl_dataset
+    where tId = #{tid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.TblDataset" >
+    insert into tbl_dataset (tId, tPass, tComPass, 
+      tGoodPass)
+    values (#{tid,jdbcType=INTEGER}, #{tpass,jdbcType=INTEGER}, #{tcompass,jdbcType=INTEGER}, 
+      #{tgoodpass,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TblDataset" >
+    update tbl_dataset
+    set tPass = #{tpass,jdbcType=INTEGER},
+      tComPass = #{tcompass,jdbcType=INTEGER},
+      tGoodPass = #{tgoodpass,jdbcType=INTEGER}
+    where tId = #{tid,jdbcType=INTEGER}
+  </update>
+</mapper>

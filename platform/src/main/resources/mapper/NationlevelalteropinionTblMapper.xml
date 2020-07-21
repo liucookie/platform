@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.NationlevelalteropinionTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.NationlevelalteropinionTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="Opionion" property="opionion" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, UniqueId, Opionion, IsDelete, Remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from nationlevelalteropinion_tbl
+    where UniqueId = #{id}
+  </select>
+
+  <select id="query" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from nationlevelalteropinion_tbl
+    where IsDelete = 0
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer" >
+    select
+    COUNT(UniqueId)
+    from nationlevelalteropinion_tbl
+    where IsDelete = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update nationlevelalteropinion_tbl set IsDelete = 1
+    where UniqueId = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.NationlevelalteropinionTbl" >
+    insert into nationlevelalteropinion_tbl (ID, UniqueId, Opionion, 
+      IsDelete, Remark)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{opionion,jdbcType=VARCHAR}, 
+      #{isdelete,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.NationlevelalteropinionTbl" >
+    insert into nationlevelalteropinion_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueId,
+      </if>
+      <if test="opionion != null" >
+        Opionion,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="remark != null" >
+        Remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="opionion != null" >
+        #{opionion,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.NationlevelalteropinionTbl" >
+    update nationlevelalteropinion_tbl
+    <set >
+      <if test="uniqueid != null" >
+        UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="opionion != null" >
+        Opionion = #{opionion,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where  UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.NationlevelalteropinionTbl" >
+    update nationlevelalteropinion_tbl
+    set UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      Opionion = #{opionion,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      Remark = #{remark,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

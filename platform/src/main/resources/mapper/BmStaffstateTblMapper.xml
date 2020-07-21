@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.BmStaffstateTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.BmStaffstateTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="StateId" property="stateid" jdbcType="VARCHAR" />
+    <result column="StateName" property="statename" jdbcType="VARCHAR" />
+    <result column="StateRemark" property="stateremark" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, StateId, StateName, StateRemark, SortOrder, IsDelete
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_staffstate_tbl
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="select" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from bm_staffstate_tbl
+    where IsDelete = 0
+    order by SortOrder
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bm_staffstate_tbl
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmStaffstateTbl" >
+    insert into bm_staffstate_tbl (ID, StateId, StateName, 
+      StateRemark, SortOrder, IsDelete
+      )
+    values (#{id,jdbcType=INTEGER}, #{stateid,jdbcType=VARCHAR}, #{statename,jdbcType=VARCHAR}, 
+      #{stateremark,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, #{isdelete,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmStaffstateTbl" >
+    insert into bm_staffstate_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="stateid != null" >
+        StateId,
+      </if>
+      <if test="statename != null" >
+        StateName,
+      </if>
+      <if test="stateremark != null" >
+        StateRemark,
+      </if>
+      <if test="sortorder != null" >
+        SortOrder,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stateid != null" >
+        #{stateid,jdbcType=VARCHAR},
+      </if>
+      <if test="statename != null" >
+        #{statename,jdbcType=VARCHAR},
+      </if>
+      <if test="stateremark != null" >
+        #{stateremark,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmStaffstateTbl" >
+    update bm_staffstate_tbl
+    <set >
+      <if test="stateid != null" >
+        StateId = #{stateid,jdbcType=VARCHAR},
+      </if>
+      <if test="statename != null" >
+        StateName = #{statename,jdbcType=VARCHAR},
+      </if>
+      <if test="stateremark != null" >
+        StateRemark = #{stateremark,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        SortOrder = #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmStaffstateTbl" >
+    update bm_staffstate_tbl
+    set StateId = #{stateid,jdbcType=VARCHAR},
+      StateName = #{statename,jdbcType=VARCHAR},
+      StateRemark = #{stateremark,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

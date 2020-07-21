@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.MediamanagementapprovalMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Mediamanagementapproval" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="StaffNamer" property="staffnamer" jdbcType="VARCHAR" />
+    <result column="AccoutNamer" property="accoutnamer" jdbcType="VARCHAR" />
+    <result column="JobNumber" property="jobnumber" jdbcType="VARCHAR" />
+    <result column="SecretLevelNamer" property="secretlevelnamer" jdbcType="VARCHAR" />
+    <result column="OrganizationNamer" property="organizationnamer" jdbcType="VARCHAR" />
+    <result column="ApplyUserPhone" property="applyuserphone" jdbcType="VARCHAR" />
+    <result column="WorkFLowID" property="workflowid" jdbcType="VARCHAR" />
+    <result column="FormID" property="formid" jdbcType="VARCHAR" />
+    <result column="Isdelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="ApplyTime" property="applytime" jdbcType="TIMESTAMP" />
+    <result column="Operation" property="operation" jdbcType="INTEGER" />
+    <result column="IsApproved" property="isapproved" jdbcType="INTEGER" />
+    <result column="loginUserID" property="loginuserid" jdbcType="VARCHAR" />
+    <result column="loginUserOrgName" property="loginuserorgname" jdbcType="VARCHAR" />
+    <result column="loginUserSecretLevel" property="loginusersecretlevel" jdbcType="VARCHAR" />
+    <result column="loginUserAccount" property="loginuseraccount" jdbcType="VARCHAR" />
+    <result column="rFileUrl" property="rfileurl" jdbcType="VARCHAR" />
+    <result column="OfficePhone" property="officephone" jdbcType="VARCHAR" />
+    <result column="UseField" property="usefield" jdbcType="VARCHAR" />
+    <result column="BorrowTime" property="borrowtime" jdbcType="VARCHAR" />
+    <result column="UsePlot" property="useplot" jdbcType="VARCHAR" />
+    <result column="UseAffair" property="useaffair" jdbcType="VARCHAR" />
+    <result column="IsJimi" property="isjimi" jdbcType="INTEGER" />
+    <result column="MediaSecretLevel" property="mediasecretlevel" jdbcType="VARCHAR" />
+    <result column="MediaUse" property="mediause" jdbcType="VARCHAR" />
+    <result column="MediaID" property="mediaid" jdbcType="VARCHAR" />
+    <result column="IsSelect" property="isselect" jdbcType="INTEGER" />
+    <result column="RenewDays" property="renewdays" jdbcType="INTEGER" />
+    <result column="RenewReason" property="renewreason" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, UniqueID, StaffNamer, AccoutNamer, JobNumber, SecretLevelNamer, OrganizationNamer, 
+    ApplyUserPhone, WorkFLowID, FormID, Isdelete, date_format(ApplyTime,'%Y-%m-%d %H:%i:%s')  ApplyTime, Operation, IsApproved, loginUserID,
+    loginUserOrgName, loginUserSecretLevel, loginUserAccount, rFileUrl, OfficePhone, 
+    UseField, BorrowTime, UsePlot, UseAffair, IsJimi, MediaSecretLevel, MediaUse, MediaID, 
+    IsSelect, RenewDays, RenewReason
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from mediamanagementapproval
+    where UniqueID = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from mediamanagementapproval
+    where UniqueID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Mediamanagementapproval" >
+    insert into mediamanagementapproval (ID, UniqueID, StaffNamer, 
+      AccoutNamer, JobNumber, SecretLevelNamer, 
+      OrganizationNamer, ApplyUserPhone, WorkFLowID, 
+      FormID, Isdelete, ApplyTime, 
+      Operation, IsApproved, loginUserID, 
+      loginUserOrgName, loginUserSecretLevel, 
+      loginUserAccount, rFileUrl, OfficePhone, 
+      UseField, BorrowTime, UsePlot, 
+      UseAffair, IsJimi, MediaSecretLevel, 
+      MediaUse, MediaID, IsSelect, 
+      RenewDays, RenewReason)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{staffnamer,jdbcType=VARCHAR}, 
+      #{accoutnamer,jdbcType=VARCHAR}, #{jobnumber,jdbcType=VARCHAR}, #{secretlevelnamer,jdbcType=VARCHAR}, 
+      #{organizationnamer,jdbcType=VARCHAR}, #{applyuserphone,jdbcType=VARCHAR}, #{workflowid,jdbcType=VARCHAR}, 
+      #{formid,jdbcType=VARCHAR},0, NOW(),
+      #{operation,jdbcType=INTEGER}, 0, #{loginuserid,jdbcType=VARCHAR},
+      #{loginuserorgname,jdbcType=VARCHAR}, #{loginusersecretlevel,jdbcType=VARCHAR}, 
+      #{loginuseraccount,jdbcType=VARCHAR}, #{rfileurl,jdbcType=VARCHAR}, #{officephone,jdbcType=VARCHAR}, 
+      #{usefield,jdbcType=VARCHAR}, #{borrowtime,jdbcType=VARCHAR}, #{useplot,jdbcType=VARCHAR}, 
+      #{useaffair,jdbcType=VARCHAR}, #{isjimi,jdbcType=INTEGER}, #{mediasecretlevel,jdbcType=VARCHAR}, 
+      #{mediause,jdbcType=VARCHAR}, #{mediaid,jdbcType=VARCHAR}, #{isselect,jdbcType=INTEGER}, 
+      #{renewdays,jdbcType=INTEGER}, #{renewreason,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Mediamanagementapproval" >
+    update mediamanagementapproval
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      StaffNamer = #{staffnamer,jdbcType=VARCHAR},
+      AccoutNamer = #{accoutnamer,jdbcType=VARCHAR},
+      JobNumber = #{jobnumber,jdbcType=VARCHAR},
+      SecretLevelNamer = #{secretlevelnamer,jdbcType=VARCHAR},
+      OrganizationNamer = #{organizationnamer,jdbcType=VARCHAR},
+      ApplyUserPhone = #{applyuserphone,jdbcType=VARCHAR},
+      WorkFLowID = #{workflowid,jdbcType=VARCHAR},
+      FormID = #{formid,jdbcType=VARCHAR},
+      Isdelete = #{isdelete,jdbcType=INTEGER},
+      ApplyTime = #{applytime,jdbcType=TIMESTAMP},
+      Operation = #{operation,jdbcType=INTEGER},
+      IsApproved = #{isapproved,jdbcType=INTEGER},
+      loginUserID = #{loginuserid,jdbcType=VARCHAR},
+      loginUserOrgName = #{loginuserorgname,jdbcType=VARCHAR},
+      loginUserSecretLevel = #{loginusersecretlevel,jdbcType=VARCHAR},
+      loginUserAccount = #{loginuseraccount,jdbcType=VARCHAR},
+      rFileUrl = #{rfileurl,jdbcType=VARCHAR},
+      OfficePhone = #{officephone,jdbcType=VARCHAR},
+      UseField = #{usefield,jdbcType=VARCHAR},
+      BorrowTime = #{borrowtime,jdbcType=VARCHAR},
+      UsePlot = #{useplot,jdbcType=VARCHAR},
+      UseAffair = #{useaffair,jdbcType=VARCHAR},
+      IsJimi = #{isjimi,jdbcType=INTEGER},
+      MediaSecretLevel = #{mediasecretlevel,jdbcType=VARCHAR},
+      MediaUse = #{mediause,jdbcType=VARCHAR},
+      MediaID = #{mediaid,jdbcType=VARCHAR},
+      IsSelect = #{isselect,jdbcType=INTEGER},
+      RenewDays = #{renewdays,jdbcType=INTEGER},
+      RenewReason = #{renewreason,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByInstanceId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from mediamanagementapproval
+    where WorkFlowID = #{instanceId}
+  </select>
+  <update id="updateByInstanceId">
+    update mediamanagementapproval
+    set
+      IsApproved = #{status}
+    where WorkFlowID = #{instanceId}
+  </update>
+</mapper>

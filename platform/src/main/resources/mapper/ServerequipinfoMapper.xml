@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.ServerequipinfoMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Serverequipinfo">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="OrgId" property="orgid" jdbcType="VARCHAR"/>
+        <result column="InUseStaffId" property="inusestaffid" jdbcType="VARCHAR"/>
+        <result column="SBXH" property="sbxh" jdbcType="VARCHAR"/>
+        <result column="SBBM" property="sbbm" jdbcType="VARCHAR"/>
+        <result column="Placement" property="placement" jdbcType="VARCHAR"/>
+        <result column="SecretLevelId" property="secretlevelid" jdbcType="VARCHAR"/>
+        <result column="OsName" property="osname" jdbcType="VARCHAR"/>
+        <result column="OSInstallDate" property="osinstalldate" jdbcType="TIMESTAMP"/>
+        <result column="HardDiscNo" property="harddiscno" jdbcType="VARCHAR"/>
+        <result column="IP" property="ip" jdbcType="VARCHAR"/>
+        <result column="MAC" property="mac" jdbcType="VARCHAR"/>
+        <result column="UseStateId" property="usestateid" jdbcType="VARCHAR"/>
+        <result column="ServerEquipInfoMemo" property="serverequipinfomemo" jdbcType="VARCHAR"/>
+        <result column="AreaType" property="areatype" jdbcType="INTEGER"/>
+        <result column="EquipTypeId" property="equiptypeid" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="SJGRQ" property="sjgrq" jdbcType="INTEGER"/>
+        <result column="GLCZ" property="glcz" jdbcType="INTEGER"/>
+        <result column="EquipBoxNum" property="equipboxnum" jdbcType="VARCHAR"/>
+        <result column="BoxPlace" property="boxplace" jdbcType="VARCHAR"/>
+        <result column="vmIP" property="vmip" jdbcType="VARCHAR"/>
+        <result column="vmMAC" property="vmmac" jdbcType="VARCHAR"/>
+        <result column="KeepSecretNumber" property="keepsecretnumber" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    c.Id, c.UniqueID, c.OrgId, c.InUseStaffId, c.SBXH, c.SBBM, c.Placement, c.SecretLevelId, c.OsName,
+    date_format(c.OSInstallDate, '%Y-%m-%d')  OSInstallDate , c.HardDiscNo, c.IP, c.MAC, c.UseStateId, c.ServerEquipInfoMemo, c.AreaType, c.EquipTypeId,
+    c.IsDelete, c.SJGRQ, c.GLCZ, c.EquipBoxNum, c.BoxPlace, c.vmIP, c.vmMAC, c.KeepSecretNumber,
+    o.OrgName orgName,s.UserName userName,
+    b.codename secretName, e.codename useStateName
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from serverequipinfo c
+        left join basecode b on b.id = c.SecretLevelId
+        left join basecode e on e.id = c.UseStateId
+        left join organization o on o.UniqueId = c.OrgId
+        left join bm_staff_tbl s on s.StaffId = c.InUseStaffId
+        where c.UniqueID = #{id}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.Serverequipinfo"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.ServerManageQueryVO">
+        select
+        <include refid="Base_Column_List"/>
+        from serverequipinfo c
+        left join basecode b on b.id = c.SecretLevelId
+        left join basecode e on e.id = c.UseStateId
+        left join organization o on o.UniqueId = c.OrgId
+        left join bm_staff_tbl s on s.StaffId = c.InUseStaffId
+        <where>
+            c.IsDelete = 0
+            <if test="equipId != null and equipId != ''">
+                and c.EquipTypeId = #{equipId}
+            </if>
+            <if test="orgId != null and orgId != ''">
+                and c.OrgId = #{orgId}
+            </if>
+            <if test="secretLevelId != null and secretLevelId != ''">
+                and c.SecretLevelId = #{secretLevelId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and c.InUseStaffId = #{userId}
+            </if>
+            <if test="userStateId != null and userStateId != ''">
+                and c.UseStateId = #{userStateId}
+            </if>
+            <if test="name != null and name != ''">
+                and c.SBBM like CONCAT("%",#{name},"%")
+            </if>
+        </where>
+        order by c.Id desc
+        limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.ServerManageQueryVO">
+        select
+        COUNT(c.Id)
+        from serverequipinfo c
+        <where>
+            c.IsDelete = 0
+            <if test="equipId != null and equipId != ''">
+                and c.EquipTypeId = #{equipId}
+            </if>
+            <if test="orgId != null and orgId != ''">
+                and c.OrgId = #{orgId}
+            </if>
+            <if test="secretLevelId != null and secretLevelId != ''">
+                and c.SecretLevelId = #{secretLevelId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and c.InUseStaffId = #{userId}
+            </if>
+            <if test="userStateId != null and userStateId != ''">
+                and c.UseStateId = #{userStateId}
+            </if>
+            <if test="name != null and name != ''">
+                and c.SBBM like CONCAT("%",#{name},"%")
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update serverequipinfo set  IsDelete = 1
+    where UniqueID = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Serverequipinfo">
+    insert into serverequipinfo (Id, UniqueID, OrgId, 
+      InUseStaffId, SBXH, SBBM, 
+      Placement, SecretLevelId, OsName, 
+      OSInstallDate, HardDiscNo, IP, 
+      MAC, UseStateId, ServerEquipInfoMemo, 
+      AreaType, EquipTypeId, IsDelete, 
+      SJGRQ, GLCZ, EquipBoxNum, 
+      BoxPlace, vmIP, vmMAC, 
+      KeepSecretNumber)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{orgid,jdbcType=VARCHAR}, 
+      #{inusestaffid,jdbcType=VARCHAR}, #{sbxh,jdbcType=VARCHAR}, #{sbbm,jdbcType=VARCHAR}, 
+      #{placement,jdbcType=VARCHAR}, #{secretlevelid,jdbcType=VARCHAR}, #{osname,jdbcType=VARCHAR}, 
+     str_to_date(#{osinstalldate},'%Y-%m-%d') , #{harddiscno,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR},
+      #{mac,jdbcType=VARCHAR}, #{usestateid,jdbcType=VARCHAR}, #{serverequipinfomemo,jdbcType=VARCHAR}, 
+      #{areatype,jdbcType=INTEGER}, #{equiptypeid,jdbcType=VARCHAR}, 0,
+      #{sjgrq,jdbcType=INTEGER}, #{glcz,jdbcType=INTEGER}, #{equipboxnum,jdbcType=VARCHAR}, 
+      #{boxplace,jdbcType=VARCHAR}, #{vmip,jdbcType=VARCHAR}, #{vmmac,jdbcType=VARCHAR}, 
+      #{keepsecretnumber,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Serverequipinfo">
+    update serverequipinfo
+    set
+      OrgId = #{orgid,jdbcType=VARCHAR},
+      InUseStaffId = #{inusestaffid,jdbcType=VARCHAR},
+      SBXH = #{sbxh,jdbcType=VARCHAR},
+      SBBM = #{sbbm,jdbcType=VARCHAR},
+      Placement = #{placement,jdbcType=VARCHAR},
+      SecretLevelId = #{secretlevelid,jdbcType=VARCHAR},
+      OsName = #{osname,jdbcType=VARCHAR},
+      OSInstallDate = str_to_date(#{osinstalldate},'%Y-%m-%d'),
+      HardDiscNo = #{harddiscno,jdbcType=VARCHAR},
+      IP = #{ip,jdbcType=VARCHAR},
+      MAC = #{mac,jdbcType=VARCHAR},
+      UseStateId = #{usestateid,jdbcType=VARCHAR},
+      ServerEquipInfoMemo = #{serverequipinfomemo,jdbcType=VARCHAR},
+      AreaType = #{areatype,jdbcType=INTEGER},
+      EquipTypeId = #{equiptypeid,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      SJGRQ = #{sjgrq,jdbcType=INTEGER},
+      GLCZ = #{glcz,jdbcType=INTEGER},
+      EquipBoxNum = #{equipboxnum,jdbcType=VARCHAR},
+      BoxPlace = #{boxplace,jdbcType=VARCHAR},
+      vmIP = #{vmip,jdbcType=VARCHAR},
+      vmMAC = #{vmmac,jdbcType=VARCHAR},
+      KeepSecretNumber = #{keepsecretnumber,jdbcType=VARCHAR}
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+
+    <select id="selectAll" resultType="com.hangyu.platform.web.backBusiness.dto.Serverequipinfo"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.ServerManageQueryVO">
+        select
+        <include refid="Base_Column_List"/>
+        from serverequipinfo c
+        left join basecode b on b.id = c.SecretLevelId
+        left join basecode e on e.id = c.UseStateId
+        left join organization o on o.UniqueId = c.OrgId
+        left join bm_staff_tbl s on s.StaffId = c.InUseStaffId
+        <where>
+            c.IsDelete = 0
+            <if test="equipId != null and equipId != ''">
+                and c.EquipTypeId = #{equipId}
+            </if>
+            <if test="orgId != null and orgId != ''">
+                and c.OrgId = #{orgId}
+            </if>
+            <if test="secretLevelId != null and secretLevelId != ''">
+                and c.SecretLevelId = #{secretLevelId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and c.InUseStaffId = #{userId}
+            </if>
+            <if test="userStateId != null and userStateId != ''">
+                and c.UseStateId = #{userStateId}
+            </if>
+            <if test="name != null and name != ''">
+                and c.SBBM like CONCAT("%",#{name},"%")
+            </if>
+        </where>
+        order by c.Id desc
+    </select>
+</mapper>

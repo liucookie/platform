@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmKeypositionTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmKeypositionTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="PositionId" property="positionid" jdbcType="VARCHAR"/>
+        <result column="PositionName" property="positionname" jdbcType="VARCHAR"/>
+        <result column="PositionManager" property="positionmanager" jdbcType="VARCHAR"/>
+        <result column="PositionAddr" property="positionaddr" jdbcType="VARCHAR"/>
+        <result column="SecretLevelId" property="secretlevelid" jdbcType="VARCHAR"/>
+        <result column="PositionPassDate" property="positionpassdate" jdbcType="TIMESTAMP"/>
+        <result column="PositionCancelDate" property="positioncanceldate" jdbcType="TIMESTAMP"/>
+        <result column="PositionUser" property="positionuser" jdbcType="VARCHAR"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="ArtPro" property="artpro" jdbcType="VARCHAR"/>
+        <result column="PhyPro" property="phypro" jdbcType="VARCHAR"/>
+        <result column="TechPro" property="techpro" jdbcType="VARCHAR"/>
+        <result column="IsHistory" property="ishistory" jdbcType="INTEGER"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, PositionId, PositionName, PositionManager, PositionAddr, SecretLevelId, date_format(PositionPassDate, '%Y-%m-%d')  PositionPassDate ,
+    date_format(PositionCancelDate, '%Y-%m-%d')  PositionCancelDate , PositionUser, SortOrder, IsDelete, ArtPro, PhyPro, TechPro, IsHistory,
+    date_format(UpdateTime, '%Y-%m-%d')  UpdateTime
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_keyposition_tbl
+        where PositionId = #{id} and IsDelete = 0
+    </select>
+
+    <select id="queryPosition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_keyposition_tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null and orgName != ''">
+                and PositionName like CONCAT("%",#{orgName},"%")
+            </if>
+            <if test="userName != null and userName != ''">
+                and PositionManager like CONCAT("%",#{userName},"%")
+            </if>
+        </where>
+        order by UpdateTime desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from bm_keyposition_tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null and orgName != ''">
+                and PositionName like CONCAT("%",#{orgName},"%")
+            </if>
+            <if test="userName != null and userName != ''">
+                and PositionManager like CONCAT("%",#{userName},"%")
+            </if>
+        </where>
+    </select>
+
+    <select id="queryPositionHistory" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_keyposition_tbl
+        where
+        PositionId = #{id} and IsHistory = 1
+        order by UpdateTime desc
+    </select>
+
+
+    <select id="exportPosition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_keyposition_tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null and orgName != ''">
+                and PositionName like CONCAT("%",#{orgName},"%")
+            </if>
+            <if test="userName != null and userName != ''">
+                and PositionManager like CONCAT("%",#{userName},"%")
+            </if>
+        </where>
+        order by Id desc
+    </select>
+
+    <delete id="deleteByPrimaryKey">
+    update  bm_keyposition_tbl
+    set IsDelete = 1  , IsHistory = #{isHistory}
+    where PositionId = #{id} and Id = #{keyId}
+  </delete>
+
+    <delete id="deleteByPositionId" parameterType="java.lang.String">
+    update  bm_keyposition_tbl
+    set IsDelete = 1
+    where PositionId = #{id}
+  </delete>
+
+    <delete id="deleteHistoryPosition" parameterType="java.lang.Integer">
+    update  bm_keyposition_tbl
+    set IsDelete = 1 , IsHistory = 0
+    where Id = #{id}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmKeypositionTbl">
+    insert into bm_keyposition_tbl (Id, PositionId, PositionName, 
+      PositionManager, PositionAddr, SecretLevelId, 
+      PositionPassDate, PositionCancelDate, 
+      PositionUser, SortOrder, IsDelete, 
+      ArtPro, PhyPro, TechPro, 
+      IsHistory, UpdateTime)
+    values (#{id,jdbcType=INTEGER}, #{positionid,jdbcType=VARCHAR}, #{positionname,jdbcType=VARCHAR}, 
+      #{positionmanager,jdbcType=VARCHAR}, #{positionaddr,jdbcType=VARCHAR}, #{secretlevelid,jdbcType=VARCHAR}, 
+     str_to_date(#{positionpassdate},'%Y-%m-%d')  ,str_to_date(#{positioncanceldate},'%Y-%m-%d'),
+      #{positionuser,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, 0,
+      #{artpro,jdbcType=VARCHAR}, #{phypro,jdbcType=VARCHAR}, #{techpro,jdbcType=VARCHAR}, 
+     0,NOW())
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmKeypositionTbl">
+    update bm_keyposition_tbl
+    set PositionId = #{positionid,jdbcType=VARCHAR},
+      PositionName = #{positionname,jdbcType=VARCHAR},
+      PositionManager = #{positionmanager,jdbcType=VARCHAR},
+      PositionAddr = #{positionaddr,jdbcType=VARCHAR},
+      SecretLevelId = #{secretlevelid,jdbcType=VARCHAR},
+      PositionPassDate =      str_to_date(#{positionpassdate},'%Y-%m-%d')  ,
+      PositionCancelDate =  str_to_date(#{positioncanceldate},'%Y-%m-%d'),
+      PositionUser = #{positionuser,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      ArtPro = #{artpro,jdbcType=VARCHAR},
+      PhyPro = #{phypro,jdbcType=VARCHAR},
+      TechPro = #{techpro,jdbcType=VARCHAR},
+      IsHistory = #{ishistory,jdbcType=INTEGER},
+      UpdateTime = NOW()
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

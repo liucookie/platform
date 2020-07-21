@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmKeydeptTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmKeydeptTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="DeptId" property="deptid" jdbcType="VARCHAR"/>
+        <result column="DeptName" property="deptname" jdbcType="VARCHAR"/>
+        <result column="DeptManager" property="deptmanager" jdbcType="VARCHAR"/>
+        <result column="DeptPosition" property="deptposition" jdbcType="VARCHAR"/>
+        <result column="DeptPeopleNum" property="deptpeoplenum" jdbcType="INTEGER"/>
+        <result column="DeptPassDate" property="deptpassdate" jdbcType="TIMESTAMP"/>
+        <result column="DeptCancelDate" property="deptcanceldate" jdbcType="TIMESTAMP"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="PositionUser" property="positionuser" jdbcType="VARCHAR"/>
+        <result column="IsCancel" property="iscancel" jdbcType="INTEGER"/>
+        <result column="CancelCause" property="cancelcause" jdbcType="VARCHAR"/>
+        <result column="altertohisdate" property="altertohisdate" jdbcType="TIMESTAMP"/>
+        <result column="ArtPro" property="artpro" jdbcType="VARCHAR"/>
+        <result column="PhyPro" property="phypro" jdbcType="VARCHAR"/>
+        <result column="TechPro" property="techpro" jdbcType="VARCHAR"/>
+        <result column="IsHistory" property="ishistory" jdbcType="INTEGER"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, DeptId, DeptName, DeptManager, DeptPosition, DeptPeopleNum,date_format(DeptPassDate, '%Y-%m-%d')  DeptPassDate ,
+    date_format(DeptCancelDate, '%Y-%m-%d')  DeptCancelDate ,
+    SortOrder, IsDelete, PositionUser, IsCancel, CancelCause, altertohisdate, ArtPro, 
+    PhyPro, TechPro, IsHistory,date_format(UpdateTime, '%Y-%m-%d %H:%i:%s')  UpdateTime
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_keydept_tbl
+        where DeptId = #{id} and IsHistory = 0 and IsDelete = 0
+    </select>
+
+    <select id="queryDeptHistory" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_keydept_tbl
+        where
+        DeptId = #{id} and IsHistory = 1
+        order by UpdateTime desc
+    </select>
+
+    <select id="selectDept" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_keydept_tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null and orgName != ''">
+                and DeptName like CONCAT("%",#{orgName},"%")
+            </if>
+            <if test="userName != null and userName != ''">
+                and DeptManager like CONCAT("%",#{userName},"%")
+            </if>
+        </where>
+        order by UpdateTime desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from bm_keydept_tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null and orgName != ''">
+                and DeptName like CONCAT("%",#{orgName},"%")
+            </if>
+            <if test="userName != null and userName != ''">
+                and DeptManager like CONCAT("%",#{userName},"%")
+            </if>
+        </where>
+    </select>
+
+    <select id="exportDept" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_keydept_tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null and orgName != ''">
+                and DeptName like CONCAT("%",#{orgName},"%")
+            </if>
+            <if test="userName != null and userName != ''">
+                and DeptManager like CONCAT("%",#{userName},"%")
+            </if>
+        </where>
+        order by Id desc
+    </select>
+
+    <delete id="deleteByPrimaryKey">
+    update  bm_keydept_tbl
+    set IsDelete = 1  , IsHistory = #{isHistory}
+    where DeptId = #{id} and Id = #{keyId}
+
+  </delete>
+
+    <delete id="deleteByDeptId" parameterType="java.lang.String">
+    update  bm_keydept_tbl
+    set IsDelete = 1
+    where DeptId = #{id}
+  </delete>
+
+    <delete id="deleteHistory" parameterType="java.lang.Integer">
+    update  bm_keydept_tbl
+    set IsDelete = 1 , IsHistory = 0
+    where Id = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmKeydeptTbl">
+    insert into bm_keydept_tbl (Id, DeptId, DeptName, 
+      DeptManager, DeptPosition, DeptPeopleNum, 
+      DeptPassDate, DeptCancelDate, SortOrder, 
+      IsDelete, PositionUser, IsCancel, 
+      CancelCause, altertohisdate, ArtPro, 
+      PhyPro, TechPro, IsHistory, 
+      UpdateTime)
+    values (#{id,jdbcType=INTEGER}, #{deptid,jdbcType=VARCHAR}, #{deptname,jdbcType=VARCHAR}, 
+      #{deptmanager,jdbcType=VARCHAR}, #{deptposition,jdbcType=VARCHAR}, #{deptpeoplenum,jdbcType=INTEGER}, 
+      str_to_date(#{deptpassdate},'%Y-%m-%d') ,str_to_date(#{deptcanceldate},'%Y-%m-%d'), #{sortorder,jdbcType=INTEGER},
+      0, #{positionuser,jdbcType=VARCHAR}, #{iscancel,jdbcType=INTEGER},
+      #{cancelcause,jdbcType=VARCHAR}, str_to_date(#{altertohisdate},'%Y-%m-%d') , #{artpro,jdbcType=VARCHAR},
+      #{phypro,jdbcType=VARCHAR}, #{techpro,jdbcType=VARCHAR}, 0,
+      NOW())
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmKeydeptTbl">
+    update bm_keydept_tbl
+    set DeptId = #{deptid,jdbcType=VARCHAR},
+      DeptName = #{deptname,jdbcType=VARCHAR},
+      DeptManager = #{deptmanager,jdbcType=VARCHAR},
+      DeptPosition = #{deptposition,jdbcType=VARCHAR},
+      DeptPeopleNum = #{deptpeoplenum,jdbcType=INTEGER},
+      DeptPassDate = str_to_date(#{deptpassdate},'%Y-%m-%d'),
+      DeptCancelDate = str_to_date(#{deptcanceldate},'%Y-%m-%d'),
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      PositionUser = #{positionuser,jdbcType=VARCHAR},
+      IsCancel = #{iscancel,jdbcType=INTEGER},
+      CancelCause = #{cancelcause,jdbcType=VARCHAR},
+      altertohisdate = #{altertohisdate,jdbcType=TIMESTAMP},
+      ArtPro = #{artpro,jdbcType=VARCHAR},
+      PhyPro = #{phypro,jdbcType=VARCHAR},
+      TechPro = #{techpro,jdbcType=VARCHAR},
+      IsHistory = #{ishistory,jdbcType=INTEGER},
+      UpdateTime = NOW()
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

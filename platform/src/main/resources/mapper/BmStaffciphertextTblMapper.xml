@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmStaffciphertextTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="CipId" property="cipid" jdbcType="VARCHAR"/>
+        <result column="DepartId" property="departid" jdbcType="VARCHAR"/>
+        <result column="UserId" property="userid" jdbcType="VARCHAR"/>
+        <result column="UserIdCard" property="useridcard" jdbcType="VARCHAR"/>
+        <result column="UserPhone" property="userphone" jdbcType="VARCHAR"/>
+        <result column="UserInJob" property="userinjob" jdbcType="VARCHAR"/>
+        <result column="UserOldUnit" property="useroldunit" jdbcType="VARCHAR"/>
+        <result column="OutSDate" property="outsdate" jdbcType="TIMESTAMP"/>
+        <result column="OutEDate" property="outedate" jdbcType="TIMESTAMP"/>
+        <result column="OutWay" property="outway" jdbcType="VARCHAR"/>
+        <result column="File" property="file" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="Passport" property="passport" jdbcType="VARCHAR"/>
+        <result column="JobTime" property="jobtime" jdbcType="TIMESTAMP"/>
+        <result column="OringinUnit" property="oringinunit" jdbcType="VARCHAR"/>
+        <result column="JobSecrectLevelId" property="jobsecrectlevelid" jdbcType="VARCHAR"/>
+        <result column="JobHistory" property="jobhistory" jdbcType="VARCHAR"/>
+        <result column="Achievements" property="achievements" jdbcType="VARCHAR"/>
+        <result column="FamilyAddr" property="familyaddr" jdbcType="VARCHAR"/>
+        <result column="ZipCode" property="zipcode" jdbcType="VARCHAR"/>
+        <result column="Nation" property="nation" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, CipId, DepartId, UserId, UserIdCard, UserPhone, UserInJob, UserOldUnit, OutSDate,
+    OutEDate, OutWay, File, IsDelete, Passport, JobTime, OringinUnit, JobSecrectLevelId,
+    JobHistory, Achievements, FamilyAddr, ZipCode, Nation
+  </sql>
+
+    <sql id="Base_Column_List1">
+    t.Id, t.CipId, t.DepartId, t.UserId, t.UserIdCard, t.UserPhone, t.UserInJob, t.UserOldUnit, date_format(t.OutSDate, '%Y-%m-%d') OutSDate,
+    date_format(t.OutEDate, '%Y-%m-%d') OutEDate, t.OutWay, t.File, t.IsDelete, t.Passport,date_format(t.JobTime, '%Y-%m-%d')   JobTime, t.OringinUnit, t.JobSecrectLevelId,
+    t.JobHistory, t.Achievements, t.FamilyAddr, t.ZipCode, t.Nation,s.UserName userName,o.OrgName orgName,
+    b.codeName levelName
+  </sql>
+    <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextTbl"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List1"/>,t.OutWay outWayIds
+        from bm_staffciphertext_tbl t
+        left join bm_staff_tbl s on t.UserId = s.StaffId
+        left join organization o on t.DepartId = o.UniqueId
+        left join basecode b on t.JobSecrectLevelId = b.id
+        where t.CipId = #{id}
+    </select>
+
+    <select id="query" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextTbl"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.StaffCipherQueryVO">
+        select
+        <include refid="Base_Column_List1"/>
+        from bm_staffciphertext_tbl t
+        left join bm_staff_tbl s on t.UserId = s.StaffId
+        left join organization o on t.DepartId = o.UniqueId
+        left join basecode b on t.JobSecrectLevelId = b.id
+        <where>
+            t.IsDelete = 0
+            <if test="orgId != null and userId == null">
+                and t.DeptId = #{orgId})
+            </if>
+            <if test="userId != null">
+                and t.UserId = #{userId}
+            </if>
+            <if test="startTime != null">
+                and t.OutSDate >= str_to_date(#{startTime},'%Y-%m-%d')
+            </if>
+            <if test="endTime != null">
+                and str_to_date(#{endTime},'%Y-%m-%d') >= t.OutEDate
+            </if>
+        </where>
+        order by t.Id desc
+        limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.StaffCipherQueryVO">
+        select
+        COUNT(t.CipId)
+        from bm_staffciphertext_tbl t
+        left join bm_staff_tbl s on t.UserId = s.StaffId
+        left join organization o on t.DepartId = o.UniqueId
+        left join basecode b on t.JobSecrectLevelId = b.id
+        <where>
+            t.IsDelete = 0
+            <if test="orgId != null and userId == null">
+                and t.DeptId = #{orgId})
+            </if>
+            <if test="userId != null">
+                and t.UserId = #{userId}
+            </if>
+            <if test="startTime != null">
+                and t.OutSDate >= str_to_date(#{startTime},'%Y-%m-%d')
+            </if>
+            <if test="endTime != null">
+                and str_to_date(#{endTime},'%Y-%m-%d') >= t.OutEDate
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update  bm_staffciphertext_tbl set IsDelete = 1
+    where CipId = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextTbl">
+    insert into bm_staffciphertext_tbl (Id, CipId, DepartId, 
+      UserId, UserIdCard, UserPhone, 
+      UserInJob, UserOldUnit, OutSDate, 
+      OutEDate, OutWay, File,
+      IsDelete, Passport, JobTime, 
+      OringinUnit, JobSecrectLevelId, JobHistory, 
+      Achievements, FamilyAddr, ZipCode, 
+      Nation)
+    values (#{id}, #{cipid}, #{departid},
+      #{userid}, #{useridcard}, #{userphone},
+      #{userinjob}, #{useroldunit},str_to_date(#{outsdate},'%Y-%m-%d') ,
+      str_to_date(#{outedate},'%Y-%m-%d'), #{outway}, #{file},
+      0, #{passport}, str_to_date(#{jobtime},'%Y-%m-%d'),
+      #{oringinunit}, #{jobsecrectlevelid}, #{jobhistory},
+      #{achievements}, #{familyaddr}, #{zipcode},
+      #{nation})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextTbl">
+    update bm_staffciphertext_tbl
+    set
+      DepartId = #{departid,jdbcType=VARCHAR},
+      UserId = #{userid,jdbcType=VARCHAR},
+      UserIdCard = #{useridcard,jdbcType=VARCHAR},
+      UserPhone = #{userphone,jdbcType=VARCHAR},
+      UserInJob = #{userinjob,jdbcType=VARCHAR},
+      File = #{file},
+      UserOldUnit = #{useroldunit,jdbcType=VARCHAR},
+      OutSDate = str_to_date(#{outsdate},'%Y-%m-%d'),
+      OutEDate = str_to_date(#{outedate},'%Y-%m-%d'),
+      OutWay = #{outway,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      Passport = #{passport,jdbcType=VARCHAR},
+      JobTime = str_to_date(#{jobtime},'%Y-%m-%d'),
+      OringinUnit = #{oringinunit,jdbcType=VARCHAR},
+      JobSecrectLevelId = #{jobsecrectlevelid,jdbcType=VARCHAR},
+      JobHistory = #{jobhistory,jdbcType=VARCHAR},
+      Achievements = #{achievements,jdbcType=VARCHAR},
+      FamilyAddr = #{familyaddr,jdbcType=VARCHAR},
+      ZipCode = #{zipcode,jdbcType=VARCHAR},
+      Nation = #{nation,jdbcType=VARCHAR}
+    where CipId = #{cipid,jdbcType=VARCHAR}
+  </update>
+
+
+    <select id="queryExport" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffciphertextTbl"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.StaffCipherQueryVO">
+        select
+        <include refid="Base_Column_List1"/>,t.OutWay outWayIds
+        from bm_staffciphertext_tbl t
+        left join bm_staff_tbl s on t.UserId = s.StaffId
+        left join organization o on t.DepartId = o.UniqueId
+        left join basecode b on t.JobSecrectLevelId = b.id
+        <where>
+            t.IsDelete = 0
+            <if test="orgId != null and userId == null">
+                and t.DeptId = #{orgId})
+            </if>
+            <if test="userId != null">
+                and t.UserId = #{userId}
+            </if>
+            <if test="startTime != null">
+                and t.OutSDate >= str_to_date(#{startTime},'%Y-%m-%d')
+            </if>
+            <if test="endTime != null">
+                and str_to_date(#{endTime},'%Y-%m-%d') >= t.OutEDate
+            </if>
+        </where>
+
+    </select>
+</mapper>

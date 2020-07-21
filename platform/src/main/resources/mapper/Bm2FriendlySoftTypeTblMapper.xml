@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2FriendlySoftTypeTblMapper">
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2FriendlySoftTypeTbl">
+    <id column="TypeId" jdbcType="VARCHAR" property="typeid" />
+    <result column="TypeName" jdbcType="VARCHAR" property="typename" />
+    <result column="IsDelete" jdbcType="INTEGER" property="isdelete" />
+    <result column="CreateTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="UpdateTime" jdbcType="TIMESTAMP" property="updatetime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.hangyu.platform.web.sysAdmin.dto.Bm2FriendlySoftTypeTbl">
+    <result column="TypeRemark" jdbcType="LONGVARCHAR" property="typeremark" />
+  </resultMap>
+
+  <!-- 总数据量查询 -->
+  <select id="selectTotal" resultType="integer" >
+    select count(typeid) from bm2_friendlysofttype_tbl where IsDelete = 0
+  </select>
+
+  <sql id="Bm2FriendlySoftTypeTbl" >
+    typename,createtime,typeremark
+  </sql>
+
+  <!-- 软件白名单类型管理批量查询 -->
+  <select id="selectAll" parameterType="integer" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2FriendlySoftTypeTbl">
+    select
+     <include refid="Bm2FriendlySoftTypeTbl"></include>
+     from bm2_friendlysofttype_tbl where IsDelete = 0 limit #{start},#{pageSize}
+  </select>
+
+  <!-- 软件白名单管理添加 -->
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FriendlySoftTypeTbl" >
+    insert into bm2_friendlysofttype_tbl(TypeName,TypeRemark) values(#{typename},#{typeremark})
+  </insert>
+
+  <!-- 软件白名单管理删除 -->
+  <delete id="delete" parameterType="string" >
+    update bm2_friendlysofttype_tbl set IsDelete = 1 where typeid in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")" >
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- 软件白名单单条查询 -->
+  <select id="select" parameterType="string" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2FriendlySoftTypeTbl" >
+    select
+     <include refid="Bm2FriendlySoftTypeTbl"></include>
+     from bm2_friendlysofttype_tbl where typeid = #{typeid}
+  </select>
+
+  <!-- 软件白名单管理修改 -->
+  <update id="update" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FriendlySoftTypeTbl" >
+    update bm2_friendlysofttype_tbl
+    set typename=#{typename},typeremark=#{typeremark},updatetime=NOW()  where typeid=#{typeid}
+  </update>
+
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.ZptypeTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.ZptypeTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    Id, Name, Remark, IsDelete
+  </sql>
+
+  <!-- 总数据量查询 -->
+  <select id="selectTotal" resultType="integer" >
+    select count(id) from zptype_tbl where isdelete = 0
+  </select>
+
+  <!-- 批量查询 -->
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from zptype_tbl where isdelete = 0 limit #{start},#{pageSize}
+  </select>
+
+  <!-- 单条信息查询 -->
+  <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from zptype_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 批量删除 -->
+  <delete id="delete" parameterType="java.lang.Integer" >
+    update zptype_tbl set isdelete = 1  where Id in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")" >
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- 添加信息 -->
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.ZptypeTbl" >
+    insert into zptype_tbl (Name, Remark,
+      IsDelete)
+    values (#{name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 0)
+  </insert>
+
+  <!-- 修改信息 -->
+  <update id="update" parameterType="com.hangyu.platform.web.sysAdmin.dto.ZptypeTbl" >
+    update zptype_tbl
+    set Name = #{name,jdbcType=VARCHAR},Remark = #{remark,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

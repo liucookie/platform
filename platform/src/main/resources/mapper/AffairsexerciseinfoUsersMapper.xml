@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.AffairsexerciseinfoUsersMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoUsers" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="StaffId" property="staffid" jdbcType="VARCHAR" />
+    <result column="UserName" property="username" jdbcType="VARCHAR" />
+    <result column="LinkName" property="linkname" jdbcType="VARCHAR" />
+    <result column="UserSex" property="usersex" jdbcType="VARCHAR" />
+    <result column="Nationality" property="nationality" jdbcType="VARCHAR" />
+    <result column="UnitName" property="unitname" jdbcType="VARCHAR" />
+    <result column="UserJob" property="userjob" jdbcType="VARCHAR" />
+    <result column="IDcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="VisitorStallName" property="visitorstallname" jdbcType="VARCHAR" />
+    <result column="VisitorStallJod" property="visitorstalljod" jdbcType="VARCHAR" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="UserId" property="userid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, StaffId, UserName, LinkName, UserSex, Nationality, UnitName, UserJob, IDcard, 
+    VisitorStallName, VisitorStallJod, UpdateTime, IsDelete, UserId
+  </sql>
+  <select id="select" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from affairsexerciseinfo_users
+    where StaffId = #{id}
+    and IsDelete = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update affairsexerciseinfo_users set IsDelete = 1
+    where StaffId = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoUsers" >
+    insert into affairsexerciseinfo_users (Id, StaffId, UserName, 
+      LinkName, UserSex, Nationality, 
+      UnitName, UserJob, IDcard, 
+      VisitorStallName, VisitorStallJod, UpdateTime, 
+      IsDelete, UserId)
+    values (#{id,jdbcType=INTEGER}, #{staffid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{linkname,jdbcType=VARCHAR}, #{usersex,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, 
+      #{unitname,jdbcType=VARCHAR}, #{userjob,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, 
+      #{visitorstallname,jdbcType=VARCHAR}, #{visitorstalljod,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP}, 
+      0, #{userid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoUsers" >
+    insert into affairsexerciseinfo_users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="staffid != null" >
+        StaffId,
+      </if>
+      <if test="username != null" >
+        UserName,
+      </if>
+      <if test="linkname != null" >
+        LinkName,
+      </if>
+      <if test="usersex != null" >
+        UserSex,
+      </if>
+      <if test="nationality != null" >
+        Nationality,
+      </if>
+      <if test="unitname != null" >
+        UnitName,
+      </if>
+      <if test="userjob != null" >
+        UserJob,
+      </if>
+      <if test="idcard != null" >
+        IDcard,
+      </if>
+      <if test="visitorstallname != null" >
+        VisitorStallName,
+      </if>
+      <if test="visitorstalljod != null" >
+        VisitorStallJod,
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="userid != null" >
+        UserId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="staffid != null" >
+        #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="linkname != null" >
+        #{linkname,jdbcType=VARCHAR},
+      </if>
+      <if test="usersex != null" >
+        #{usersex,jdbcType=VARCHAR},
+      </if>
+      <if test="nationality != null" >
+        #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="unitname != null" >
+        #{unitname,jdbcType=VARCHAR},
+      </if>
+      <if test="userjob != null" >
+        #{userjob,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorstallname != null" >
+        #{visitorstallname,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorstalljod != null" >
+        #{visitorstalljod,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoUsers" >
+    update affairsexerciseinfo_users
+    <set >
+      <if test="staffid != null" >
+        StaffId = #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        UserName = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="linkname != null" >
+        LinkName = #{linkname,jdbcType=VARCHAR},
+      </if>
+      <if test="usersex != null" >
+        UserSex = #{usersex,jdbcType=VARCHAR},
+      </if>
+      <if test="nationality != null" >
+        Nationality = #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="unitname != null" >
+        UnitName = #{unitname,jdbcType=VARCHAR},
+      </if>
+      <if test="userjob != null" >
+        UserJob = #{userjob,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        IDcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorstallname != null" >
+        VisitorStallName = #{visitorstallname,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorstalljod != null" >
+        VisitorStallJod = #{visitorstalljod,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        UserId = #{userid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoUsers" >
+    update affairsexerciseinfo_users
+    set StaffId = #{staffid,jdbcType=VARCHAR},
+      UserName = #{username,jdbcType=VARCHAR},
+      LinkName = #{linkname,jdbcType=VARCHAR},
+      UserSex = #{usersex,jdbcType=VARCHAR},
+      Nationality = #{nationality,jdbcType=VARCHAR},
+      UnitName = #{unitname,jdbcType=VARCHAR},
+      UserJob = #{userjob,jdbcType=VARCHAR},
+      IDcard = #{idcard,jdbcType=VARCHAR},
+      VisitorStallName = #{visitorstallname,jdbcType=VARCHAR},
+      VisitorStallJod = #{visitorstalljod,jdbcType=VARCHAR},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      UserId = #{userid,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

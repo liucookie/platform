@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSecsoftverTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSecsoftverTbl">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="SoftID" property="softid" jdbcType="VARCHAR"/>
+        <result column="Version" property="version" jdbcType="VARCHAR"/>
+        <result column="SoftIcon" property="softicon" jdbcType="VARCHAR"/>
+        <result column="SoftKey" property="softkey" jdbcType="VARCHAR"/>
+        <result column="UpdateDate" property="updatedate" jdbcType="TIMESTAMP"/>
+        <result column="SoftDesc" property="softdesc" jdbcType="VARCHAR"/>
+        <result column="SoftPics" property="softpics" jdbcType="VARCHAR"/>
+        <result column="LinkUrl" property="linkurl" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="DownloadType" property="downloadtype" jdbcType="INTEGER"/>
+        <result column="FileUrl" property="fileurl" jdbcType="VARCHAR"/>
+        <result column="SoftFunc" property="softfunc" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, UniqueId, SoftID, Version, SoftIcon, SoftKey,date_format(UpdateDate, '%Y-%m-%d')  UpdateDate  , SoftDesc, SoftPics,
+    LinkUrl, IsDelete, DownloadType, FileUrl,SoftFunc
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secsoftver_tbl
+        where UniqueId = #{id}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secsoftver_tbl
+        where SoftID = #{id}
+        and IsDelete = 0
+        order by ID desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secsoftver_tbl
+        where SoftID = #{id}
+        and IsDelete = 0
+        order by Version desc
+    </select>
+
+    <select id="selectNewSoft" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secsoftver_tbl
+        where SoftID = #{id}
+        and IsDelete = 0
+        order by Version desc
+        limit 1
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from bm_secsoftver_tbl
+        where SoftID = #{id,}
+        and IsDelete = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_secsoftver_tbl set IsDelete = 1
+    where UniqueId = #{id}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSecsoftverTbl">
+    insert into bm_secsoftver_tbl (ID, UniqueId, SoftID, 
+      Version, SoftIcon, SoftKey, 
+      UpdateDate, SoftDesc, SoftPics, 
+      LinkUrl, IsDelete, DownloadType, 
+      FileUrl, SoftFunc)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{softid,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR}, #{softicon,jdbcType=VARCHAR}, #{softkey,jdbcType=VARCHAR}, 
+      str_to_date(#{updatedate},'%Y-%m-%d'), #{softdesc,jdbcType=VARCHAR}, #{softpics,jdbcType=VARCHAR},
+      #{linkurl,jdbcType=VARCHAR}, 0, #{downloadtype,jdbcType=INTEGER},
+      #{fileurl,jdbcType=VARCHAR}, #{softfunc,jdbcType=LONGVARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSecsoftverTbl">
+    update bm_secsoftver_tbl
+    set
+      SoftID = #{softid,jdbcType=VARCHAR},
+      Version = #{version,jdbcType=VARCHAR},
+      SoftIcon = #{softicon,jdbcType=VARCHAR},
+      SoftKey = #{softkey,jdbcType=VARCHAR},
+      UpdateDate = str_to_date(#{updatedate},'%Y-%m-%d'),
+      SoftDesc = #{softdesc,jdbcType=VARCHAR},
+      SoftPics = #{softpics,jdbcType=VARCHAR},
+      LinkUrl = #{linkurl,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      DownloadType = #{downloadtype,jdbcType=INTEGER},
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      SoftFunc = #{softfunc,jdbcType=LONGVARCHAR}
+    where UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

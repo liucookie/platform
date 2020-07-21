@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.MediacommenuseTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.MediacommenuseTbl">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="MediaID" property="mediaid" jdbcType="VARCHAR"/>
+        <result column="IsBorrow" property="isborrow" jdbcType="INTEGER"/>
+        <result column="IsReturn" property="isreturn" jdbcType="INTEGER"/>
+        <result column="IsFinished" property="isfinished" jdbcType="INTEGER"/>
+        <result column="BorrowTime" property="borrowtime" jdbcType="TIMESTAMP"/>
+        <result column="ReturnTime" property="returntime" jdbcType="TIMESTAMP"/>
+        <result column="ApplyUser" property="applyuser" jdbcType="VARCHAR"/>
+        <result column="ExpectedReturnTime" property="expectedreturntime" jdbcType="TIMESTAMP"/>
+        <result column="OverTime" property="overtime" jdbcType="INTEGER"/>
+        <result column="FormType" property="formtype" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    m.ID,  m.UniqueID,  m.MediaID,  m.IsBorrow,  m.IsReturn,  m.IsFinished, date_format( m.BorrowTime, '%Y-%m-%d %H:%i:%s')  BorrowTime ,
+    date_format(m.ReturnTime, '%Y-%m-%d %H:%i:%s')  ReturnTime ,  m.ApplyUser,
+    date_format( m.ExpectedReturnTime, '%Y-%m-%d %H:%i:%s')  ExpectedReturnTime ,  m.OverTime,  m.FormType,s.UserName userName
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from mediacommenuse_tbl
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.MediacommenuseTbl">
+        select
+        <include refid="Base_Column_List"/>
+        from mediacommenuse_tbl m
+        left join bm_staff_tbl s on s.StaffId = m.ApplyUser
+        <where>
+            m.IsBorrow = 1
+            and m.IsFinished = 0
+            <if test="mediaId != null">
+                and m.MediaID = #{mediaId}
+            </if>
+        </where>
+        order by m.ID desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(ID)
+        from mediacommenuse_tbl
+        <where>
+            IsBorrow = 1
+            and IsFinished = 0
+            <if test="mediaId != null">
+                and MediaID = #{mediaId}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mediacommenuse_tbl
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.MediacommenuseTbl">
+    insert into mediacommenuse_tbl (ID, UniqueID, MediaID, 
+      IsBorrow, IsReturn, IsFinished, 
+      BorrowTime, ReturnTime, ApplyUser, 
+      ExpectedReturnTime, OverTime, FormType
+      )
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{mediaid,jdbcType=VARCHAR}, 
+      #{isborrow,jdbcType=INTEGER}, #{isreturn,jdbcType=INTEGER}, #{isfinished,jdbcType=INTEGER}, 
+      #{borrowtime,jdbcType=TIMESTAMP}, #{returntime,jdbcType=TIMESTAMP}, #{applyuser,jdbcType=VARCHAR}, 
+      #{expectedreturntime,jdbcType=TIMESTAMP}, #{overtime,jdbcType=INTEGER}, #{formtype,jdbcType=INTEGER}
+      )
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.MediacommenuseTbl">
+    update mediacommenuse_tbl
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      MediaID = #{mediaid,jdbcType=VARCHAR},
+      IsBorrow = #{isborrow,jdbcType=INTEGER},
+      IsReturn = #{isreturn,jdbcType=INTEGER},
+      IsFinished = #{isfinished,jdbcType=INTEGER},
+      BorrowTime = #{borrowtime,jdbcType=TIMESTAMP},
+      ReturnTime = #{returntime,jdbcType=TIMESTAMP},
+      ApplyUser = #{applyuser,jdbcType=VARCHAR},
+      ExpectedReturnTime = #{expectedreturntime,jdbcType=TIMESTAMP},
+      OverTime = #{overtime,jdbcType=INTEGER},
+      FormType = #{formtype,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

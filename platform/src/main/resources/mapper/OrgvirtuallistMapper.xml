@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.OrgvirtuallistMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Orgvirtuallist">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="AppovorName" property="appovorname" jdbcType="VARCHAR"/>
+        <result column="Isdelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="UserNameIDs" property="usernameids" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, AppovorName, Isdelete, UniqueID, UserNameIDs
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from orgvirtuallist
+        where UniqueID = #{id}
+    </select>
+
+    <select id="query" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from orgvirtuallist
+        <where>
+            Isdelete = 0
+            <if test="name != null">
+                and AppovorName like CONCAT("%",#{name},"%")
+            </if>
+        </where>
+        order by Id desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select
+        COUNT(Id)
+        from orgvirtuallist
+        <where>
+            Isdelete = 0
+            <if test="name != null">
+                and AppovorName like CONCAT("%",#{name},"%")
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update  orgvirtuallist set Isdelete = 1
+    where UniqueID = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Orgvirtuallist">
+    insert into orgvirtuallist (Id, AppovorName, Isdelete, 
+      UniqueID, UserNameIDs)
+    values (#{id,jdbcType=INTEGER}, #{appovorname,jdbcType=VARCHAR}, 0,
+      #{uniqueid,jdbcType=VARCHAR}, #{usernameids,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Orgvirtuallist">
+    update orgvirtuallist
+    set AppovorName = #{appovorname,jdbcType=VARCHAR},
+      Isdelete = #{isdelete,jdbcType=INTEGER},
+      UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      UserNameIDs = #{usernameids,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

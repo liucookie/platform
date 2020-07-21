@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.ServerpropertymatchTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.ServerpropertymatchTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="PropertyMatchID" property="propertymatchid" jdbcType="VARCHAR" />
+    <result column="ServerEquipInfoID" property="serverequipinfoid" jdbcType="VARCHAR" />
+    <result column="ComputerPropertyID" property="computerpropertyid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, PropertyMatchID, ServerEquipInfoID, ComputerPropertyID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from serverpropertymatch_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByComputerId" resultType="java.lang.String" parameterType="java.lang.String" >
+    select
+    ServerEquipInfoID
+    from serverpropertymatch_tbl
+    where ComputerPropertyID = #{id}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from serverpropertymatch_tbl
+    where ComputerPropertyID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.ServerpropertymatchTbl" >
+    insert into serverpropertymatch_tbl (Id, PropertyMatchID, ServerEquipInfoID, 
+      ComputerPropertyID)
+    values (#{id,jdbcType=INTEGER}, #{propertymatchid,jdbcType=VARCHAR}, #{serverequipinfoid,jdbcType=VARCHAR}, 
+      #{computerpropertyid,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.ServerpropertymatchTbl" >
+    update serverpropertymatch_tbl
+    set PropertyMatchID = #{propertymatchid,jdbcType=VARCHAR},
+      ServerEquipInfoID = #{serverequipinfoid,jdbcType=VARCHAR},
+      ComputerPropertyID = #{computerpropertyid,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TzPrivatepassportTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TzPrivatepassportTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="StaffId" property="staffid" jdbcType="VARCHAR" />
+    <result column="OrgId" property="orgid" jdbcType="VARCHAR" />
+    <result column="PassportNumber" property="passportnumber" jdbcType="VARCHAR" />
+    <result column="UseState" property="usestate" jdbcType="INTEGER" />
+    <result column="IsDeleted" property="isdeleted" jdbcType="INTEGER" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+    <result column="PostType" property="posttype" jdbcType="VARCHAR" />
+    <result column="ZhiWu" property="zhiwu" jdbcType="VARCHAR" />
+    <result column="MiJi" property="miji" jdbcType="VARCHAR" />
+    <result column="QFDate" property="qfdate" jdbcType="VARCHAR" />
+    <result column="QFPlace" property="qfplace" jdbcType="VARCHAR" />
+    <result column="YouXiaoQi" property="youxiaoqi" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    p.ID, p.UniqueId, p.StaffId, p.OrgId, p.PassportNumber, p.UseState, p.IsDeleted, p.Remark, p.PostType,
+    p.ZhiWu, p.MiJi, p.QFDate, p.QFPlace,p.YouXiaoQi, o.OrgName orgName,s.UserName userName,b.codeName secretName
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List"/>
+    from tz_privatepassport_tbl p
+    left join organization o on o.UniqueId = p.OrgId
+    left join bm_staff_tbl s on s.StaffId = p.StaffId
+    left join basecode b on b.id = p.MiJi
+    where p.UniqueId = #{id}
+  </select>
+
+  <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.TzPrivatepassportTbl"
+          parameterType="com.hangyu.platform.web.backBusiness.vo.UsbKeyQueryVO">
+    select
+    <include refid="Base_Column_List"/>
+    from tz_privatepassport_tbl p
+    left join organization o on o.UniqueId = p.OrgId
+    left join bm_staff_tbl s on s.StaffId = p.StaffId
+    left join basecode b on b.id = p.MiJi
+    <where>
+      p.IsDeleted = 0
+      <if test="orgId != null and orgId != ''">
+        and p.OrgId = #{orgId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and p.StaffId = #{userId}
+      </if>
+      <if test="borrowId != null and borrowId != ''">
+        and p.UseState = #{borrowId}
+      </if>
+      <if test="name != null and name != ''">
+        and p.PassportNumber like CONCAT("%",#{name},"%")
+      </if>
+    </where>
+    order by p.Id desc
+    limit #{pageNum},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer"
+          parameterType="com.hangyu.platform.web.backBusiness.vo.UsbKeyQueryVO">
+    select
+    COUNT(Id)
+    from tz_privatepassport_tbl
+    <where>
+      IsDeleted = 0
+      <if test="orgId != null and orgId != ''">
+        and OrgId = #{orgId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and StaffId = #{userId}
+      </if>
+      <if test="borrowId != null and borrowId != ''">
+        and UseState = #{borrowId}
+      </if>
+      <if test="name != null and name != ''">
+        and PassportNumber like CONCAT("%",#{name},"%")
+      </if>
+    </where>
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update tz_privatepassport_tbl set IsDeleted = 1
+    where UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.TzPrivatepassportTbl" >
+    insert into tz_privatepassport_tbl (ID, UniqueId, StaffId, 
+      OrgId, PassportNumber, UseState, 
+      IsDeleted, Remark, PostType, 
+      ZhiWu, MiJi, QFDate, 
+      QFPlace, YouXiaoQi)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{staffid,jdbcType=VARCHAR}, 
+      #{orgid,jdbcType=VARCHAR}, #{passportnumber,jdbcType=VARCHAR}, #{usestate,jdbcType=INTEGER}, 
+      0, #{remark,jdbcType=VARCHAR}, #{posttype,jdbcType=VARCHAR},
+      #{zhiwu,jdbcType=VARCHAR}, #{miji,jdbcType=VARCHAR}, #{qfdate,jdbcType=VARCHAR}, 
+      #{qfplace,jdbcType=VARCHAR}, #{youxiaoqi,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.TzPrivatepassportTbl" >
+    insert into tz_privatepassport_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueId,
+      </if>
+      <if test="staffid != null" >
+        StaffId,
+      </if>
+      <if test="orgid != null" >
+        OrgId,
+      </if>
+      <if test="passportnumber != null" >
+        PassportNumber,
+      </if>
+      <if test="usestate != null" >
+        UseState,
+      </if>
+      <if test="isdeleted != null" >
+        IsDeleted,
+      </if>
+      <if test="remark != null" >
+        Remark,
+      </if>
+      <if test="posttype != null" >
+        PostType,
+      </if>
+      <if test="zhiwu != null" >
+        ZhiWu,
+      </if>
+      <if test="miji != null" >
+        MiJi,
+      </if>
+      <if test="qfdate != null" >
+        QFDate,
+      </if>
+      <if test="qfplace != null" >
+        QFPlace,
+      </if>
+      <if test="youxiaoqi != null" >
+        YouXiaoQi,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null" >
+        #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="passportnumber != null" >
+        #{passportnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="usestate != null" >
+        #{usestate,jdbcType=INTEGER},
+      </if>
+      <if test="isdeleted != null" >
+        #{isdeleted,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="posttype != null" >
+        #{posttype,jdbcType=VARCHAR},
+      </if>
+      <if test="zhiwu != null" >
+        #{zhiwu,jdbcType=VARCHAR},
+      </if>
+      <if test="miji != null" >
+        #{miji,jdbcType=VARCHAR},
+      </if>
+      <if test="qfdate != null" >
+        #{qfdate,jdbcType=VARCHAR},
+      </if>
+      <if test="qfplace != null" >
+        #{qfplace,jdbcType=VARCHAR},
+      </if>
+      <if test="youxiaoqi != null" >
+        #{youxiaoqi,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.TzPrivatepassportTbl" >
+    update tz_privatepassport_tbl
+    <set >
+      <if test="uniqueid != null" >
+        UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        StaffId = #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null" >
+        OrgId = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="passportnumber != null" >
+        PassportNumber = #{passportnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="usestate != null" >
+        UseState = #{usestate,jdbcType=INTEGER},
+      </if>
+      <if test="isdeleted != null" >
+        IsDeleted = #{isdeleted,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="posttype != null" >
+        PostType = #{posttype,jdbcType=VARCHAR},
+      </if>
+      <if test="zhiwu != null" >
+        ZhiWu = #{zhiwu,jdbcType=VARCHAR},
+      </if>
+      <if test="miji != null" >
+        MiJi = #{miji,jdbcType=VARCHAR},
+      </if>
+      <if test="qfdate != null" >
+        QFDate = #{qfdate,jdbcType=VARCHAR},
+      </if>
+      <if test="qfplace != null" >
+        QFPlace = #{qfplace,jdbcType=VARCHAR},
+      </if>
+      <if test="youxiaoqi != null" >
+        YouXiaoQi = #{youxiaoqi,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TzPrivatepassportTbl" >
+    update tz_privatepassport_tbl
+    set
+      StaffId = #{staffid,jdbcType=VARCHAR},
+      OrgId = #{orgid,jdbcType=VARCHAR},
+      PassportNumber = #{passportnumber,jdbcType=VARCHAR},
+      UseState = #{usestate,jdbcType=INTEGER},
+      IsDeleted = #{isdeleted,jdbcType=INTEGER},
+      Remark = #{remark,jdbcType=VARCHAR},
+      PostType = #{posttype,jdbcType=VARCHAR},
+      ZhiWu = #{zhiwu,jdbcType=VARCHAR},
+      MiJi = #{miji,jdbcType=VARCHAR},
+      QFDate = #{qfdate,jdbcType=VARCHAR},
+      QFPlace = #{qfplace,jdbcType=VARCHAR},
+      YouXiaoQi = #{youxiaoqi,jdbcType=VARCHAR}
+    where UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

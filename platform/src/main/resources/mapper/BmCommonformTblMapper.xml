@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmCommonformTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmCommonformTbl">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="FormID" property="formid" jdbcType="VARCHAR"/>
+        <result column="FormName" property="formname" jdbcType="VARCHAR"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="FileUrl" property="fileurl" jdbcType="VARCHAR"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="TopSign" property="topsign" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="IsPublish" property="ispublish" jdbcType="INTEGER"/>
+        <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, FormID, FormName,date_format(UpdateTime, '%Y-%m-%d')  UpdateTime  , FileUrl, SortOrder, TopSign, IsDelete, IsPublish, 
+    Remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_commonform_tbl
+        where FormID = #{id}
+    </select>
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_commonform_tbl
+        <where>
+            IsDelete = 0
+            <if test="isPublish != null">
+                and IsPublish = #{isPublish}
+            </if>
+        </where>
+        order by ID desc
+        limit #{start},#{pageSize}
+    </select>
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(Id)
+        from bm_commonform_tbl
+        <where>
+            IsDelete = 0
+            <if test="isPublish != null">
+                and IsPublish = #{isPublish}
+            </if>
+        </where>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        update   bm_commonform_tbl set IsDelete  = 1
+        where FormID = #{id}
+    </delete>
+    <update id="isPublish">
+        update bm_commonform_tbl
+        set
+        IsPublish = #{status,jdbcType=INTEGER}
+        where FormID = #{id,jdbcType=VARCHAR}
+    </update>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCommonformTbl">
+    insert into bm_commonform_tbl (ID, FormID, FormName, 
+      UpdateTime, FileUrl, SortOrder, 
+      TopSign, IsDelete, IsPublish, 
+      Remark)
+    values (#{id,jdbcType=INTEGER}, #{formid,jdbcType=VARCHAR}, #{formname,jdbcType=VARCHAR}, 
+       str_to_date(#{updatetime},'%Y-%m-%d') , #{fileurl,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER},
+      #{topsign,jdbcType=INTEGER}, 0, #{ispublish,jdbcType=INTEGER},
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCommonformTbl">
+    update bm_commonform_tbl
+    set
+      FormName = #{formname,jdbcType=VARCHAR},
+      UpdateTime = str_to_date(#{updatetime},'%Y-%m-%d') ,
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      TopSign = #{topsign,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      IsPublish = #{ispublish,jdbcType=INTEGER},
+      Remark = #{remark,jdbcType=VARCHAR}
+    where FormID = #{formid,jdbcType=VARCHAR}
+  </update>
+</mapper>

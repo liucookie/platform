@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.CreditscoreTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.CreditscoreTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="FKeyId" property="fkeyid" jdbcType="VARCHAR" />
+    <result column="CSType" property="cstype" jdbcType="INTEGER" />
+    <result column="Year" property="year" jdbcType="INTEGER" />
+    <result column="YearScore" property="yearscore" jdbcType="DOUBLE" />
+    <result column="MonthScore1" property="monthscore1" jdbcType="DOUBLE" />
+    <result column="MonthScore2" property="monthscore2" jdbcType="DOUBLE" />
+    <result column="MonthScore3" property="monthscore3" jdbcType="DOUBLE" />
+    <result column="MonthScore4" property="monthscore4" jdbcType="DOUBLE" />
+    <result column="MonthScore5" property="monthscore5" jdbcType="DOUBLE" />
+    <result column="MonthScore6" property="monthscore6" jdbcType="DOUBLE" />
+    <result column="MonthScore7" property="monthscore7" jdbcType="DOUBLE" />
+    <result column="MonthScore8" property="monthscore8" jdbcType="DOUBLE" />
+    <result column="MonthScore9" property="monthscore9" jdbcType="DOUBLE" />
+    <result column="MonthScore10" property="monthscore10" jdbcType="DOUBLE" />
+    <result column="MonthScore11" property="monthscore11" jdbcType="DOUBLE" />
+    <result column="MonthScore12" property="monthscore12" jdbcType="DOUBLE" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="Start" property="start" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, UniqueID, FKeyId, CSType, Year, YearScore, MonthScore1, MonthScore2, MonthScore3, 
+    MonthScore4, MonthScore5, MonthScore6, MonthScore7, MonthScore8, MonthScore9, MonthScore10, 
+    MonthScore11, MonthScore12, IsDelete, CreateTime, UpdateTime, Start
+  </sql>
+
+  <sql id="Base_Column_List1" >
+    c.ID, c.UniqueID, c.FKeyId, c.CSType, c.Year, c.YearScore, c.MonthScore1, c.MonthScore2, c.MonthScore3,
+    c.MonthScore4, c.MonthScore5, c.MonthScore6, c.MonthScore7, c.MonthScore8, c.MonthScore9, c.MonthScore10,
+    c.MonthScore11, c.MonthScore12, c.IsDelete, c.CreateTime, c.UpdateTime, c.Start,o.OrgName deptName
+  </sql>
+
+  <sql id="Base_Column_List2" >
+    c.ID, c.UniqueID, c.FKeyId, c.CSType, c.Year, c.YearScore, c.MonthScore1, c.MonthScore2, c.MonthScore3,
+    c.MonthScore4, c.MonthScore5, c.MonthScore6, c.MonthScore7, c.MonthScore8, c.MonthScore9, c.MonthScore10,
+    c.MonthScore11, c.MonthScore12, c.IsDelete, c.CreateTime, c.UpdateTime, c.Start,s.UserName userName,
+    o.OrgName orgName,d.OrgName deptName
+  </sql>
+
+  <select id="selectDeptScore" resultType="com.hangyu.platform.web.backBusiness.dto.CreditscoreTbl">
+    select
+    <include refid="Base_Column_List1"/>
+    from creditscore_tbl c
+    left join organization o on o.UniqueId = c.FKeyId
+    <where>
+      c.IsDelete = 0
+      and c.CSType = 0
+      <if test="year != null and year != ''">
+        and c.Year = #{year}
+      </if>
+      <if test="orgId != null and orgId != ''">
+        and c.FKeyId = #{orgId}
+      </if>
+    </where>
+    order by c.Id desc
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="exportDeptScore" resultType="com.hangyu.platform.web.backBusiness.dto.CreditscoreTbl">
+    select
+    <include refid="Base_Column_List1"/>
+    from creditscore_tbl c
+    left join organization o on o.UniqueId = c.FKeyId
+    <where>
+      c.IsDelete = 0
+      and c.CSType = 0
+      <if test="year != null and year != ''">
+        and c.Year = #{year}
+      </if>
+      <if test="orgId != null and orgId != ''">
+        and c.FKeyId = #{orgId}
+      </if>
+    </where>
+    order by c.Id desc
+  </select>
+
+  <select id="selectDeptScoreCount" resultType="java.lang.Integer">
+    select
+    COUNT(ID)
+    from creditscore_tbl
+    <where>
+      IsDelete = 0
+      and CSType = 0
+      <if test="year != null and year != ''">
+        and Year = #{year}
+      </if>
+      <if test="orgId != null and orgId != ''">
+        and FKeyId = #{orgId}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectUserScore" resultType="com.hangyu.platform.web.backBusiness.dto.CreditscoreTbl">
+    select
+    <include refid="Base_Column_List2"/>
+    from creditscore_tbl c
+    left join bm_staff_tbl s on s.StaffId = c.FKeyId
+    left join organization o on o.UniqueId = s.DeptId
+    left join organization d on d.UniqueId = o.ParentId
+    <where>
+      c.IsDelete = 0
+      and c.CSType = 1
+      <if test="year != null and year != ''">
+        and c.Year = #{year}
+      </if>
+      <if test="orgId != null and orgId != '' and userId == null ">
+        and c.FKeyId in (select StaffId from bm_staff_tbl where DeptId = #{orgId} and IsDelete = 0 )
+      </if>
+      <if test="userId != null and userId != ''">
+        and c.FKeyId = #{userId}
+      </if>
+    </where>
+    order by c.Id desc
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectUserScoreCount" resultType="java.lang.Integer">
+    select
+    COUNT(ID)
+    from creditscore_tbl
+    <where>
+      IsDelete = 0
+      and CSType = 1
+      <if test="year != null and year != ''">
+        and Year = #{year}
+      </if>
+      <if test="orgId != null and orgId != '' and userId ==  null ">
+        and FKeyId in (select StaffId from bm_staff_tbl where DeptId = #{orgId} and IsDelete = 0 )
+      </if>
+      <if test="userId != null and userId != ''">
+        and FKeyId = #{userId}
+      </if>
+    </where>
+  </select>
+
+  <select id="exportUserScore" resultType="com.hangyu.platform.web.backBusiness.dto.CreditscoreTbl">
+    select
+    <include refid="Base_Column_List2"/>
+    from creditscore_tbl c
+    left join bm_staff_tbl s on s.StaffId = c.FKeyId
+    left join organization o on o.UniqueId = s.DeptId
+    left join organization d on d.UniqueId = o.ParentId
+    <where>
+      c.IsDelete = 0
+      and c.CSType = 1
+      <if test="year != null and year != ''">
+        and c.Year = #{year}
+      </if>
+      <if test="orgId != null and orgId != '' and userId == null ">
+        and c.FKeyId in (select StaffId from bm_staff_tbl where DeptId = #{orgId} and IsDelete = 0 )
+      </if>
+      <if test="userId != null and userId != ''">
+        and c.FKeyId = #{userId}
+      </if>
+    </where>
+    order by c.Id desc
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from creditscore_tbl
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectDeptOrUserScore" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from creditscore_tbl
+    <where>
+      IsDelete = 0
+      and CSType = #{type}
+      <if test="year != null and year != ''">
+        and Year = #{year}
+      </if>
+      <if test="key != null and key != ''">
+        and FKeyId = #{key}
+      </if>
+    </where>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from creditscore_tbl
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.CreditscoreTbl" >
+    insert into creditscore_tbl (ID, UniqueID, FKeyId, 
+      CSType, Year, YearScore, 
+      MonthScore1, MonthScore2, MonthScore3, 
+      MonthScore4, MonthScore5, MonthScore6, 
+      MonthScore7, MonthScore8, MonthScore9, 
+      MonthScore10, MonthScore11, MonthScore12, 
+      IsDelete, CreateTime, UpdateTime, 
+      Start)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{fkeyid,jdbcType=VARCHAR}, 
+      #{cstype,jdbcType=INTEGER}, #{year,jdbcType=INTEGER}, #{yearscore,jdbcType=DOUBLE}, 
+      #{monthscore1,jdbcType=DOUBLE}, #{monthscore2,jdbcType=DOUBLE}, #{monthscore3,jdbcType=DOUBLE}, 
+      #{monthscore4,jdbcType=DOUBLE}, #{monthscore5,jdbcType=DOUBLE}, #{monthscore6,jdbcType=DOUBLE}, 
+      #{monthscore7,jdbcType=DOUBLE}, #{monthscore8,jdbcType=DOUBLE}, #{monthscore9,jdbcType=DOUBLE}, 
+      #{monthscore10,jdbcType=DOUBLE}, #{monthscore11,jdbcType=DOUBLE}, #{monthscore12,jdbcType=DOUBLE}, 
+      #{isdelete,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, 
+      #{start,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.CreditscoreTbl" >
+    update creditscore_tbl
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      FKeyId = #{fkeyid,jdbcType=VARCHAR},
+      CSType = #{cstype,jdbcType=INTEGER},
+      Year = #{year,jdbcType=INTEGER},
+      YearScore = #{yearscore,jdbcType=DOUBLE},
+      MonthScore1 = #{monthscore1,jdbcType=DOUBLE},
+      MonthScore2 = #{monthscore2,jdbcType=DOUBLE},
+      MonthScore3 = #{monthscore3,jdbcType=DOUBLE},
+      MonthScore4 = #{monthscore4,jdbcType=DOUBLE},
+      MonthScore5 = #{monthscore5,jdbcType=DOUBLE},
+      MonthScore6 = #{monthscore6,jdbcType=DOUBLE},
+      MonthScore7 = #{monthscore7,jdbcType=DOUBLE},
+      MonthScore8 = #{monthscore8,jdbcType=DOUBLE},
+      MonthScore9 = #{monthscore9,jdbcType=DOUBLE},
+      MonthScore10 = #{monthscore10,jdbcType=DOUBLE},
+      MonthScore11 = #{monthscore11,jdbcType=DOUBLE},
+      MonthScore12 = #{monthscore12,jdbcType=DOUBLE},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      Start = #{start,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

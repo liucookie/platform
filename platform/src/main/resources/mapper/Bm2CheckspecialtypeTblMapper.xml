@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2CheckspecialtypeTblMapper">
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckspecialtypeTbl">
+    <id column="CheckTypeID" jdbcType="VARCHAR" property="checktypeid" />
+    <result column="CheckTypeName" jdbcType="VARCHAR" property="checktypename" />
+    <result column="CheckTypeMemo" jdbcType="VARCHAR" property="checktypememo" />
+    <result column="OrderNo" jdbcType="INTEGER" property="orderno" />
+    <result column="IsDelete" jdbcType="INTEGER" property="isdelete" />
+    <result column="CheckClass" jdbcType="INTEGER" property="checkclass" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    CheckTypeID, CheckTypeName, CheckTypeMemo, OrderNo, IsDelete, CheckClass
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bm2_checkspecialtype_tbl
+    where CheckTypeID = #{checktypeid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectNameById" parameterType="java.lang.String" resultType="java.lang.String">
+    select
+    CheckTypeName
+    from bm2_checkspecialtype_tbl
+    where CheckTypeID = #{checktypeid,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="queryNameBatch" resultType="java.lang.String" parameterType="java.util.List">
+    select
+    CheckTypeName
+    from bm2_checkspecialtype_tbl
+    where CheckTypeID IN
+    <foreach collection="list" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="queryType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from bm2_checkspecialtype_tbl
+    where IsDelete = 0
+    order by OrderNo
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="queryAllType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from bm2_checkspecialtype_tbl
+    where IsDelete = 0
+    order by OrderNo
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(CheckTypeID)
+    from bm2_checkspecialtype_tbl
+    where IsDelete = 0
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm2_checkspecialtype_tbl set IsDelete = 1
+    where CheckTypeID = #{checktypeid,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckspecialtypeTbl">
+    insert into bm2_checkspecialtype_tbl (CheckTypeID, CheckTypeName, CheckTypeMemo, 
+      OrderNo, IsDelete, CheckClass
+      )
+    values (#{checktypeid,jdbcType=VARCHAR}, #{checktypename,jdbcType=VARCHAR}, #{checktypememo,jdbcType=VARCHAR}, 
+      #{orderno,jdbcType=INTEGER},0, #{checkclass,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckspecialtypeTbl">
+    insert into bm2_checkspecialtype_tbl
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="checktypeid != null">
+        CheckTypeID,
+      </if>
+      <if test="checktypename != null">
+        CheckTypeName,
+      </if>
+      <if test="checktypememo != null">
+        CheckTypeMemo,
+      </if>
+      <if test="orderno != null">
+        OrderNo,
+      </if>
+      <if test="isdelete != null">
+        IsDelete,
+      </if>
+      <if test="checkclass != null">
+        CheckClass,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="checktypeid != null">
+        #{checktypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="checktypename != null">
+        #{checktypename,jdbcType=VARCHAR},
+      </if>
+      <if test="checktypememo != null">
+        #{checktypememo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderno != null">
+        #{orderno,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="checkclass != null">
+        #{checkclass,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckspecialtypeTbl">
+    update bm2_checkspecialtype_tbl
+    <set>
+      <if test="checktypename != null">
+        CheckTypeName = #{checktypename,jdbcType=VARCHAR},
+      </if>
+      <if test="checktypememo != null">
+        CheckTypeMemo = #{checktypememo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderno != null">
+        OrderNo = #{orderno,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null">
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="checkclass != null">
+        CheckClass = #{checkclass,jdbcType=INTEGER},
+      </if>
+    </set>
+    where CheckTypeID = #{checktypeid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckspecialtypeTbl">
+    update bm2_checkspecialtype_tbl
+    set CheckTypeName = #{checktypename,jdbcType=VARCHAR},
+      CheckTypeMemo = #{checktypememo,jdbcType=VARCHAR},
+      OrderNo = #{orderno,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      CheckClass = #{checkclass,jdbcType=INTEGER}
+    where CheckTypeID = #{checktypeid,jdbcType=VARCHAR}
+  </update>
+</mapper>

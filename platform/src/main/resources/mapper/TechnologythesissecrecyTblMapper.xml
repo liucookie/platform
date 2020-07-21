@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TechnologythesissecrecyTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TechnologythesissecrecyTbl" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="Topic" property="topic" jdbcType="VARCHAR" />
+    <result column="Author" property="author" jdbcType="VARCHAR" />
+    <result column="Zhicheng" property="zhicheng" jdbcType="VARCHAR" />
+    <result column="Phone" property="phone" jdbcType="VARCHAR" />
+    <result column="Contents" property="contents" jdbcType="VARCHAR" />
+    <result column="ThesisUnit" property="thesisunit" jdbcType="VARCHAR" />
+    <result column="Purpose" property="purpose" jdbcType="VARCHAR" />
+    <result column="WorkFlowID" property="workflowid" jdbcType="VARCHAR" />
+    <result column="Operation" property="operation" jdbcType="INTEGER" />
+    <result column="IsApproved" property="isapproved" jdbcType="INTEGER" />
+    <result column="Isdelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="FormID" property="formid" jdbcType="VARCHAR" />
+    <result column="ApplyTime" property="applytime" jdbcType="TIMESTAMP" />
+    <result column="AccoutNamer" property="accoutnamer" jdbcType="VARCHAR" />
+    <result column="OrganizationNamer" property="organizationnamer" jdbcType="VARCHAR" />
+    <result column="ChuShi" property="chushi" jdbcType="VARCHAR" />
+    <result column="JobNumber" property="jobnumber" jdbcType="VARCHAR" />
+    <result column="SecretLevelNamer" property="secretlevelnamer" jdbcType="VARCHAR" />
+    <result column="StaffNamer" property="staffnamer" jdbcType="VARCHAR" />
+    <result column="loginUserID" property="loginuserid" jdbcType="VARCHAR" />
+    <result column="loginUserOrgName" property="loginuserorgname" jdbcType="VARCHAR" />
+    <result column="loginUserSecretLevel" property="loginusersecretlevel" jdbcType="VARCHAR" />
+    <result column="loginUserAccount" property="loginuseraccount" jdbcType="VARCHAR" />
+    <result column="rFileUrl" property="rfileurl" jdbcType="VARCHAR" />
+    <result column="ApplyUserPhone" property="applyuserphone" jdbcType="VARCHAR" />
+    <result column="PaperType" property="papertype" jdbcType="VARCHAR" />
+    <result column="UseState" property="usestate" jdbcType="VARCHAR" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+    <result column="SecretLevel" property="secretlevel" jdbcType="VARCHAR" />
+    <result column="IsGuoJi" property="isguoji" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, UniqueID, Topic, Author, Zhicheng, Phone, Contents, ThesisUnit, Purpose, WorkFlowID, 
+    Operation, IsApproved, Isdelete, FormID, date_format(ApplyTime, '%Y-%m-%d %H:%i:%s')  ApplyTime, AccoutNamer, OrganizationNamer,
+    ChuShi, JobNumber, SecretLevelNamer, StaffNamer, loginUserID, loginUserOrgName, loginUserSecretLevel, 
+    loginUserAccount, rFileUrl, ApplyUserPhone, PaperType, UseState, Remark, SecretLevel, 
+    IsGuoJi
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from technologythesissecrecy_tbl
+    where UniqueID = #{id}
+  </select>
+
+  <select id="query" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from technologythesissecrecy_tbl
+    <where>
+      Isdelete = 0
+      <if test="formId != null and formId != ''">
+        and FormID = #{formId}
+      </if>
+      <if test="type != null and type != ''">
+        and IsApproved = #{type}
+      </if>
+    </where>
+    limit #{start},#{pageSize}
+  </select>
+  <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(UniqueID)
+    from technologythesissecrecy_tbl
+    <where>
+      Isdelete = 0
+      <if test="formId != null and formId != ''">
+        and FormID = #{formId}
+      </if>
+      <if test="type != null and type != ''">
+        and IsApproved = #{type}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from technologythesissecrecy_tbl
+    where UniqueID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.TechnologythesissecrecyTbl" >
+    insert into technologythesissecrecy_tbl (id, UniqueID, Topic, 
+      Author, Zhicheng, Phone, 
+      Contents, ThesisUnit, Purpose, 
+      WorkFlowID, Operation, IsApproved, 
+      Isdelete, FormID, ApplyTime, 
+      AccoutNamer, OrganizationNamer, ChuShi, 
+      JobNumber, SecretLevelNamer, StaffNamer, 
+      loginUserID, loginUserOrgName, loginUserSecretLevel, 
+      loginUserAccount, rFileUrl, ApplyUserPhone, 
+      PaperType, UseState, Remark, 
+      SecretLevel, IsGuoJi)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{topic,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{zhicheng,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{contents,jdbcType=VARCHAR}, #{thesisunit,jdbcType=VARCHAR}, #{purpose,jdbcType=VARCHAR}, 
+      #{workflowid,jdbcType=VARCHAR}, #{operation,jdbcType=INTEGER}, 0,
+     0, #{formid,jdbcType=VARCHAR}, NOW(),
+      #{accoutnamer,jdbcType=VARCHAR}, #{organizationnamer,jdbcType=VARCHAR}, #{chushi,jdbcType=VARCHAR}, 
+      #{jobnumber,jdbcType=VARCHAR}, #{secretlevelnamer,jdbcType=VARCHAR}, #{staffnamer,jdbcType=VARCHAR}, 
+      #{loginuserid,jdbcType=VARCHAR}, #{loginuserorgname,jdbcType=VARCHAR}, #{loginusersecretlevel,jdbcType=VARCHAR}, 
+      #{loginuseraccount,jdbcType=VARCHAR}, #{rfileurl,jdbcType=VARCHAR}, #{applyuserphone,jdbcType=VARCHAR}, 
+      #{papertype,jdbcType=VARCHAR}, #{usestate,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{secretlevel,jdbcType=VARCHAR}, #{isguoji,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TechnologythesissecrecyTbl" >
+    update technologythesissecrecy_tbl
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      Topic = #{topic,jdbcType=VARCHAR},
+      Author = #{author,jdbcType=VARCHAR},
+      Zhicheng = #{zhicheng,jdbcType=VARCHAR},
+      Phone = #{phone,jdbcType=VARCHAR},
+      Contents = #{contents,jdbcType=VARCHAR},
+      ThesisUnit = #{thesisunit,jdbcType=VARCHAR},
+      Purpose = #{purpose,jdbcType=VARCHAR},
+      WorkFlowID = #{workflowid,jdbcType=VARCHAR},
+      Operation = #{operation,jdbcType=INTEGER},
+      IsApproved = #{isapproved,jdbcType=INTEGER},
+      Isdelete = #{isdelete,jdbcType=INTEGER},
+      FormID = #{formid,jdbcType=VARCHAR},
+      ApplyTime = #{applytime,jdbcType=TIMESTAMP},
+      AccoutNamer = #{accoutnamer,jdbcType=VARCHAR},
+      OrganizationNamer = #{organizationnamer,jdbcType=VARCHAR},
+      ChuShi = #{chushi,jdbcType=VARCHAR},
+      JobNumber = #{jobnumber,jdbcType=VARCHAR},
+      SecretLevelNamer = #{secretlevelnamer,jdbcType=VARCHAR},
+      StaffNamer = #{staffnamer,jdbcType=VARCHAR},
+      loginUserID = #{loginuserid,jdbcType=VARCHAR},
+      loginUserOrgName = #{loginuserorgname,jdbcType=VARCHAR},
+      loginUserSecretLevel = #{loginusersecretlevel,jdbcType=VARCHAR},
+      loginUserAccount = #{loginuseraccount,jdbcType=VARCHAR},
+      rFileUrl = #{rfileurl,jdbcType=VARCHAR},
+      ApplyUserPhone = #{applyuserphone,jdbcType=VARCHAR},
+      PaperType = #{papertype,jdbcType=VARCHAR},
+      UseState = #{usestate,jdbcType=VARCHAR},
+      Remark = #{remark,jdbcType=VARCHAR},
+      SecretLevel = #{secretlevel,jdbcType=VARCHAR},
+      IsGuoJi = #{isguoji,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectByInstanceId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from technologythesissecrecy_tbl
+        where WorkFlowID = #{instanceId}
+    </select>
+    <update id="updateByInstanceId">
+    update technologythesissecrecy_tbl
+    set
+      IsApproved = #{status}
+    where WorkFlowID = #{instanceId}
+  </update>
+</mapper>

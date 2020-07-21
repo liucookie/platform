@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.BasecodeMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Basecode">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="typeId" property="typeid" jdbcType="VARCHAR"/>
+        <result column="codeName" property="codename" jdbcType="VARCHAR"/>
+        <result column="property" property="property" jdbcType="VARCHAR"/>
+        <result column="sortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="createtime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="createperson" property="createperson" jdbcType="VARCHAR"/>
+        <result column="isDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, typeId, codeName, property, sortOrder, date_format(createtime, '%Y-%m-%d %H:%i:%s') createtime ,createperson, isDelete, remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from basecode
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryIdByName" resultType="java.lang.String" parameterType="java.lang.String">
+        select
+        id
+        from basecode
+        where codeName = #{name,jdbcType=VARCHAR}
+        limit 1
+    </select>
+
+    <select id="select" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from basecode
+        where typeId = #{id,jdbcType=VARCHAR}
+        and isDelete = 0
+        order by sortOrder
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="queryAll" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from basecode
+        where typeId = #{id,jdbcType=VARCHAR}
+        and isDelete = 0
+        order by sortOrder
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select
+        COUNT(typeId)
+        from basecode
+        where typeId = #{id,jdbcType=VARCHAR}
+        and isDelete = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update basecode set isDelete = 1
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Basecode">
+    insert into basecode (id, typeId, codeName, 
+      property, sortOrder, createtime, 
+      createperson, isDelete, remark
+      )
+    values (#{id,jdbcType=VARCHAR}, #{typeid,jdbcType=VARCHAR}, #{codename,jdbcType=VARCHAR}, 
+      #{property,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, NOW(),
+      #{createperson,jdbcType=VARCHAR},0, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Basecode">
+        insert into basecode
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="typeid != null">
+                typeId,
+            </if>
+            <if test="codename != null">
+                codeName,
+            </if>
+            <if test="property != null">
+                property,
+            </if>
+            <if test="sortorder != null">
+                sortOrder,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="createperson != null">
+                createperson,
+            </if>
+            <if test="isdelete != null">
+                isDelete,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="typeid != null">
+                #{typeid,jdbcType=VARCHAR},
+            </if>
+            <if test="codename != null">
+                #{codename,jdbcType=VARCHAR},
+            </if>
+            <if test="property != null">
+                #{property,jdbcType=VARCHAR},
+            </if>
+            <if test="sortorder != null">
+                #{sortorder,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createperson != null">
+                #{createperson,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Basecode">
+        update basecode
+        <set>
+            <if test="typeid != null">
+                typeId = #{typeid,jdbcType=VARCHAR},
+            </if>
+            <if test="codename != null">
+                codeName = #{codename,jdbcType=VARCHAR},
+            </if>
+            <if test="property != null">
+                property = #{property,jdbcType=VARCHAR},
+            </if>
+            <if test="sortorder != null">
+                sortOrder = #{sortorder,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                createtime = str_to_date(#{createtime},'%Y-%m-%d %H:%i:%s'),,
+            </if>
+            <if test="createperson != null">
+                createperson = #{createperson,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                isDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Basecode">
+    update basecode
+    set typeId = #{typeid,jdbcType=VARCHAR},
+      codeName = #{codename,jdbcType=VARCHAR},
+      property = #{property,jdbcType=VARCHAR},
+      sortOrder = #{sortorder,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      createperson = #{createperson,jdbcType=VARCHAR},
+      isDelete = #{isdelete,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

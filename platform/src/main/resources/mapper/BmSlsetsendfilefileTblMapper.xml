@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSlsetsendfilefileTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSlsetsendfilefileTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="SendFID" property="sendfid" jdbcType="VARCHAR" />
+    <result column="FileName" property="filename" jdbcType="VARCHAR" />
+    <result column="FileUrl" property="fileurl" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="OldID" property="oldid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, UniqueID, SendFID, FileName, FileUrl, IsDelete, OldID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_slsetsendfilefile_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectBySetId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_slsetsendfilefile_tbl
+    where SendFID = #{id}
+    and IsDelete = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm_slsetsendfilefile_tbl set IsDelete = 1
+    where SendFID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetsendfilefileTbl" >
+    insert into bm_slsetsendfilefile_tbl (Id, UniqueID, SendFID, 
+      FileName, FileUrl, IsDelete, 
+      OldID)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{sendfid,jdbcType=VARCHAR}, 
+      #{filename,jdbcType=VARCHAR}, #{fileurl,jdbcType=VARCHAR}, 0,
+      #{oldid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetsendfilefileTbl" >
+    insert into bm_slsetsendfilefile_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueID,
+      </if>
+      <if test="sendfid != null" >
+        SendFID,
+      </if>
+      <if test="filename != null" >
+        FileName,
+      </if>
+      <if test="fileurl != null" >
+        FileUrl,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="oldid != null" >
+        OldID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="sendfid != null" >
+        #{sendfid,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="fileurl != null" >
+        #{fileurl,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="oldid != null" >
+        #{oldid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetsendfilefileTbl" >
+    update bm_slsetsendfilefile_tbl
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      SendFID = #{sendfid,jdbcType=VARCHAR},
+      FileName = #{filename,jdbcType=VARCHAR},
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      OldID = #{oldid,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

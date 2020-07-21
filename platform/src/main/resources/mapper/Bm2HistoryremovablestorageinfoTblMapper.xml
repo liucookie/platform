@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2HistoryremovablestorageinfoTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestorageinfoTbl" >
+    <id column="HRemovableStorageID" property="hremovablestorageid" jdbcType="VARCHAR" />
+    <result column="TypeID" property="typeid" jdbcType="VARCHAR" />
+    <result column="UseStartTime" property="usestarttime" jdbcType="TIMESTAMP" />
+    <result column="UseEndTime" property="useendtime" jdbcType="TIMESTAMP" />
+    <result column="SerialNo" property="serialno" jdbcType="VARCHAR" />
+    <result column="StorageName" property="storagename" jdbcType="VARCHAR" />
+    <result column="StorageNumber" property="storagenumber" jdbcType="VARCHAR" />
+    <result column="SecretLevelId" property="secretlevelid" jdbcType="VARCHAR" />
+    <result column="InfoMemo" property="infomemo" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="InUseUnit" property="inuseunit" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    HRemovableStorageID, TypeID, UseStartTime, UseEndTime, SerialNo, StorageName, StorageNumber, 
+    SecretLevelId, InfoMemo, IsDelete, CreateTime, UpdateTime, InUseUnit
+  </sql>
+
+  <sql id="Base_Column_List2" >
+    b.HRemovableStorageID, b.TypeID, date_format(b.UseStartTime, '%Y-%m-%d') UseStartTime,date_format(b.UseEndTime, '%Y-%m-%d') UseEndTime, b.SerialNo, b.StorageName, b.StorageNumber,
+    b.SecretLevelId, b.InfoMemo, b.IsDelete,  b.InUseUnit,s.codeName secretName,t.TypeName typeName,c.ColorCode color
+  </sql>
+
+  <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestorageinfoTbl" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List2" />
+    from bm2_historyremovablestorageinfo_tbl b
+    left join basecode s on s.id = b.SecretLevelId
+    left join bm2_historyremovablestoragetype_tbl t on b.TypeID = t.TypeID
+    where HRemovableStorageID = #{hremovablestorageid}
+  </select>
+
+  <select id="selectByAddition" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestorageinfoTbl" parameterType="com.hangyu.platform.web.sysAdmin.vo.Bm2HistoryQueryVO" >
+    select
+    <include refid="Base_Column_List2" />
+    from bm2_historyremovablestorageinfo_tbl b
+    left join basecode s on s.id = b.SecretLevelId
+    left join bm2_historyremovablestoragetype_tbl t on b.TypeID = t.TypeID
+    left join bm2_historyremovablestoragecolor_tbl c on t.TypeColorID = c.ColorId
+    <where>
+      b.IsDelete = 0
+    <if test="type != null and type != '' ">
+     and b.TypeID = #{type}
+    </if>
+      <if test="secretLevel != null and secretLevel != '' ">
+       and   b.SecretLevelId = #{secretLevel}
+      </if>
+      <if test="info != null and info != '' ">
+        and  b.InfoMemo like CONCAT('%',#{info},'%')
+      </if>
+      <if test="serialNo != null and serialNo != '' ">
+        and  b.SerialNo  like CONCAT('%',#{serialNo},'%')
+      </if>
+      <if test="storageName != null and storageName != '' ">
+        and  b.StorageName  like CONCAT('%',#{storageName},'%')
+      </if>
+      <if test="storageNumber != null and storageNumber != '' ">
+        and  b.StorageNumber  like CONCAT('%',#{storageNumber},'%')
+      </if>
+      <if test="startTime != null and startTime != '' ">
+        and  str_to_date(#{startTime},'%Y-%m-%d') &lt;= b.UseStartTime
+      </if>
+      <if test="endTime != null and endTime != '' ">
+        and  str_to_date(#{endTime},'%Y-%m-%d') &gt;= b.UseEndTime
+      </if>
+    </where>
+    order by b.UpdateTime desc
+    limit #{pageNum},#{pageSize}
+  </select>
+
+
+  <select id="selectTotal" resultType="java.lang.Integer" parameterType="com.hangyu.platform.web.sysAdmin.vo.Bm2HistoryQueryVO" >
+    select
+    COUNT(b.HRemovableStorageID)
+    from bm2_historyremovablestorageinfo_tbl b
+    <where>
+      b.IsDelete = 0
+      <if test="type != null and type != '' ">
+        and b.TypeID = #{type}
+      </if>
+      <if test="secretLevel != null and secretLevel != '' ">
+        and   b.SecretLevelId = #{secretLevel}
+      </if>
+      <if test="info != null and info != '' ">
+        and  b.InfoMemo like CONCAT('%',#{info},'%')
+      </if>
+      <if test="serialNo != null and serialNo != '' ">
+        and  b.SerialNo  like CONCAT('%',#{serialNo},'%')
+      </if>
+      <if test="storageName != null and storageName != '' ">
+        and  b.StorageName  like CONCAT('%',#{storageName},'%')
+      </if>
+      <if test="storageNumber != null and storageNumber != '' ">
+        and  b.StorageNumber  like CONCAT('%',#{storageNumber},'%')
+      </if>
+      <if test="startTime != null and startTime != '' ">
+        and  str_to_date(#{startTime},'%Y-%m-%d') &lt;= b.UseStartTime
+      </if>
+      <if test="endTime != null and endTime != '' ">
+        and  str_to_date(#{endTime},'%Y-%m-%d') &gt;= b.UseEndTime
+      </if>
+    </where>
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm2_historyremovablestorageinfo_tbl set IsDelete = 1
+    where HRemovableStorageID = #{hremovablestorageid,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestorageinfoTbl" >
+    insert into bm2_historyremovablestorageinfo_tbl (HRemovableStorageID, TypeID, UseStartTime, 
+      UseEndTime, SerialNo, StorageName, 
+      StorageNumber, SecretLevelId, InfoMemo, 
+      IsDelete, CreateTime, UpdateTime, 
+      InUseUnit)
+    values (#{hremovablestorageid,jdbcType=VARCHAR}, #{typeid,jdbcType=VARCHAR},str_to_date(#{usestarttime},'%Y-%m-%d'),
+      str_to_date(#{useendtime},'%Y-%m-%d'), #{serialno,jdbcType=VARCHAR}, #{storagename,jdbcType=VARCHAR},
+      #{storagenumber,jdbcType=VARCHAR}, #{secretlevelid,jdbcType=VARCHAR}, #{infomemo,jdbcType=VARCHAR}, 
+      0, NOW(), NOW(),
+      #{inuseunit,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+    <foreach collection="list" index="item" separator=";" item="item" >
+      insert into bm2_historyremovablestorageinfo_tbl (HRemovableStorageID, TypeID, UseStartTime,
+      UseEndTime, SerialNo, StorageName,
+      StorageNumber, SecretLevelId, InfoMemo,
+      IsDelete, CreateTime, UpdateTime,
+      InUseUnit)
+      values (#{item.hremovablestorageid}, #{item.typeid},str_to_date(#{item.usestarttime},'%Y-%m-%d'),
+      str_to_date(#{item.useendtime},'%Y-%m-%d'), #{item.serialno}, #{item.storagename},
+      #{item.storagenumber}, #{item.secretlevelid}, #{item.infomemo},
+      0, NOW(), NOW(), #{item.inuseunit})
+    </foreach>
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestorageinfoTbl" >
+    insert into bm2_historyremovablestorageinfo_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="hremovablestorageid != null" >
+        HRemovableStorageID,
+      </if>
+      <if test="typeid != null" >
+        TypeID,
+      </if>
+      <if test="usestarttime != null" >
+        UseStartTime,
+      </if>
+      <if test="useendtime != null" >
+        UseEndTime,
+      </if>
+      <if test="serialno != null" >
+        SerialNo,
+      </if>
+      <if test="storagename != null" >
+        StorageName,
+      </if>
+      <if test="storagenumber != null" >
+        StorageNumber,
+      </if>
+      <if test="secretlevelid != null" >
+        SecretLevelId,
+      </if>
+      <if test="infomemo != null" >
+        InfoMemo,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime,
+      </if>
+      <if test="inuseunit != null" >
+        InUseUnit,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="hremovablestorageid != null" >
+        #{hremovablestorageid,jdbcType=VARCHAR},
+      </if>
+      <if test="typeid != null" >
+        #{typeid,jdbcType=VARCHAR},
+      </if>
+      <if test="usestarttime != null" >
+        #{usestarttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="useendtime != null" >
+        #{useendtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="serialno != null" >
+        #{serialno,jdbcType=VARCHAR},
+      </if>
+      <if test="storagename != null" >
+        #{storagename,jdbcType=VARCHAR},
+      </if>
+      <if test="storagenumber != null" >
+        #{storagenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="secretlevelid != null" >
+        #{secretlevelid,jdbcType=VARCHAR},
+      </if>
+      <if test="infomemo != null" >
+        #{infomemo,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inuseunit != null" >
+        #{inuseunit,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestorageinfoTbl" >
+    update bm2_historyremovablestorageinfo_tbl
+    <set >
+      <if test="typeid != null" >
+        TypeID = #{typeid,jdbcType=VARCHAR},
+      </if>
+      <if test="usestarttime != null" >
+        usestarttime = str_to_date(#{usestarttime},'%Y-%m-%d'),
+      </if>
+      <if test="useendtime != null" >
+        useendtime = str_to_date(#{useendtime},'%Y-%m-%d'),
+      </if>
+      <if test="serialno != null" >
+        SerialNo = #{serialno,jdbcType=VARCHAR},
+      </if>
+      <if test="storagename != null" >
+        StorageName = #{storagename,jdbcType=VARCHAR},
+      </if>
+      <if test="storagenumber != null" >
+        StorageNumber = #{storagenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="secretlevelid != null" >
+        SecretLevelId = #{secretlevelid,jdbcType=VARCHAR},
+      </if>
+      <if test="infomemo != null" >
+        InfoMemo = #{infomemo,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        NOW(),
+      </if>
+      <if test="inuseunit != null" >
+        InUseUnit = #{inuseunit,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where HRemovableStorageID = #{hremovablestorageid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2HistoryremovablestorageinfoTbl" >
+    update bm2_historyremovablestorageinfo_tbl
+    set TypeID = #{typeid,jdbcType=VARCHAR},
+      UseStartTime = #{usestarttime,jdbcType=TIMESTAMP},
+      UseEndTime = #{useendtime,jdbcType=TIMESTAMP},
+      SerialNo = #{serialno,jdbcType=VARCHAR},
+      StorageName = #{storagename,jdbcType=VARCHAR},
+      StorageNumber = #{storagenumber,jdbcType=VARCHAR},
+      SecretLevelId = #{secretlevelid,jdbcType=VARCHAR},
+      InfoMemo = #{infomemo,jdbcType=VARCHAR},
+      UpdateTime = NOW(),
+      InUseUnit = #{inuseunit,jdbcType=VARCHAR}
+    where HRemovableStorageID = #{hremovablestorageid,jdbcType=VARCHAR}
+  </update>
+</mapper>

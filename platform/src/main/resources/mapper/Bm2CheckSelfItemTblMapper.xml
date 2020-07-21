@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2CheckSelfItemTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckSelfItemTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="ItemID" property="itemid" jdbcType="VARCHAR" />
+    <result column="ItemName" property="itemname" jdbcType="VARCHAR" />
+    <result column="TypeID" property="typeid" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="CreatorID" property="creatorid" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="DefaultOption" property="defaultoption" jdbcType="INTEGER" />
+    <result column="StandardAnswer" property="standardanswer" jdbcType="INTEGER" />
+    <result column="TypeName"  property="typename" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckSelfItemTbl" extends="BaseResultMap" >
+    <result column="Remark" property="remark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+
+  <!-- 总数据量查询 -->
+  <select id="selectTotal" resultType="integer" >
+    select count(itemid) from bm2_checkselfitem_tbl where isdelete = 0
+  </select>
+
+  <!-- 条件查询总数据量 -->
+  <select id="selectTotals" resultType="integer" >
+    select count(f.itemid) from bm2_checkselfitem_tbl f left join bm2_checkselftype_tbl  g on f.typeid=g.typeid
+    where f.itemname like concat('%',#{itemname},'%')  AND f.createtime BETWEEN date_format(#{createtime},'%Y-%m-%d %H:%i:%s')
+    AND  date_format(#{endtime},'%Y-%m-%d %H:%i:%s') AND f.typeid = #{typeid}
+  </select>
+
+  <!-- 保密自查检查项批量查询 -->
+  <select id="selectAll" parameterType="integer" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckSelfItemTbl" >
+    select  a.itemname,b.typename,a.createtime,a.remark
+    from bm2_checkselfitem_tbl a left join bm2_checkselftype_tbl  b on a.typeid=b.typeid
+    where a.IsDelete = 0  limit #{start},#{pageSize}
+  </select>
+
+  <!-- 保密自查检查项条件查询 -->
+  <select id="factorSelect" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckSelfItemTbl" >
+    select  d.itemname,e.typename,d.createtime,d.remark
+    from bm2_checkselfitem_tbl d,bm2_checkselftype_tbl  e
+    where d.typeid=e.typeid and d.itemname like concat('%',#{itemname},'%')  AND d.createtime BETWEEN date_format(#{createtime},'%Y-%m-%d %H:%i:%s')
+    AND  date_format(#{endtime},'%Y-%m-%d %H:%i:%s') AND d.typeid = #{typeid} limit #{start},#{pageSize}
+  </select>
+
+  <!-- 查询保密自查类型名和id -->
+  <select id="typeSelect" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckSelfTypeTbl" >
+    select typename,typeid from bm2_checkselftype_tbl where isdelete = 0
+  </select>
+
+  <!-- 保密自查检查项添加 -->
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckSelfItemTbl" >
+    insert into bm2_checkselfitem_tbl(itemname,typeid,sortorder,remark)
+    values(#{itemname},#{typeid},#{sortorder},#{remark})
+  </insert>
+
+  <!-- 保密自查检查项删除 -->
+  <delete id="delete" parameterType="String" >
+    update bm2_checkselfitem_tbl set isdelete = 1 where itemid in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")" >
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- 保密检查项单条查询 -->
+  <select id="select" parameterType="string" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckSelfItemTbl" >
+    select  a.itemname,b.typename,a.createtime,a.remark
+    from bm2_checkselfitem_tbl a left join bm2_checkselftype_tbl  b on a.typeid=b.typeid
+    where a.IsDelete = 0  and itemid = #{itemid}
+  </select>
+
+  <!-- 保密自查检查项修改 -->
+  <update id="update" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CheckSelfItemTbl" >
+    update bm2_checkselfitem_tbl set itemname = #{itemname},typeid = #{typeid},sortorder = #{sortorder},remark = #{remark}
+    where itemid = #{itemid}
+  </update>
+
+</mapper>

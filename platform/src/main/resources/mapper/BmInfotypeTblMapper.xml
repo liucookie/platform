@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.BmInfotypeTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.BmInfotypeTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="TypeId" property="typeid" jdbcType="VARCHAR" />
+    <result column="TopTypeId" property="toptypeid" jdbcType="VARCHAR" />
+    <result column="TypeName" property="typename" jdbcType="VARCHAR" />
+    <result column="TypePath" property="typepath" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="TypeRemark" property="typeremark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hangyu.platform.web.sysAdmin.dto.BmInfotypeTbl" extends="BaseResultMap" >
+    <result column="TypeRemark" property="typeremark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    Id, TypeId, TopTypeId, TypeName, TypePath, SortOrder, IsDelete,TypeRemark
+  </sql>
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_infotype_tbl
+    where TypeId = #{id}
+  </select>
+
+  <select id="selectAllType" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from bm_infotype_tbl
+    where IsDelete = 0
+    order by SortOrder
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer"  >
+    select
+    COUNT(TypeId)
+    from bm_infotype_tbl
+    where IsDelete = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm_infotype_tbl set IsDelete = 1
+    where TypeId = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmInfotypeTbl" >
+    insert into bm_infotype_tbl (Id, TypeId, TopTypeId, 
+      TypeName, TypePath, SortOrder, 
+      IsDelete, TypeRemark)
+    values (#{id,jdbcType=INTEGER}, #{typeid,jdbcType=VARCHAR}, #{toptypeid,jdbcType=VARCHAR}, 
+      #{typename,jdbcType=VARCHAR}, #{typepath,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, 
+      0, #{typeremark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmInfotypeTbl" >
+    insert into bm_infotype_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="typeid != null" >
+        TypeId,
+      </if>
+      <if test="toptypeid != null" >
+        TopTypeId,
+      </if>
+      <if test="typename != null" >
+        TypeName,
+      </if>
+      <if test="typepath != null" >
+        TypePath,
+      </if>
+      <if test="sortorder != null" >
+        SortOrder,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="typeremark != null" >
+        TypeRemark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="typeid != null" >
+        #{typeid,jdbcType=VARCHAR},
+      </if>
+      <if test="toptypeid != null" >
+        #{toptypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null" >
+        #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="typepath != null" >
+        #{typepath,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="typeremark != null" >
+        #{typeremark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmInfotypeTbl" >
+    update bm_infotype_tbl
+    <set >
+
+      <if test="toptypeid != null" >
+        TopTypeId = #{toptypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null" >
+        TypeName = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="typepath != null" >
+        TypePath = #{typepath,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        SortOrder = #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="typeremark != null" >
+        TypeRemark = #{typeremark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TypeId = #{typeid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmInfotypeTbl" >
+    update bm_infotype_tbl
+    set TypeId = #{typeid,jdbcType=VARCHAR},
+      TopTypeId = #{toptypeid,jdbcType=VARCHAR},
+      TypeName = #{typename,jdbcType=VARCHAR},
+      TypePath = #{typepath,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      TypeRemark = #{typeremark,jdbcType=LONGVARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmInfotypeTbl" >
+    update bm_infotype_tbl
+    set TypeId = #{typeid,jdbcType=VARCHAR},
+      TopTypeId = #{toptypeid,jdbcType=VARCHAR},
+      TypeName = #{typename,jdbcType=VARCHAR},
+      TypePath = #{typepath,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

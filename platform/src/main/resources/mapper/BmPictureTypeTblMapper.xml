@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.BmPictureTypeTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.BmPicturetypeTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="TypeName" property="typename" jdbcType="VARCHAR" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+  </resultMap>
+
+  <!-- 总分数据量查询 -->
+  <select id="selectTotal" resultType="integer" >
+    select count(uniqueid) from bm_picturetype_tbl where IsDelete = 0
+  </select>
+
+  <!-- 图片资源类别管理批量查询 -->
+  <select id="selectAll" parameterType="integer"  resultType="com.hangyu.platform.web.sysAdmin.dto.BmPicturetypeTbl" >
+    select typename,remark from bm_picturetype_tbl where  IsDelete = 0 limit #{start},#{pageSize}
+  </select>
+
+  <!-- 图片资源类别管理单条查询 -->
+  <select id="select" parameterType="string"  resultType="com.hangyu.platform.web.sysAdmin.dto.BmPicturetypeTbl" >
+    select typename,remark from bm_picturetype_tbl where uniqueid = #{uniqueid} and IsDelete = 0
+  </select>
+
+  <!-- 图片资源类别管理添加 -->
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmPicturetypeTbl"  >
+    insert into bm_picturetype_tbl(TypeName,Remark) values(#{typename},#{remark})
+  </insert>
+
+  <!-- 图片资源类别管理删除 -->
+  <delete id="delete" parameterType="string" >
+    update bm_picturetype_tbl set IsDelete = 1 where uniqueid in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")" >
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- 图片资源类别管理删修改 -->
+  <update id="update" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmPicturetypeTbl" >
+    update bm_picturetype_tbl set typename = #{typename},remark = #{remark} where uniqueid = #{uniqueid}
+  </update>
+
+</mapper>

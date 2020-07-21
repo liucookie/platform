@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TblTestMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TblTest">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="testContent" property="testcontent" jdbcType="VARCHAR"/>
+        <result column="createtime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="foranswers" property="foranswers" jdbcType="VARCHAR"/>
+        <result column="rightanswer" property="rightanswer" jdbcType="VARCHAR"/>
+        <result column="useCount" property="usecount" jdbcType="INTEGER"/>
+        <result column="isDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="original" property="original" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, testContent,date_format(createtime, '%Y-%m-%d %H:%i:%s')  createtime  , type, foranswers, rightanswer, useCount, isDelete, original
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_test
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_test
+        <where>
+            IsDelete = 0
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="name != null">
+                and testContent like CONCAT('%',#{name},'%')
+            </if>
+        </where>
+        order by createtime desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(id)
+        from tbl_test
+        <where>
+            IsDelete = 0
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="name != null">
+                and testContent like CONCAT('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="exportExcel" resultMap="BaseResultMap">
+        select
+        type,
+        testContent,
+        foranswers,
+        rightanswer
+        from tbl_test
+        <where>
+            IsDelete = 0 and original = 1
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="name != null">
+                and testContent like CONCAT('%',#{name},'%')
+            </if>
+        </where>
+        order by type desc
+    </select>
+
+    <select id="queryByTypeAndCount" resultMap="BaseResultMap">
+        <!--select-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--from tbl_test-->
+        <!--where-->
+        <!--ID >= (-->
+        <!--SELECT floor(RAND() * (-->
+        <!--SELECT MAX(ID) FROM `tbl_test` where IsDelete = 0 and original = 1-->
+        <!--and type = #{type} order by ID )-->
+        <!--))-->
+        <!--limit #{count}-->
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_test
+        <where>
+            IsDelete = 0
+            <if test="type != null">
+                and type = #{type}
+            </if>
+            <if test="count != null">
+                and useCount = #{count}
+            </if>
+        </where>
+        order by createtime desc
+    </select>
+
+
+    <select id="queryTestByExamId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_test
+        where ID in
+        (select TestID from tbl_classify_test where classifyID in
+        (select ID from tbl_classsify where tbl_ExamID = #{examId})
+        )
+        order by type
+    </select>
+
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update tbl_test set  isDelete = 1
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.TblTest">
+    insert into tbl_test (id, testContent, createtime, 
+      `type`, foranswers, rightanswer,
+      useCount, isDelete, original
+      )
+    values (#{id,jdbcType=INTEGER}, #{testcontent,jdbcType=VARCHAR}, NOW(),
+      #{type,jdbcType=VARCHAR}, #{foranswers,jdbcType=VARCHAR}, #{rightanswer,jdbcType=VARCHAR}, 
+      0, 0, 1
+      )
+  </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            insert into tbl_test (id, testContent, createtime,
+            `type`, foranswers, rightanswer,
+            useCount, isDelete, original
+            )
+            values (#{item.id,jdbcType=INTEGER}, #{item.testcontent,jdbcType=VARCHAR}, NOW(),
+            #{item.type,jdbcType=VARCHAR}, #{item.foranswers,jdbcType=VARCHAR}, #{item.rightanswer,jdbcType=VARCHAR},
+            0, 0, 1
+            )
+        </foreach>
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TblTest">
+    update tbl_test
+    set testContent = #{testcontent,jdbcType=VARCHAR},
+       `type` = #{type,jdbcType=VARCHAR},
+      foranswers = #{foranswers,jdbcType=VARCHAR},
+      rightanswer = #{rightanswer,jdbcType=VARCHAR},
+      useCount = #{usecount,jdbcType=INTEGER},
+      isDelete = #{isdelete,jdbcType=INTEGER},
+      original = #{original,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update tbl_test
+            <set>
+                useCount = useCount + 1
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+</mapper>

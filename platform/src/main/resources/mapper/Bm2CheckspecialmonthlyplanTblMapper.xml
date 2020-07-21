@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.Bm2CheckspecialmonthlyplanTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialmonthlyplanTbl" >
+    <id column="MonthlyPlanID" property="monthlyplanid" jdbcType="VARCHAR" />
+    <result column="MonthlyPlanYear" property="monthlyplanyear" jdbcType="INTEGER" />
+    <result column="MonthlyPlanMonth" property="monthlyplanmonth" jdbcType="INTEGER" />
+    <result column="MonthlyPlanState" property="monthlyplanstate" jdbcType="INTEGER" />
+    <result column="FileUrl" property="fileurl" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="MonthlyPlanRemark" property="monthlyplanremark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    MonthlyPlanID, MonthlyPlanYear, MonthlyPlanMonth, MonthlyPlanState, FileUrl, IsDelete
+     , MonthlyPlanRemark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm2_checkspecialmonthlyplan_tbl
+    where MonthlyPlanID = #{monthlyplanid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="select" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from bm2_checkspecialmonthlyplan_tbl
+    <where>
+      IsDelete = 0
+      <if test="year != null and year != ''">
+        and MonthlyPlanYear = #{year}
+      </if>
+      <if test="month != null and month != ''">
+        and MonthlyPlanMonth = #{month}
+      </if>
+      <if test="status != null and status != ''">
+        and MonthlyPlanState = #{status}
+      </if>
+    </where>
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer"  >
+    select
+    COUNT(MonthlyPlanID)
+    from bm2_checkspecialmonthlyplan_tbl
+    <where>
+      IsDelete = 0
+      <if test="year != null and year != ''">
+        and MonthlyPlanYear = #{year}
+      </if>
+      <if test="month != null and month != ''">
+        and MonthlyPlanMonth = #{month}
+      </if>
+      <if test="status != null and status != ''">
+        and MonthlyPlanState = #{status}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from bm2_checkspecialmonthlyplan_tbl
+    where MonthlyPlanID = #{monthlyplanid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialmonthlyplanTbl" >
+    insert into bm2_checkspecialmonthlyplan_tbl (MonthlyPlanID, MonthlyPlanYear, MonthlyPlanMonth, 
+      MonthlyPlanState, FileUrl, IsDelete, 
+      MonthlyPlanRemark)
+    values (#{monthlyplanid,jdbcType=VARCHAR}, #{monthlyplanyear,jdbcType=INTEGER}, #{monthlyplanmonth,jdbcType=INTEGER}, 
+      #{monthlyplanstate,jdbcType=INTEGER}, #{fileurl,jdbcType=VARCHAR}, #{isdelete,jdbcType=INTEGER}, 
+      #{monthlyplanremark,jdbcType=LONGVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialmonthlyplanTbl" >
+    update bm2_checkspecialmonthlyplan_tbl
+    <set >
+      <if test="monthlyplanyear != null" >
+        MonthlyPlanYear = #{monthlyplanyear,jdbcType=INTEGER},
+      </if>
+      <if test="monthlyplanmonth != null" >
+        MonthlyPlanMonth = #{monthlyplanmonth,jdbcType=INTEGER},
+      </if>
+      <if test="monthlyplanstate != null" >
+        MonthlyPlanState = #{monthlyplanstate,jdbcType=INTEGER},
+      </if>
+      <if test="fileurl != null" >
+        FileUrl = #{fileurl,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="monthlyplanremark != null" >
+        MonthlyPlanRemark = #{monthlyplanremark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where MonthlyPlanID = #{monthlyplanid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialmonthlyplanTbl" >
+    update bm2_checkspecialmonthlyplan_tbl
+    set MonthlyPlanYear = #{monthlyplanyear,jdbcType=INTEGER},
+      MonthlyPlanMonth = #{monthlyplanmonth,jdbcType=INTEGER},
+      MonthlyPlanState = #{monthlyplanstate,jdbcType=INTEGER},
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where MonthlyPlanID = #{monthlyplanid,jdbcType=VARCHAR}
+  </update>
+</mapper>

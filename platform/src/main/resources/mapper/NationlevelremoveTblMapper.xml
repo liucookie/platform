@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.NationlevelremoveTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.NationlevelremoveTbl" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="CarrierType" property="carriertype" jdbcType="VARCHAR" />
+    <result column="LevelDataTime" property="leveldatatime" jdbcType="TIMESTAMP" />
+    <result column="SecretLevelName" property="secretlevelname" jdbcType="VARCHAR" />
+    <result column="KeepSecretDate" property="keepsecretdate" jdbcType="VARCHAR" />
+    <result column="ScopeFront" property="scopefront" jdbcType="VARCHAR" />
+    <result column="RemoveReason" property="removereason" jdbcType="VARCHAR" />
+    <result column="Isdelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="FormID" property="formid" jdbcType="VARCHAR" />
+    <result column="ApplyTime" property="applytime" jdbcType="TIMESTAMP" />
+    <result column="RemoveRemark" property="removeremark" jdbcType="VARCHAR" />
+    <result column="WorkFLowID" property="workflowid" jdbcType="VARCHAR" />
+    <result column="Operation" property="operation" jdbcType="INTEGER" />
+    <result column="IsApproved" property="isapproved" jdbcType="INTEGER" />
+    <result column="UserView" property="userview" jdbcType="VARCHAR" />
+    <result column="AccoutNamer" property="accoutnamer" jdbcType="VARCHAR" />
+    <result column="OrganizationNamer" property="organizationnamer" jdbcType="VARCHAR" />
+    <result column="ChuShi" property="chushi" jdbcType="VARCHAR" />
+    <result column="JobNumber" property="jobnumber" jdbcType="VARCHAR" />
+    <result column="SecretLevelNamer" property="secretlevelnamer" jdbcType="VARCHAR" />
+    <result column="StaffNamer" property="staffnamer" jdbcType="VARCHAR" />
+    <result column="loginUserID" property="loginuserid" jdbcType="VARCHAR" />
+    <result column="loginUserOrgName" property="loginuserorgname" jdbcType="VARCHAR" />
+    <result column="loginUserSecretLevel" property="loginusersecretlevel" jdbcType="VARCHAR" />
+    <result column="loginUserAccount" property="loginuseraccount" jdbcType="VARCHAR" />
+    <result column="rFileUrl" property="rfileurl" jdbcType="VARCHAR" />
+    <result column="ApplyUserPhone" property="applyuserphone" jdbcType="VARCHAR" />
+    <result column="ResponsibilityOrg" property="responsibilityorg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, UniqueID, Name, CarrierType, date_format(LevelDataTime, '%Y-%m-%d')  LevelDataTime  , SecretLevelName, KeepSecretDate,
+    ScopeFront, RemoveReason, Isdelete, FormID, date_format(ApplyTime, '%Y-%m-%d %H:%i:%s')  ApplyTime,
+     RemoveRemark, WorkFLowID,
+    Operation, IsApproved, UserView, AccoutNamer, OrganizationNamer, ChuShi, JobNumber, 
+    SecretLevelNamer, StaffNamer, loginUserID, loginUserOrgName, loginUserSecretLevel, 
+    loginUserAccount, rFileUrl, ApplyUserPhone, ResponsibilityOrg
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from nationlevelremove_tbl
+    where UniqueID = #{id}
+  </select>
+
+  <select id="selectByInstanceId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from nationlevelremove_tbl
+    where WorkFLowID = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from nationlevelremove_tbl
+    where UniqueID = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.NationlevelremoveTbl" >
+    insert into nationlevelremove_tbl (id, UniqueID, Name, 
+      CarrierType, LevelDataTime, SecretLevelName, 
+      KeepSecretDate, ScopeFront, RemoveReason, 
+      Isdelete, FormID, ApplyTime, 
+      RemoveRemark, WorkFLowID, Operation, 
+      IsApproved, UserView, AccoutNamer, 
+      OrganizationNamer, ChuShi, JobNumber, 
+      SecretLevelNamer, StaffNamer, loginUserID, 
+      loginUserOrgName, loginUserSecretLevel, 
+      loginUserAccount, rFileUrl, ApplyUserPhone, 
+      ResponsibilityOrg)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{carriertype,jdbcType=VARCHAR}, str_to_date(#{leveldatatime},'%Y-%m-%d'), #{secretlevelname,jdbcType=VARCHAR},
+      #{keepsecretdate,jdbcType=VARCHAR}, #{scopefront,jdbcType=VARCHAR}, #{removereason,jdbcType=VARCHAR}, 
+      0, #{formid,jdbcType=VARCHAR}, NOW(),
+      #{removeremark,jdbcType=VARCHAR}, #{workflowid,jdbcType=VARCHAR}, #{operation,jdbcType=INTEGER}, 
+      0, #{userview,jdbcType=VARCHAR}, #{accoutnamer,jdbcType=VARCHAR},
+      #{organizationnamer,jdbcType=VARCHAR}, #{chushi,jdbcType=VARCHAR}, #{jobnumber,jdbcType=VARCHAR}, 
+      #{secretlevelnamer,jdbcType=VARCHAR}, #{staffnamer,jdbcType=VARCHAR}, #{loginuserid,jdbcType=VARCHAR}, 
+      #{loginuserorgname,jdbcType=VARCHAR}, #{loginusersecretlevel,jdbcType=VARCHAR}, 
+      #{loginuseraccount,jdbcType=VARCHAR}, #{rfileurl,jdbcType=VARCHAR}, #{applyuserphone,jdbcType=VARCHAR}, 
+      #{responsibilityorg,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.NationlevelremoveTbl" >
+    update nationlevelremove_tbl
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      Name = #{name,jdbcType=VARCHAR},
+      CarrierType = #{carriertype,jdbcType=VARCHAR},
+      LevelDataTime = #{leveldatatime,jdbcType=TIMESTAMP},
+      SecretLevelName = #{secretlevelname,jdbcType=VARCHAR},
+      KeepSecretDate = #{keepsecretdate,jdbcType=VARCHAR},
+      ScopeFront = #{scopefront,jdbcType=VARCHAR},
+      RemoveReason = #{removereason,jdbcType=VARCHAR},
+      Isdelete = #{isdelete,jdbcType=INTEGER},
+      FormID = #{formid,jdbcType=VARCHAR},
+      ApplyTime = #{applytime,jdbcType=TIMESTAMP},
+      RemoveRemark = #{removeremark,jdbcType=VARCHAR},
+      WorkFLowID = #{workflowid,jdbcType=VARCHAR},
+      Operation = #{operation,jdbcType=INTEGER},
+      IsApproved = #{isapproved,jdbcType=INTEGER},
+      UserView = #{userview,jdbcType=VARCHAR},
+      AccoutNamer = #{accoutnamer,jdbcType=VARCHAR},
+      OrganizationNamer = #{organizationnamer,jdbcType=VARCHAR},
+      ChuShi = #{chushi,jdbcType=VARCHAR},
+      JobNumber = #{jobnumber,jdbcType=VARCHAR},
+      SecretLevelNamer = #{secretlevelnamer,jdbcType=VARCHAR},
+      StaffNamer = #{staffnamer,jdbcType=VARCHAR},
+      loginUserID = #{loginuserid,jdbcType=VARCHAR},
+      loginUserOrgName = #{loginuserorgname,jdbcType=VARCHAR},
+      loginUserSecretLevel = #{loginusersecretlevel,jdbcType=VARCHAR},
+      loginUserAccount = #{loginuseraccount,jdbcType=VARCHAR},
+      rFileUrl = #{rfileurl,jdbcType=VARCHAR},
+      ApplyUserPhone = #{applyuserphone,jdbcType=VARCHAR},
+      ResponsibilityOrg = #{responsibilityorg,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByInstanceId" >
+    update nationlevelremove_tbl
+    set
+      IsApproved = #{status}
+    where WorkFlowID = #{instanceId}
+  </update>
+</mapper>

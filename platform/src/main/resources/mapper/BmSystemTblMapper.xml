@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSystemTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSystemTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="SysId" property="sysid" jdbcType="VARCHAR" />
+    <result column="DeptId" property="deptid" jdbcType="VARCHAR" />
+    <result column="SysType" property="systype" jdbcType="VARCHAR" />
+    <result column="SysName" property="sysname" jdbcType="VARCHAR" />
+    <result column="DefineTypeId" property="definetypeid" jdbcType="VARCHAR" />
+    <result column="SysDate" property="sysdate" jdbcType="TIMESTAMP" />
+    <result column="SysRange" property="sysrange" jdbcType="VARCHAR" />
+    <result column="SysUserId" property="sysuserid" jdbcType="VARCHAR" />
+    <result column="SysRemark" property="sysremark" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="SysContent" property="syscontent" jdbcType="VARCHAR" />
+    <result column="Dscore" property="dscore" jdbcType="INTEGER" />
+    <result column="DConSub" property="dconsub" jdbcType="INTEGER" />
+    <result column="Dwages" property="dwages" jdbcType="INTEGER" />
+    <result column="RefDeptId" property="refdeptid" jdbcType="VARCHAR" />
+    <result column="RefNum" property="refnum" jdbcType="VARCHAR" />
+    <result column="IsHistory" property="ishistory" jdbcType="INTEGER" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    s.Id, s.SysId, s.DeptId, s.SysType, s.SysName, s.DefineTypeId, date_format( s.SysDate, '%Y-%m-%d')  SysDate, s.SysRange, s.SysUserId,
+    s.SysRemark, s.SortOrder, s.IsDelete, s.SysContent, s.Dscore, s.DConSub, s.Dwages, s.RefDeptId, s.RefNum,
+    s.IsHistory, s.UpdateTime,o.OrgName orgName,d.orgName deptName,f.OrgName publishName
+  </sql>
+  <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.backBusiness.dto.BmSystemTbl"
+          parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List"/>
+    from bm_system_tbl s
+    left join organization o on o.UniqueId = s.DeptId
+    left join organization d on o.ParentId = d.UniqueId
+    left join organization f on f.UniqueId = s.RefDeptId
+    where s.SysId = #{id}
+  </select>
+
+  <select id="queryHistory" resultType="com.hangyu.platform.web.backBusiness.dto.BmSystemTbl"
+          parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List"/>
+    from bm_system_tbl s
+    left join organization o on o.UniqueId = s.DeptId
+    left join organization d on o.ParentId = d.UniqueId
+    left join organization f on f.UniqueId = s.RefDeptId
+    where s.SysId = #{id} and  s.IsHistory = 1
+  </select>
+
+  <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.BmSystemTbl" >
+    select
+    <include refid="Base_Column_List"/>
+    from bm_system_tbl s
+    left join organization o on o.UniqueId = s.DeptId
+    left join organization d on o.ParentId = d.UniqueId
+    left join organization f on f.UniqueId = s.RefDeptId
+    <where>
+      s.IsDelete = 0
+      <if test="name != null and name != ''">
+        and s.SysName like CONCAT("%",#{name},"%")
+      </if>
+      <if test="type != null and type != ''">
+        and s.SysType = #{type}
+      </if>
+    </where>
+    order by s.UpdateTime desc
+    limit #{start},#{pageSize}
+  </select>
+
+
+  <select id="selectTotal" resultType="java.lang.Integer" >
+    select
+    COUNT(ID)
+    from bm_system_tbl
+    <where>
+      IsDelete = 0
+      <if test="name != null and name != ''">
+        and SysName like CONCAT("%",#{name},"%")
+      </if>
+      <if test="type != null and type != ''">
+        and SysType = #{type}
+      </if>
+    </where>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm_system_tbl set IsDelete = 1
+    where SysId = #{id}
+  </delete>
+
+  <delete id="deleteHistory" parameterType="java.lang.Integer" >
+    update bm_system_tbl set IsDelete = 1 and  IsHistory = 0
+    where Id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSystemTbl" >
+    insert into bm_system_tbl (Id, SysId, DeptId, 
+      SysType, SysName, DefineTypeId, 
+      SysDate, SysRange, SysUserId, 
+      SysRemark, SortOrder, IsDelete, 
+      SysContent, Dscore, DConSub, 
+      Dwages, RefDeptId, RefNum, 
+      IsHistory, UpdateTime)
+    values (#{id,jdbcType=INTEGER}, #{sysid,jdbcType=VARCHAR}, #{deptid,jdbcType=VARCHAR}, 
+      #{systype,jdbcType=VARCHAR}, #{sysname,jdbcType=VARCHAR}, #{definetypeid,jdbcType=VARCHAR}, 
+      str_to_date(#{sysdate},'%Y-%m-%d') , #{sysrange,jdbcType=VARCHAR}, #{sysuserid,jdbcType=VARCHAR},
+      #{sysremark,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, 0,
+      #{syscontent,jdbcType=VARCHAR}, #{dscore,jdbcType=INTEGER}, #{dconsub,jdbcType=INTEGER}, 
+      #{dwages,jdbcType=INTEGER}, #{refdeptid,jdbcType=VARCHAR}, #{refnum,jdbcType=VARCHAR}, 
+      0, NOW())
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSystemTbl" >
+    update bm_system_tbl
+    set
+      DeptId = #{deptid,jdbcType=VARCHAR},
+      SysType = #{systype,jdbcType=VARCHAR},
+      SysName = #{sysname,jdbcType=VARCHAR},
+      DefineTypeId = #{definetypeid,jdbcType=VARCHAR},
+      SysDate = str_to_date(#{sysdate},'%Y-%m-%d') ,
+      SysRange = #{sysrange,jdbcType=VARCHAR},
+      SysUserId = #{sysuserid,jdbcType=VARCHAR},
+      SysRemark = #{sysremark,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      SysContent = #{syscontent,jdbcType=VARCHAR},
+      Dscore = #{dscore,jdbcType=INTEGER},
+      DConSub = #{dconsub,jdbcType=INTEGER},
+      Dwages = #{dwages,jdbcType=INTEGER},
+      RefDeptId = #{refdeptid,jdbcType=VARCHAR},
+      RefNum = #{refnum,jdbcType=VARCHAR},
+      IsHistory = #{ishistory,jdbcType=INTEGER},
+      UpdateTime = NOW()
+    where SysId = #{sysid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="exportExcel" resultType="com.hangyu.platform.web.backBusiness.dto.BmSystemTbl" >
+    select
+    <include refid="Base_Column_List"/>
+    from bm_system_tbl s
+    left join organization o on o.UniqueId = s.DeptId
+    left join organization d on o.ParentId = d.UniqueId
+    left join organization f on f.UniqueId = s.RefDeptId
+    <where>
+      s.IsDelete = 0
+      <if test="name != null and name != ''">
+        and s.SysName like CONCAT("%",#{name},"%")
+      </if>
+      <if test="type != null and type != ''">
+        and s.SysType = #{type}
+      </if>
+    </where>
+    order by s.Id desc
+  </select>
+  <select id = "selectSystemByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+       select
+       *
+       from bm_system_tbl
+       where SysType = #{type} and IsDelete = 0
+  </select>
+</mapper>

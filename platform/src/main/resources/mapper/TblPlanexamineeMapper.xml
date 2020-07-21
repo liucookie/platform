@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TblPlanexamineeMapper">
+
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TblPlanexaminee">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="tbl_PlanOrganizationID" property="tblPlanorganizationid" jdbcType="INTEGER"/>
+        <result column="BM_Staff_Tbl_StaffId" property="bmStaffTblStaffid" jdbcType="VARCHAR"/>
+        <result column="userName" property="username" jdbcType="VARCHAR"/>
+        <result column="tbl_ExamID" property="tblExamid" jdbcType="INTEGER"/>
+        <result column="State" property="state" jdbcType="INTEGER"/>
+        <result column="IsEnter" property="isenter" jdbcType="INTEGER"/>
+        <result column="isNewStaffExam" property="isNewStaffExam" jdbcType="INTEGER"/>
+        <result column="isTest" property="isTest" jdbcType="INTEGER"/>
+        <result column="Score" property="score" jdbcType="INTEGER"/>
+        <result column="examResult" property="examresult" jdbcType="INTEGER"/>
+        <result column="planId" property="planId" jdbcType="INTEGER"/>
+        <result column="handintime" property="handintime" jdbcType="TIMESTAMP"/>
+        <result column="examleftSecond" property="examleftsecond" jdbcType="INTEGER"/>
+        <result column="enterTime" property="entertime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    ID, tbl_PlanOrganizationID, BM_Staff_Tbl_StaffId, tbl_ExamID, State, IsEnter, Score, 
+    examResult, handintime, examleftSecond, enterTime,userName,isNewStaffExam,isTest,planId
+  </sql>
+
+    <sql id="Base_Column_List1">
+    p.ID,  p.tbl_PlanOrganizationID tblPlanorganizationid,  p.BM_Staff_Tbl_StaffId bmStaffTblStaffid, p.tbl_ExamID tblExamid,
+     p.State,p. IsEnter, p.Score,p.userName,
+    p.examResult, date_format(p.handintime, '%Y-%m-%d %H:%i:%s')  handintime , p.examleftSecond,p.isNewStaffExam,p.isTest,
+    date_format(p.enterTime, '%Y-%m-%d %H:%i:%s')  enterTime,p.planId,
+    s.AccoutName account,o.OrgName orgName,CONCAT(p.Score,'/',e.Score) scoreResult
+  </sql>
+
+    <sql id="Base_Column_List2">
+    p.ID,  p.tbl_PlanOrganizationID tblPlanorganizationid,  p.BM_Staff_Tbl_StaffId bmStaffTblStaffid, p.tbl_ExamID tblExamid,
+     p.State,p. IsEnter, p.Score,p.userName,
+    p.examResult, date_format(p.handintime, '%Y-%m-%d %H:%i:%s')  handintime , p.examleftSecond,
+    date_format(p.enterTime, '%Y-%m-%d %H:%i:%s')  enterTime,p.isNewStaffExam,p.isTest,p.planId
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_planexaminee
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectYetExam" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_planexaminee
+        where
+        tbl_PlanOrganizationID in (
+        select ID from tbl_planorganization where tbl_PlanID = #{planId}
+        )
+        and State = 1
+    </select>
+
+    <select id="selectByOrgId" resultType="com.hangyu.platform.web.backBusiness.vo.PlanExamAddVO$PlanStaff"
+            parameterType="java.lang.Integer">
+    select
+    t.BM_Staff_Tbl_StaffId staffid,b.UserName username
+    from tbl_planexaminee t
+    left join bm_staff_tbl b on b.StaffId = t.BM_Staff_Tbl_StaffId
+    where t.tbl_PlanOrganizationID = #{id,jdbcType=INTEGER}
+  </select>
+
+    <select id="selectAllByOrgId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_planexaminee
+        <where>
+            tbl_PlanOrganizationID = #{orgId}
+            <if test="state != null">
+                and State = #{state}
+            </if>
+            <if test="result != null">
+                and examResult = #{result}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDetailByOrgId" resultType="com.hangyu.platform.web.backBusiness.dto.TblPlanexaminee"
+            parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List1"/>
+        from tbl_planexaminee p
+        left join bm_staff_tbl s on s.StaffId = p.BM_Staff_Tbl_StaffId
+        left join organization o on o.uniqueid = s.DeptId
+        left join tbl_exam e on e.ID = p.tbl_ExamID
+        where
+        p.tbl_PlanOrganizationID = #{orgId}
+    </select>
+
+    <select id="selectDetailByExamId" resultType="com.hangyu.platform.web.backBusiness.dto.TblPlanexaminee">
+        select
+        <include refid="Base_Column_List1"/>
+        from tbl_planexaminee p
+        left join bm_staff_tbl s on s.StaffId = p.BM_Staff_Tbl_StaffId
+        left join organization o on o.uniqueid = s.DeptId
+        left join tbl_exam e on e.ID = p.tbl_ExamID
+        where
+        p.tbl_PlanOrganizationID in ( select ID from tbl_planorganization where tbl_PlanID = #{planId} )
+        and p.tbl_ExamID = #{examId}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_planexaminee
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <delete id="deleteByOrgId" parameterType="java.lang.Integer">
+    delete from tbl_planexaminee
+    where tbl_PlanOrganizationID = #{orgId,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" keyProperty="id" keyColumn="ID" useGeneratedKeys="true"
+            parameterType="com.hangyu.platform.web.backBusiness.dto.TblPlanexaminee">
+    insert into tbl_planexaminee (ID, tbl_PlanOrganizationID, BM_Staff_Tbl_StaffId, 
+      tbl_ExamID, State, IsEnter, 
+      Score, examResult, handintime, 
+      examleftSecond, enterTime,userName,isNewStaffExam,isTest,planId)
+    values (#{id,jdbcType=INTEGER}, #{tblPlanorganizationid,jdbcType=INTEGER}, #{bmStaffTblStaffid,jdbcType=VARCHAR}, 
+      #{tblExamid,jdbcType=INTEGER}, 0, #{isenter},
+      0, #{examresult,jdbcType=INTEGER},str_to_date(#{handintime},'%Y-%m-%d %H:%i:%s') ,
+      #{examleftsecond,jdbcType=INTEGER}, str_to_date(#{entertime},'%Y-%m-%d %H:%i:%s'),#{username},#{isNewStaffExam},#{isTest},#{planId})
+  </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TblPlanexaminee">
+    update tbl_planexaminee
+    set tbl_PlanOrganizationID = #{tblPlanorganizationid,jdbcType=INTEGER},
+      BM_Staff_Tbl_StaffId = #{bmStaffTblStaffid,jdbcType=VARCHAR},
+      tbl_ExamID = #{tblExamid,jdbcType=INTEGER},
+      State = #{state,jdbcType=INTEGER},
+      IsEnter = #{isenter,jdbcType=BIT},
+      isNewStaffExam = #{isNewStaffExam},
+      isTest = #{isTest},
+      Score = #{score,jdbcType=INTEGER},
+      planId = #{planId},
+      examResult = #{examresult,jdbcType=INTEGER},
+      handintime = NOW(),
+      examleftSecond = #{examleftsecond,jdbcType=INTEGER},
+      enterTime = str_to_date(#{entertime},'%Y-%m-%d %H:%i:%s'),
+      userName = #{username}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="querySelfTest" resultType="com.hangyu.platform.web.backBusiness.dto.TblPlanexaminee">
+        select
+        <include refid="Base_Column_List2"/>,
+        t.name examName
+        from tbl_planexaminee p
+        left join tbl_exam t on t.id = p.tbl_ExamID
+        <where>
+             p.State = 1
+            <if test="status != null">
+                and p.examResult = #{status}
+            </if>
+            <if test="isTest != null">
+                and p.isTest = #{isTest}
+            </if>
+            <if test="examName != null">
+                and t.name like CONCAT('%',#{examName},'%')
+            </if>
+            <if test="userName != null">
+                and p.userName like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="isNewStaffExam != null">
+                and p.isNewStaffExam = #{isNewStaffExam}
+            </if>
+            <if test="startDate != null">
+                and enterTime >= str_to_date(#{startDate},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDate != null">
+                and str_to_date(#{endDate},'%Y-%m-%d %H:%i:%s') >= handintime
+            </if>
+        </where>
+        order by entertime desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="querySelfTestCount" resultType="java.lang.Integer">
+        select
+        COUNT(p.ID)
+        from tbl_planexaminee p
+        left join tbl_exam t on t.id = p.tbl_ExamID
+        <where>
+             p.State = 1
+            <if test="status != null">
+                and p.examResult = #{status}
+            </if>
+            <if test="isNewStaffExam != null">
+                and p.isNewStaffExam = #{isNewStaffExam}
+            </if>
+            <if test="isTest != null">
+                and p.isTest = #{isTest}
+            </if>
+            <if test="examName != null">
+                and t.name like CONCAT('%',#{examName},'%')
+            </if>
+            <if test="userName != null">
+                and p.userName like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="startDate != null">
+                and enterTime >= str_to_date(#{startDate},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endDate != null">
+                and str_to_date(#{endDate},'%Y-%m-%d %H:%i:%s') >= handintime
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByUserId" resultType="com.hangyu.platform.web.backBusiness.dto.TblPlanexaminee">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_planexaminee
+        where
+        tbl_PlanOrganizationID in (select ID from tbl_planorganization where tbl_PlanId = #{planId})
+        and BM_Staff_Tbl_StaffId = #{userId}
+        and State = 0
+        and tbl_ExamId = #{examId}
+    </select>
+
+</mapper>

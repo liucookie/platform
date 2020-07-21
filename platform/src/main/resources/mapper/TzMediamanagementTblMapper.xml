@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TzMediamanagementTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TzMediamanagementTbl">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="MediaId" property="mediaid" jdbcType="VARCHAR"/>
+        <result column="OrgId" property="orgid" jdbcType="VARCHAR"/>
+        <result column="StaffId" property="staffid" jdbcType="VARCHAR"/>
+        <result column="SecretLevel" property="secretlevel" jdbcType="VARCHAR"/>
+        <result column="EquipId" property="equipid" jdbcType="VARCHAR"/>
+        <result column="Brand" property="brand" jdbcType="VARCHAR"/>
+        <result column="Usage" property="usage" jdbcType="VARCHAR"/>
+        <result column="BorrowState" property="borrowstate" jdbcType="VARCHAR"/>
+        <result column="UseState" property="usestate" jdbcType="VARCHAR"/>
+        <result column="MediaSize" property="mediasize" jdbcType="VARCHAR"/>
+        <result column="ChipSerialNumber" property="chipserialnumber" jdbcType="VARCHAR"/>
+        <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="IsDeleted" property="isdeleted" jdbcType="INTEGER"/>
+        <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    t.ID, t.MediaId, t.OrgId, t.StaffId, t.SecretLevel, t.EquipId, t.Brand, t.Usage, t.BorrowState, t.UseState,
+    t.MediaSize, t.ChipSerialNumber, t.Remark,t. IsDeleted, t.UniqueId,o.OrgName orgName,b.UserName userName
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from tz_mediamanagement_tbl t
+        left join organization o on o.UniqueId = t.OrgId
+        left join bm_staff_tbl b on b.StaffId = t.StaffId
+        where t.UniqueId = #{id}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.TzMediamanagementTbl"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.MediaManageQueryVO">
+        select
+        <include refid="Base_Column_List"/>
+        from tz_mediamanagement_tbl t
+        left join organization o on o.UniqueId = t.OrgId
+        left join bm_staff_tbl b on b.StaffId = t.StaffId
+        <where>
+            t.IsDeleted = 0
+            <if test="orgId != null and orgId != ''">
+                and t.OrgId = #{orgId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and t.StaffId = #{userId}
+            </if>
+            <if test="equipId != null and equipId != ''">
+                and t.EquipId = #{equipId}
+            </if>
+            <if test="mediaId != null and mediaId != ''">
+                and t.MediaId = #{secretId}
+            </if>
+            <if test="brand != null and brand != ''">
+                and t.Brand = #{brand}
+            </if>
+            <if test="secretName != null and secretName != ''">
+                and t.SecretLevel = #{secretName}
+            </if>
+            <if test="userStateId != null and userStateId != ''">
+                and t.UseState = #{userStateId}
+            </if>
+            <if test="usage != null and usage != ''">
+                and t.Usage = #{usage}
+            </if>
+            <if test="borrowStateId != null and borrowStateId != ''">
+                and t.BorrowState = #{borrowStateId}
+            </if>
+            <if test="mediaSize != null and mediaSize != ''">
+                and t.MediaSize  like CONCAT("%",#{mediaSize},"%")
+            </if>
+            <if test="chipNumber != null and chipNumber != ''">
+                and t.ChipSerialNumber like CONCAT("%",#{chipNumber},"%")
+            </if>
+        </where>
+        order by t.Id desc
+        limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.MediaManageQueryVO">
+        select
+        COUNT(t.Id)
+        from tz_mediamanagement_tbl t
+        left join organization o on o.UniqueId = t.OrgId
+        left join bm_staff_tbl b on b.StaffId = t.StaffId
+        <where>
+            t.IsDeleted = 0
+            <if test="orgId != null and orgId != ''">
+                and t.OrgId = #{orgId}
+            </if>
+            <if test="equipId != null and equipId != ''">
+                and t.EquipId = #{equipId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and t.StaffId = #{userId}
+            </if>
+            <if test="mediaId != null and mediaId != ''">
+                and t.MediaId = #{secretId}
+            </if>
+            <if test="brand != null and brand != ''">
+                and t.Brand = #{brand}
+            </if>
+            <if test="secretName != null and secretName != ''">
+                and t.SecretLevel = #{secretName}
+            </if>
+            <if test="userStateId != null and userStateId != ''">
+                and t.UseState = #{userStateId}
+            </if>
+            <if test="usage != null and usage != ''">
+                and t.Usage = #{usage}
+            </if>
+            <if test="borrowStateId != null and borrowStateId != ''">
+                and t.BorrowState = #{borrowStateId}
+            </if>
+            <if test="mediaSize != null and mediaSize != ''">
+                and t.MediaSize  like CONCAT("%",#{mediaSize},"%")
+            </if>
+            <if test="chipNumber != null and chipNumber != ''">
+                and t.ChipSerialNumber like CONCAT("%",#{chipNumber},"%")
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAll" resultType="com.hangyu.platform.web.backBusiness.dto.TzMediamanagementTbl"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.MediaManageQueryVO">
+        select
+        <include refid="Base_Column_List"/>
+        from tz_mediamanagement_tbl t
+        left join organization o on o.UniqueId = t.OrgId
+        left join bm_staff_tbl b on b.StaffId = t.StaffId
+        <where>
+            t.IsDeleted = 0
+            <if test="orgId != null and orgId != ''">
+                and t.OrgId = #{orgId}
+            </if>
+            <if test="userId != null and userId != ''">
+                and t.StaffId = #{userId}
+            </if>
+            <if test="equipId != null and equipId != ''">
+                and t.EquipId = #{equipId}
+            </if>
+            <if test="mediaId != null and mediaId != ''">
+                and t.MediaId = #{secretId}
+            </if>
+            <if test="brand != null and brand != ''">
+                and t.Brand = #{brand}
+            </if>
+            <if test="secretName != null and secretName != ''">
+                and t.SecretLevel = #{secretName}
+            </if>
+            <if test="userStateId != null and userStateId != ''">
+                and t.UseState = #{userStateId}
+            </if>
+            <if test="usage != null and usage != ''">
+                and t.Usage = #{usage}
+            </if>
+            <if test="borrowStateId != null and borrowStateId != ''">
+                and t.BorrowState = #{borrowStateId}
+            </if>
+            <if test="mediaSize != null and mediaSize != ''">
+                and t.MediaSize  like CONCAT("%",#{mediaSize},"%")
+            </if>
+            <if test="chipNumber != null and chipNumber != ''">
+                and t.ChipSerialNumber like CONCAT("%",#{chipNumber},"%")
+            </if>
+        </where>
+        order by t.Id desc
+    </select>
+
+    <select id="queryByUserId" resultType="com.hangyu.platform.web.backBusiness.dto.TzMediamanagementTbl"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from tz_mediamanagement_tbl t
+        left join organization o on o.UniqueId = t.OrgId
+        left join bm_staff_tbl b on b.StaffId = t.StaffId
+        <where>
+            t.IsDeleted = 0
+            <if test="userId != null and userId != ''">
+                and t.StaffId = #{userId}
+            </if>
+        </where>
+        order by t.Id desc
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update tz_mediamanagement_tbl set IsDeleted = 1
+    where UniqueId = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.TzMediamanagementTbl">
+    insert into tz_mediamanagement_tbl (ID, MediaId, OrgId, 
+      StaffId, SecretLevel, EquipId, 
+      Brand, `Usage`, BorrowState,
+      UseState, MediaSize, ChipSerialNumber, 
+      Remark, IsDeleted, UniqueId
+      )
+    values (#{id,jdbcType=INTEGER}, #{mediaid,jdbcType=VARCHAR}, #{orgid,jdbcType=VARCHAR}, 
+      #{staffid,jdbcType=VARCHAR}, #{secretlevel,jdbcType=VARCHAR}, #{equipid,jdbcType=VARCHAR}, 
+      #{brand,jdbcType=VARCHAR}, #{usage,jdbcType=VARCHAR}, #{borrowstate,jdbcType=VARCHAR}, 
+      #{usestate,jdbcType=VARCHAR}, #{mediasize,jdbcType=VARCHAR}, #{chipserialnumber,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, 0, #{uniqueid,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.TzMediamanagementTbl">
+        insert into tz_mediamanagement_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="mediaid != null">
+                MediaId,
+            </if>
+            <if test="orgid != null">
+                OrgId,
+            </if>
+            <if test="staffid != null">
+                StaffId,
+            </if>
+            <if test="secretlevel != null">
+                SecretLevel,
+            </if>
+            <if test="equipid != null">
+                EquipId,
+            </if>
+            <if test="brand != null">
+                Brand,
+            </if>
+            <if test="usage != null">
+                Usage,
+            </if>
+            <if test="borrowstate != null">
+                BorrowState,
+            </if>
+            <if test="usestate != null">
+                UseState,
+            </if>
+            <if test="mediasize != null">
+                MediaSize,
+            </if>
+            <if test="chipserialnumber != null">
+                ChipSerialNumber,
+            </if>
+            <if test="remark != null">
+                Remark,
+            </if>
+            <if test="isdeleted != null">
+                IsDeleted,
+            </if>
+            <if test="uniqueid != null">
+                UniqueId,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="mediaid != null">
+                #{mediaid,jdbcType=VARCHAR},
+            </if>
+            <if test="orgid != null">
+                #{orgid,jdbcType=VARCHAR},
+            </if>
+            <if test="staffid != null">
+                #{staffid,jdbcType=VARCHAR},
+            </if>
+            <if test="secretlevel != null">
+                #{secretlevel,jdbcType=VARCHAR},
+            </if>
+            <if test="equipid != null">
+                #{equipid,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null">
+                #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="usage != null">
+                #{usage,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowstate != null">
+                #{borrowstate,jdbcType=VARCHAR},
+            </if>
+            <if test="usestate != null">
+                #{usestate,jdbcType=VARCHAR},
+            </if>
+            <if test="mediasize != null">
+                #{mediasize,jdbcType=VARCHAR},
+            </if>
+            <if test="chipserialnumber != null">
+                #{chipserialnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isdeleted != null">
+                #{isdeleted,jdbcType=INTEGER},
+            </if>
+            <if test="uniqueid != null">
+                #{uniqueid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.hangyu.platform.web.backBusiness.dto.TzMediamanagementTbl">
+        update tz_mediamanagement_tbl
+        <set>
+            <if test="mediaid != null">
+                MediaId = #{mediaid,jdbcType=VARCHAR},
+            </if>
+            <if test="orgid != null">
+                OrgId = #{orgid,jdbcType=VARCHAR},
+            </if>
+            <if test="staffid != null">
+                StaffId = #{staffid,jdbcType=VARCHAR},
+            </if>
+            <if test="secretlevel != null">
+                SecretLevel = #{secretlevel,jdbcType=VARCHAR},
+            </if>
+            <if test="equipid != null">
+                EquipId = #{equipid,jdbcType=VARCHAR},
+            </if>
+            <if test="brand != null">
+                Brand = #{brand,jdbcType=VARCHAR},
+            </if>
+            <if test="usage != null">
+                `Usage` = #{usage,jdbcType=VARCHAR},
+            </if>
+            <if test="borrowstate != null">
+                BorrowState = #{borrowstate,jdbcType=VARCHAR},
+            </if>
+            <if test="usestate != null">
+                UseState = #{usestate,jdbcType=VARCHAR},
+            </if>
+            <if test="mediasize != null">
+                MediaSize = #{mediasize,jdbcType=VARCHAR},
+            </if>
+            <if test="chipserialnumber != null">
+                ChipSerialNumber = #{chipserialnumber,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                Remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isdeleted != null">
+                IsDeleted = #{isdeleted,jdbcType=INTEGER}
+            </if>
+        </set>
+        where UniqueId = #{uniqueid,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TzMediamanagementTbl">
+    update tz_mediamanagement_tbl
+    set MediaId = #{mediaid,jdbcType=VARCHAR},
+      OrgId = #{orgid,jdbcType=VARCHAR},
+      StaffId = #{staffid,jdbcType=VARCHAR},
+      SecretLevel = #{secretlevel,jdbcType=VARCHAR},
+      EquipId = #{equipid,jdbcType=VARCHAR},
+      Brand = #{brand,jdbcType=VARCHAR},
+      Usage = #{usage,jdbcType=VARCHAR},
+      BorrowState = #{borrowstate,jdbcType=VARCHAR},
+      UseState = #{usestate,jdbcType=VARCHAR},
+      MediaSize = #{mediasize,jdbcType=VARCHAR},
+      ChipSerialNumber = #{chipserialnumber,jdbcType=VARCHAR},
+      Remark = #{remark,jdbcType=VARCHAR},
+      IsDeleted = #{isdeleted,jdbcType=INTEGER}
+    where  UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

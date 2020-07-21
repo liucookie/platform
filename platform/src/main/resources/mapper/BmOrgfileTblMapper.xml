@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmOrgfileTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmOrgfileTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="OrgFileId" property="orgfileid" jdbcType="NVARCHAR" />
+    <result column="OrgId" property="orgid" jdbcType="NVARCHAR" />
+    <result column="FileName" property="filename" jdbcType="NVARCHAR" />
+    <result column="FileUrl" property="fileurl" jdbcType="NVARCHAR" />
+    <result column="Remark" property="remark" jdbcType="NVARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="Isdelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="orgTime" property="orgtime" jdbcType="TIMESTAMP" />
+    <result column="OId" property="oid" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    Id, OrgFileId, OrgId, FileName, FileUrl, Remark, SortOrder, Isdelete, orgTime, OId
+  </sql>
+
+  <sql id="Column_List" >
+    Id, OrgFileId, OrgId, FileName, FileUrl, Remark, SortOrder, Isdelete, date_format(orgTime,'%Y-%m-%d %H:%i:%s') orgTime, OId
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from BM_OrgFile_Tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!--查询机构附件根据机构id -->
+  <select id="selectByOrgId" resultType="com.hangyu.platform.web.backBusiness.dto.BmOrgfileTbl">
+    select
+    DISTINCT
+    <include refid="Column_List" />
+    from BM_OrgFile_Tbl
+    where OrgId = #{orgId}
+    and Isdelete = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from BM_OrgFile_Tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByOrgId" parameterType="java.lang.String" >
+    delete from BM_OrgFile_Tbl
+    where OrgId = #{orgId}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgfileTbl" >
+    insert into BM_OrgFile_Tbl (Id, OrgFileId, OrgId, 
+      FileName, FileUrl, Remark, 
+      SortOrder, Isdelete, orgTime, 
+      OId)
+    values (#{id,jdbcType=INTEGER}, #{orgfileid,jdbcType=NVARCHAR}, #{orgid,jdbcType=NVARCHAR}, 
+      #{filename,jdbcType=NVARCHAR}, #{fileurl,jdbcType=NVARCHAR}, #{remark,jdbcType=NVARCHAR}, 
+      #{sortorder,jdbcType=INTEGER}, 0, NOW(),
+      #{oid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgfileTbl" >
+    insert into BM_OrgFile_Tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="orgfileid != null" >
+        OrgFileId,
+      </if>
+      <if test="orgid != null" >
+        OrgId,
+      </if>
+      <if test="filename != null" >
+        FileName,
+      </if>
+      <if test="fileurl != null" >
+        FileUrl,
+      </if>
+      <if test="remark != null" >
+        Remark,
+      </if>
+      <if test="sortorder != null" >
+        SortOrder,
+      </if>
+      <if test="isdelete != null" >
+        Isdelete,
+      </if>
+      <if test="orgtime != null" >
+        orgTime,
+      </if>
+      <if test="oid != null" >
+        OId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orgfileid != null" >
+        #{orgfileid,jdbcType=NVARCHAR},
+      </if>
+      <if test="orgid != null" >
+        #{orgid,jdbcType=NVARCHAR},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=NVARCHAR},
+      </if>
+      <if test="fileurl != null" >
+        #{fileurl,jdbcType=NVARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=NVARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="orgtime != null" >
+        #{orgtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oid != null" >
+        #{oid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgfileTbl" >
+    update BM_OrgFile_Tbl
+    <set >
+      <if test="orgfileid != null" >
+        OrgFileId = #{orgfileid,jdbcType=NVARCHAR},
+      </if>
+      <if test="orgid != null" >
+        OrgId = #{orgid,jdbcType=NVARCHAR},
+      </if>
+      <if test="filename != null" >
+        FileName = #{filename,jdbcType=NVARCHAR},
+      </if>
+      <if test="fileurl != null" >
+        FileUrl = #{fileurl,jdbcType=NVARCHAR},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=NVARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        SortOrder = #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        Isdelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="orgtime != null" >
+        orgTime = #{orgtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oid != null" >
+        OId = #{oid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrgfileTbl" >
+    update BM_OrgFile_Tbl
+    set OrgFileId = #{orgfileid,jdbcType=NVARCHAR},
+      OrgId = #{orgid,jdbcType=NVARCHAR},
+      FileName = #{filename,jdbcType=NVARCHAR},
+      FileUrl = #{fileurl,jdbcType=NVARCHAR},
+      Remark = #{remark,jdbcType=NVARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      Isdelete = #{isdelete,jdbcType=INTEGER},
+      orgTime = #{orgtime,jdbcType=TIMESTAMP},
+      OId = #{oid,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

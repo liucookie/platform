@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.AfficheTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.AfficheTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="AfficheTitle" property="affichetitle" jdbcType="VARCHAR" />
+    <result column="AfficheTime" property="affichetime" jdbcType="VARCHAR" />
+    <result column="Editor" property="editor" jdbcType="VARCHAR" />
+    <result column="AfficheSource" property="affichesource" jdbcType="VARCHAR" />
+    <result column="UserId" property="userid" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="IsPublish" property="ispublish" jdbcType="INTEGER" />
+    <result column="OpenMode" property="openmode" jdbcType="INTEGER" />
+    <result column="Width" property="width" jdbcType="INTEGER" />
+    <result column="Height" property="height" jdbcType="INTEGER" />
+    <result column="AfficheContent" property="affichecontent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    Id, UniqueId, AfficheTitle, date_format(AfficheTime,'%Y-%m-%d') AfficheTime, Editor, AfficheSource, UserId, IsDelete,
+    IsPublish, OpenMode, Width, Height,AfficheContent
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from affiche_tbl
+    where UniqueId = #{id}
+  </select>
+
+  <select id="queryAffiche" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from affiche_tbl
+    where IsDelete = 0
+    order by AfficheTime desc
+    limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer" >
+    select
+    COUNT(UniqueId)
+    from affiche_tbl
+    where IsDelete = 0
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update affiche_tbl set IsDelete = 1
+    where UniqueId = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.AfficheTbl" >
+    insert into affiche_tbl (Id, UniqueId, AfficheTitle, 
+      AfficheTime, Editor, AfficheSource, 
+      UserId, IsDelete, IsPublish, 
+      OpenMode, Width, Height, 
+      AfficheContent)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{affichetitle,jdbcType=VARCHAR}, 
+      str_to_date(#{affichetime},'%Y-%m-%d'), #{editor,jdbcType=VARCHAR}, #{affichesource,jdbcType=VARCHAR},
+      #{userid,jdbcType=VARCHAR}, 0, #{ispublish,jdbcType=INTEGER},
+      #{openmode,jdbcType=INTEGER}, #{width,jdbcType=INTEGER}, #{height,jdbcType=INTEGER}, 
+      #{affichecontent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.AfficheTbl" >
+    insert into affiche_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueId,
+      </if>
+      <if test="affichetitle != null" >
+        AfficheTitle,
+      </if>
+      <if test="affichetime != null" >
+        AfficheTime,
+      </if>
+      <if test="editor != null" >
+        Editor,
+      </if>
+      <if test="affichesource != null" >
+        AfficheSource,
+      </if>
+      <if test="userid != null" >
+        UserId,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="ispublish != null" >
+        IsPublish,
+      </if>
+      <if test="openmode != null" >
+        OpenMode,
+      </if>
+      <if test="width != null" >
+        Width,
+      </if>
+      <if test="height != null" >
+        Height,
+      </if>
+      <if test="affichecontent != null" >
+        AfficheContent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="affichetitle != null" >
+        #{affichetitle,jdbcType=VARCHAR},
+      </if>
+      <if test="affichetime != null" >
+        #{affichetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editor != null" >
+        #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="affichesource != null" >
+        #{affichesource,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="ispublish != null" >
+        #{ispublish,jdbcType=INTEGER},
+      </if>
+      <if test="openmode != null" >
+        #{openmode,jdbcType=INTEGER},
+      </if>
+      <if test="width != null" >
+        #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height != null" >
+        #{height,jdbcType=INTEGER},
+      </if>
+      <if test="affichecontent != null" >
+        #{affichecontent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.AfficheTbl" >
+    update affiche_tbl
+    <set >
+
+      <if test="affichetitle != null" >
+        AfficheTitle = #{affichetitle,jdbcType=VARCHAR},
+      </if>
+      <if test="affichetime != null" >
+        AfficheTime = str_to_date(#{affichetime},'%Y-%m-%d'),
+      </if>
+      <if test="editor != null" >
+        Editor = #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="affichesource != null" >
+        AfficheSource = #{affichesource,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        UserId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="ispublish != null" >
+        IsPublish = #{ispublish,jdbcType=INTEGER},
+      </if>
+      <if test="openmode != null" >
+        OpenMode = #{openmode,jdbcType=INTEGER},
+      </if>
+      <if test="width != null" >
+        Width = #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height != null" >
+        Height = #{height,jdbcType=INTEGER},
+      </if>
+      <if test="affichecontent != null" >
+        AfficheContent = #{affichecontent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where UniqueId = #{uniqueid}
+  </update>
+
+  <update id="publish"  >
+    update affiche_tbl
+    set
+      IsPublish = #{isPublish}
+    where UniqueId = #{id}
+  </update>
+</mapper>

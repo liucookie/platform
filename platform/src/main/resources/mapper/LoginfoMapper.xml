@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hangyu.platform.web.logAdmin.mapper.LoginfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.logAdmin.dto.Loginfo">
+        <id column="Id" jdbcType="INTEGER" property="id"/>
+        <result column="UniqueID" jdbcType="VARCHAR" property="uniqueid"/>
+        <result column="StaffAccoutName" jdbcType="VARCHAR" property="staffaccoutname"/>
+        <result column="OperateDate" jdbcType="TIMESTAMP" property="operatedate"/>
+        <result column="OperateEntityType" jdbcType="VARCHAR" property="operateentitytype"/>
+        <result column="OperateEntityId" jdbcType="VARCHAR" property="operateentityid"/>
+        <result column="OperateAction" jdbcType="VARCHAR" property="operateaction"/>
+        <result column="OperateContent" jdbcType="VARCHAR" property="operatecontent"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="module" jdbcType="VARCHAR" property="module"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="ip" jdbcType="VARCHAR" property="ip"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    Id, UniqueID, StaffAccoutName,  date_format(OperateDate, '%Y-%m-%d %H:%i:%s') OperateDate, OperateEntityType, OperateEntityId, OperateAction,
+    OperateContent, status, module, username, ip
+  </sql>
+
+    <sql id="Base_Column_List1">
+        l.Id, l.UniqueID, l.StaffAccoutName,  date_format(l.OperateDate, '%Y-%m-%d %H:%i:%s') OperateDate, l.OperateEntityType, l.OperateEntityId, l.OperateAction,
+    l.OperateContent, l.status, l.module,l. username, l.ip,o.OrgName orgName,o.OrgMemo orgMemo,o.UniqueId deptId
+  </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from loginfo
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List1"/>
+        from loginfo l
+        left join bm_staff_tbl s on l.StaffAccoutName = s.AccoutName
+        left join organization o on s.DeptId = o.UniqueID
+        <where>
+        <if test="type == 0">
+            l.StaffAccoutName not in  ("safeadmin","logadmin","sysadmin")
+            <if test="orgId != null and account == null">
+                and  l.username in
+                (select userName FROM bm_staff_tbl b where b.DeptId = #{orgId})
+            </if>
+            <if test="account != null">
+                and l.userName = #{account}
+            </if>
+            <if test="keyWords != null">
+                and l.OperateAction like CONCAT('%',#{keyWords},'%')
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and  OperateDate >= str_to_date(#{startDate},'%Y-%m-%d')
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and  str_to_date(#{endDate},'%Y-%m-%d') >= OperateDate
+            </if>
+        </if>
+            <if test="type == 1">
+                l.StaffAccoutName  in  ("safeadmin","logadmin","sysadmin")
+                <if test="startDate != null and startDate != ''">
+                    and  OperateDate >= str_to_date(#{startDate},'%Y-%m-%d')
+                </if>
+                <if test="endDate != null and endDate != ''">
+                    and  str_to_date(#{endDate},'%Y-%m-%d') >= OperateDate
+                </if>
+                <if test="keyWords != null">
+                    and l.OperateAction like CONCAT('%',#{keyWords},'%')
+                </if>
+            </if>
+        </where>
+        ORDER BY l.OperateDate desc
+        limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="selectAllLog" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List1"/>
+        from loginfo l
+        left join bm_staff_tbl s on l.StaffAccoutName = s.AccoutName
+        left join organization o on s.DeptId = o.UniqueID
+        <where>
+            <if test="type == 0">
+                l.StaffAccoutName not in  ("safeadmin","logadmin","sysadmin")
+                <if test="orgId != null and account == null">
+                    and  l.username in
+                    (select userName FROM bm_staff_tbl b where b.DeptId = #{orgId})
+                </if>
+                <if test="account != null">
+                    and l.userName = #{account}
+                </if>
+                <if test="keyWords != null">
+                    and l.OperateAction like CONCAT('%',#{keyWords},'%')
+                </if>
+                <if test="startDate != null and startDate != ''">
+                    and  OperateDate >= str_to_date(#{startDate},'%Y-%m-%d')
+                </if>
+                <if test="endDate != null and endDate != ''">
+                    and  str_to_date(#{endDate},'%Y-%m-%d') >= OperateDate
+                </if>
+            </if>
+            <if test="type == 1">
+                l.StaffAccoutName  in  ("safeadmin","logadmin","sysadmin")
+                <if test="startDate != null and startDate != ''">
+                    and  OperateDate >= str_to_date(#{startDate},'%Y-%m-%d')
+                </if>
+                <if test="endDate != null and endDate != ''">
+                    and  str_to_date(#{endDate},'%Y-%m-%d') >= OperateDate
+                </if>
+                <if test="keyWords != null">
+                    and l.OperateAction like CONCAT('%',#{keyWords},'%')
+                </if>
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+     delete from loginfo
+      where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.logAdmin.dto.Loginfo">
+    insert into loginfo (Id, UniqueID, StaffAccoutName, 
+      OperateDate, OperateEntityType, OperateEntityId, 
+      OperateAction, OperateContent, status, 
+      module, username, ip
+      )
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{staffaccoutname,jdbcType=VARCHAR}, 
+      NOW(), #{operateentitytype,jdbcType=VARCHAR}, #{operateentityid,jdbcType=VARCHAR},
+      #{operateaction,jdbcType=VARCHAR}, #{operatecontent,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{module,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.logAdmin.dto.Loginfo">
+        insert into loginfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="uniqueid != null">
+                UniqueID,
+            </if>
+            <if test="staffaccoutname != null">
+                StaffAccoutName,
+            </if>
+            <if test="operatedate != null">
+                OperateDate,
+            </if>
+            <if test="operateentitytype != null">
+                OperateEntityType,
+            </if>
+            <if test="operateentityid != null">
+                OperateEntityId,
+            </if>
+            <if test="operateaction != null">
+                OperateAction,
+            </if>
+            <if test="operatecontent != null">
+                OperateContent,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="module != null">
+                module,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+            <if test="ip != null">
+                ip,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="uniqueid != null">
+                #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="staffaccoutname != null">
+                #{staffaccoutname,jdbcType=VARCHAR},
+            </if>
+            <if test="operatedate != null">
+                #{operatedate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operateentitytype != null">
+                #{operateentitytype,jdbcType=VARCHAR},
+            </if>
+            <if test="operateentityid != null">
+                #{operateentityid,jdbcType=VARCHAR},
+            </if>
+            <if test="operateaction != null">
+                #{operateaction,jdbcType=VARCHAR},
+            </if>
+            <if test="operatecontent != null">
+                #{operatecontent,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="module != null">
+                #{module,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null">
+                #{ip,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.logAdmin.dto.Loginfo">
+        update loginfo
+        <set>
+            <if test="uniqueid != null">
+                UniqueID = #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="staffaccoutname != null">
+                StaffAccoutName = #{staffaccoutname,jdbcType=VARCHAR},
+            </if>
+            <if test="operatedate != null">
+                OperateDate = #{operatedate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operateentitytype != null">
+                OperateEntityType = #{operateentitytype,jdbcType=VARCHAR},
+            </if>
+            <if test="operateentityid != null">
+                OperateEntityId = #{operateentityid,jdbcType=VARCHAR},
+            </if>
+            <if test="operateaction != null">
+                OperateAction = #{operateaction,jdbcType=VARCHAR},
+            </if>
+            <if test="operatecontent != null">
+                OperateContent = #{operatecontent,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="module != null">
+                module = #{module,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null">
+                ip = #{ip,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.logAdmin.dto.Loginfo">
+    update loginfo
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      StaffAccoutName = #{staffaccoutname,jdbcType=VARCHAR},
+      OperateDate = #{operatedate,jdbcType=TIMESTAMP},
+      OperateEntityType = #{operateentitytype,jdbcType=VARCHAR},
+      OperateEntityId = #{operateentityid,jdbcType=VARCHAR},
+      OperateAction = #{operateaction,jdbcType=VARCHAR},
+      OperateContent = #{operatecontent,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      module = #{module,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

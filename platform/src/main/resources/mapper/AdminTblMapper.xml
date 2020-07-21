@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.AdminTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.AdminTbl" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="adminId" property="adminid" jdbcType="VARCHAR" />
+    <result column="pass" property="pass" jdbcType="VARCHAR" />
+    <result column="roleType" property="roletype" jdbcType="INTEGER" />
+    <result column="ChangePasswdTime" property="changepasswdtime" jdbcType="TIMESTAMP" />
+    <result column="LastLoginTime" property="lastlogintime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, UniqueID, adminId, pass, roleType, date_format(ChangePasswdTime, '%Y-%m-%d %H:%i:%s') ChangePasswdTime, date_format(LastLoginTime, '%Y-%m-%d %H:%i:%s') LastLoginTime
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin_tbl
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="queryByAccount" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from admin_tbl
+    where adminId = #{account}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from admin_tbl
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.AdminTbl" >
+    insert into admin_tbl (id, UniqueID, adminId, 
+      pass, roleType, ChangePasswdTime, 
+      LastLoginTime)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{adminid,jdbcType=VARCHAR}, 
+      #{pass,jdbcType=VARCHAR}, #{roletype,jdbcType=INTEGER}, #{changepasswdtime,jdbcType=TIMESTAMP}, 
+      #{lastlogintime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.AdminTbl" >
+    insert into admin_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueID,
+      </if>
+      <if test="adminid != null" >
+        adminId,
+      </if>
+      <if test="pass != null" >
+        pass,
+      </if>
+      <if test="roletype != null" >
+        roleType,
+      </if>
+      <if test="changepasswdtime != null" >
+        ChangePasswdTime,
+      </if>
+      <if test="lastlogintime != null" >
+        LastLoginTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="adminid != null" >
+        #{adminid,jdbcType=VARCHAR},
+      </if>
+      <if test="pass != null" >
+        #{pass,jdbcType=VARCHAR},
+      </if>
+      <if test="roletype != null" >
+        #{roletype,jdbcType=INTEGER},
+      </if>
+      <if test="changepasswdtime != null" >
+        #{changepasswdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastlogintime != null" >
+        #{lastlogintime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.AdminTbl" >
+    update admin_tbl
+    <set >
+      <if test="adminid != null" >
+        adminId = #{adminid,jdbcType=VARCHAR},
+      </if>
+      <if test="pass != null" >
+        pass = #{pass,jdbcType=VARCHAR},
+      </if>
+      <if test="roletype != null" >
+        roleType = #{roletype,jdbcType=INTEGER},
+      </if>
+      <if test="changepasswdtime != null" >
+        ChangePasswdTime = NOW(),
+      </if>
+      <if test="lastlogintime != null" >
+        LastLoginTime = #{lastlogintime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.AdminTbl" >
+    update admin_tbl
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      adminId = #{adminid,jdbcType=VARCHAR},
+      pass = #{pass,jdbcType=VARCHAR},
+      roleType = #{roletype,jdbcType=INTEGER},
+      ChangePasswdTime = #{changepasswdtime,jdbcType=TIMESTAMP},
+      LastLoginTime = #{lastlogintime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

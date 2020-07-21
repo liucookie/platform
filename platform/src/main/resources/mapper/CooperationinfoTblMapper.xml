@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.CooperationinfoTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.CooperationinfoTbl" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="IsSecret" property="issecret" jdbcType="VARCHAR" />
+    <result column="Person" property="person" jdbcType="VARCHAR" />
+    <result column="OrgName" property="orgname" jdbcType="VARCHAR" />
+    <result column="SecrecyAptitude" property="secrecyaptitude" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, UniqueID, Name, IsSecret, Person, OrgName, SecrecyAptitude
+  </sql>
+
+  <sql id="Base_Column_List1" >
+    c.id, c.UniqueID, c.Name, c.IsSecret, c.Person, c.OrgName, c.SecrecyAptitude
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cooperationinfo_tbl
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.CooperationinfoTbl"
+          parameterType="com.hangyu.platform.web.backBusiness.vo.CooperationQueryVO">
+    select
+    c.id, c.UniqueID, c.Name, c.IsSecret, b.UserName person, o.OrgName orgname, c.SecrecyAptitude
+    from cooperationinfo_tbl c
+    left JOIN organization  o on c.OrgName = o.UniqueID
+    left JOIN bm_staff_tbl b on c.Person = b.StaffId
+    <where>
+        <if test="orgId != null">
+              c.OrgName = #{orgId}
+        </if>
+        <if test="userId != null">
+            and c.Person = #{userId}
+        </if>
+        <if test="isSecret != null">
+            and c.IsSecret = #{isSecret}
+        </if>
+        <if test="aptitude != null">
+            and c.SecrecyAptitude = #{aptitude}
+        </if>
+        <if test="name != null">
+            and c.Name like CONCAT('%',#{name},'%')
+        </if>
+    </where>
+   limit #{pageNum},#{pageSize}
+</select>
+
+    <select id="selectTotal" resultType="com.hangyu.platform.web.backBusiness.dto.CooperationinfoTbl"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.CooperationQueryVO">
+        select
+        c.id, c.UniqueID, c.Name, c.IsSecret, b.UserName person, o.OrgName orgname, c.SecrecyAptitude
+        from cooperationinfo_tbl c
+        left JOIN organization  o on c.OrgName = o.UniqueID
+        left JOIN bm_staff_tbl b on c.Person = b.StaffId
+        <where>
+            <if test="orgId != null">
+                  c.OrgName = #{orgId}
+            </if>
+            <if test="userId != null">
+                and c.Person = #{userId}
+            </if>
+            <if test="isSecret != null">
+                and c.IsSecret = #{isSecret}
+            </if>
+            <if test="aptitude != null">
+                and c.SecrecyAptitude = #{aptitude}
+            </if>
+            <if test="name != null">
+                and c.Name like CONCAT('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from cooperationinfo_tbl
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.CooperationinfoTbl" >
+    insert into cooperationinfo_tbl (id, UniqueID, Name, 
+      IsSecret, Person, OrgName, 
+      SecrecyAptitude)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{issecret,jdbcType=VARCHAR}, #{person,jdbcType=VARCHAR}, #{orgname,jdbcType=VARCHAR}, 
+      #{secrecyaptitude,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.CooperationinfoTbl" >
+    insert into cooperationinfo_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uniqueid != null" >
+        UniqueID,
+      </if>
+      <if test="name != null" >
+        Name,
+      </if>
+      <if test="issecret != null" >
+        IsSecret,
+      </if>
+      <if test="person != null" >
+        Person,
+      </if>
+      <if test="orgname != null" >
+        OrgName,
+      </if>
+      <if test="secrecyaptitude != null" >
+        SecrecyAptitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null" >
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="issecret != null" >
+        #{issecret,jdbcType=VARCHAR},
+      </if>
+      <if test="person != null" >
+        #{person,jdbcType=VARCHAR},
+      </if>
+      <if test="orgname != null" >
+        #{orgname,jdbcType=VARCHAR},
+      </if>
+      <if test="secrecyaptitude != null" >
+        #{secrecyaptitude,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.CooperationinfoTbl" >
+    update cooperationinfo_tbl
+    set
+      Name = #{name,jdbcType=VARCHAR},
+      IsSecret = #{issecret,jdbcType=VARCHAR},
+      Person = #{person,jdbcType=VARCHAR},
+      OrgName = #{orgname,jdbcType=VARCHAR},
+      SecrecyAptitude = #{secrecyaptitude,jdbcType=VARCHAR}
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

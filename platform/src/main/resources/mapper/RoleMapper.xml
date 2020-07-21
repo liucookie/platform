@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.safeAdmin.mapper.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.safeAdmin.dto.Role" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="rolename" property="rolename" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="createperson" property="createperson" jdbcType="VARCHAR" />
+    <result column="updateperson" property="updateperson" jdbcType="VARCHAR" />
+    <result column="department" property="department" jdbcType="INTEGER" />
+    <result column="orgid" property="orgid" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, rolename, date_format(createtime, '%Y-%m-%d %H:%i:%s') createtime, date_format(updatetime, '%Y-%m-%d %H:%i:%s') updatetime, createperson, updateperson, department, orgid,
+    remarks
+  </sql>
+
+  <sql id="Base_Column_List2" >
+    r.id, r.rolename,date_format(r.createtime, '%Y-%m-%d %H:%i:%s') createtime, date_format(r.updatetime, '%Y-%m-%d %H:%i:%s') updatetime, r.createperson, r.updateperson, r.department, r.orgid,
+    r.remarks,o.orgname orgname
+  </sql>
+
+  <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.safeAdmin.dto.Role" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List2" />
+    from role r
+    left join organization o
+    on r.orgid =  o.UniqueID
+    where r.id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="queryAllByPage" resultType="com.hangyu.platform.web.safeAdmin.dto.Role">
+    select
+    <include refid="Base_Column_List2" />
+    from role r
+    left join organization o
+    on r.orgid =  o.UniqueID
+    <where>
+      <if test="orgid != null and orgid != '' ">
+        r.orgid = #{orgid}
+      </if>
+      <if test="rolename != null and rolename != '' ">
+        and r.rolename like CONCAT('%',#{rolename},'%')
+      </if>
+    </where>
+    order by r.createtime desc
+    limit #{start} , #{pageSize}
+  </select>
+
+  <select id="queryAllRole" resultType="com.hangyu.platform.web.safeAdmin.dto.Role">
+    select
+    <include refid="Base_Column_List2" />
+    from role r
+    left join organization o
+    on r.orgid =  o.UniqueID
+    <where>
+      <if test="orgid != null and orgid != '' ">
+        r.orgid = #{orgid}
+      </if>
+      <if test="rolename != null and rolename != '' ">
+        and r.rolename = #{rolename}
+      </if>
+    </where>
+
+  </select>
+
+  <select id="selectByRoleName" resultType="com.hangyu.platform.web.safeAdmin.dto.Role" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from role
+    where rolename = #{roleName}
+  </select>
+
+  <select id="queryUserNameByRoleId" resultType="java.lang.String" parameterType="java.lang.Integer" >
+    select distinct
+    b.username
+    from bm_staff_tbl b
+    where b.staffid in
+    (select userid from userrole u where u.roleid  = #{roleid})
+    and b.isDelete = 0
+  </select>
+
+  <select id="queryRoleByUserId" resultType="java.lang.String" parameterType="java.lang.String" >
+   select
+   DISTINCT
+    r.rolename
+    from role r
+    left join userrole u on r.id = u.roleid
+    where r.id in
+    (select u.roleid from userrole u where u.userid  = #{userid})
+
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.safeAdmin.dto.Role" >
+    insert into role (id, rolename, createtime, 
+      updatetime, createperson, updateperson, 
+      department, orgid, remarks
+      )
+    values (#{id,jdbcType=INTEGER}, #{rolename,jdbcType=VARCHAR}, NOW(),
+      #{updatetime,jdbcType=TIMESTAMP}, #{createperson,jdbcType=VARCHAR}, #{updateperson,jdbcType=VARCHAR}, 
+      #{department,jdbcType=INTEGER}, #{orgid,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.safeAdmin.dto.Role" >
+    insert into role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="rolename != null" >
+        rolename,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="createperson != null" >
+        createperson,
+      </if>
+      <if test="updateperson != null" >
+        updateperson,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="orgid != null" >
+        orgid,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="rolename != null" >
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+           NOW(),
+      </if>
+      <if test="createperson != null" >
+        #{createperson,jdbcType=VARCHAR},
+      </if>
+      <if test="updateperson != null" >
+        #{updateperson,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        #{department,jdbcType=INTEGER},
+      </if>
+      <if test="orgid != null" >
+        #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.safeAdmin.dto.Role" >
+    update role
+    <set >
+      <if test="rolename != null" >
+        rolename = #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = NOW(),
+      </if>
+      <if test="createperson != null" >
+        createperson = #{createperson,jdbcType=VARCHAR},
+      </if>
+      <if test="updateperson != null" >
+        updateperson = #{updateperson,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null" >
+        department = #{department,jdbcType=INTEGER},
+      </if>
+      <if test="orgid != null" >
+        orgid = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.safeAdmin.dto.Role" >
+    update role
+    set rolename = #{rolename,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      createperson = #{createperson,jdbcType=VARCHAR},
+      updateperson = #{updateperson,jdbcType=VARCHAR},
+      department = #{department,jdbcType=INTEGER},
+      orgid = #{orgid,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="getRoleByUserId" resultType="com.hangyu.platform.web.safeAdmin.dto.Role" parameterType="java.lang.String" >
+   select
+    id id,
+    rolename rolename
+    from role r
+    where id in (select roleid from userrole where userid = #{userId})
+  </select>
+
+
+  <select id="queryUserId" resultType="java.lang.String" parameterType="java.lang.Integer" >
+   select
+    userid
+    from userrole
+    where roleid = #{roleId}
+  </select>
+</mapper>

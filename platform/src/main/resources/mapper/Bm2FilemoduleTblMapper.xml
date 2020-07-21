@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2FilemoduleTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2FilemoduleTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="ModuleId" property="moduleid" jdbcType="VARCHAR"/>
+        <result column="ModuleName" property="modulename" jdbcType="VARCHAR"/>
+        <result column="TopModuleId" property="topmoduleid" jdbcType="VARCHAR"/>
+        <result column="ModuleTemp" property="moduletemp" jdbcType="VARCHAR"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="RecordType" property="recordtype" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, ModuleId, ModuleName, TopModuleId, ModuleTemp, SortOrder, IsDelete, RecordType
+  </sql>
+
+    <sql id="Base_Column_List1">
+    f.Id, f.ModuleId, f.ModuleName, f.TopModuleId, f.ModuleTemp, f.SortOrder,f.IsDelete, f.RecordType
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_filemodule_tbl
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_filemodule_tbl
+        where RecordType = #{type}
+        and IsDelete = 0
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from    bm2_filemodule_tbl
+        where ModuleId in
+        (select ModuleId from bm2_recordmodulerelation_tbl where RecordTypeId = #{id})
+        and IsDelete = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bm2_filemodule_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FilemoduleTbl">
+    insert into bm2_filemodule_tbl (Id, ModuleId, ModuleName, 
+      TopModuleId, ModuleTemp, SortOrder, 
+      IsDelete, RecordType)
+    values (#{id,jdbcType=INTEGER}, #{moduleid,jdbcType=VARCHAR}, #{modulename,jdbcType=VARCHAR}, 
+      #{topmoduleid,jdbcType=VARCHAR}, #{moduletemp,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, 
+      #{isdelete,jdbcType=INTEGER}, #{recordtype,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FilemoduleTbl">
+        insert into bm2_filemodule_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="moduleid != null">
+                ModuleId,
+            </if>
+            <if test="modulename != null">
+                ModuleName,
+            </if>
+            <if test="topmoduleid != null">
+                TopModuleId,
+            </if>
+            <if test="moduletemp != null">
+                ModuleTemp,
+            </if>
+            <if test="sortorder != null">
+                SortOrder,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+            <if test="recordtype != null">
+                RecordType,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="moduleid != null">
+                #{moduleid,jdbcType=VARCHAR},
+            </if>
+            <if test="modulename != null">
+                #{modulename,jdbcType=VARCHAR},
+            </if>
+            <if test="topmoduleid != null">
+                #{topmoduleid,jdbcType=VARCHAR},
+            </if>
+            <if test="moduletemp != null">
+                #{moduletemp,jdbcType=VARCHAR},
+            </if>
+            <if test="sortorder != null">
+                #{sortorder,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="recordtype != null">
+                #{recordtype,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FilemoduleTbl">
+        update bm2_filemodule_tbl
+        <set>
+            <if test="moduleid != null">
+                ModuleId = #{moduleid,jdbcType=VARCHAR},
+            </if>
+            <if test="modulename != null">
+                ModuleName = #{modulename,jdbcType=VARCHAR},
+            </if>
+            <if test="topmoduleid != null">
+                TopModuleId = #{topmoduleid,jdbcType=VARCHAR},
+            </if>
+            <if test="moduletemp != null">
+                ModuleTemp = #{moduletemp,jdbcType=VARCHAR},
+            </if>
+            <if test="sortorder != null">
+                SortOrder = #{sortorder,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="recordtype != null">
+                RecordType = #{recordtype,jdbcType=INTEGER},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FilemoduleTbl">
+    update bm2_filemodule_tbl
+    set ModuleId = #{moduleid,jdbcType=VARCHAR},
+      ModuleName = #{modulename,jdbcType=VARCHAR},
+      TopModuleId = #{topmoduleid,jdbcType=VARCHAR},
+      ModuleTemp = #{moduletemp,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      RecordType = #{recordtype,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

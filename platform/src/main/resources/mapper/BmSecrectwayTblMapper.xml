@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSecrectwayTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSecrectwayTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="OutWayId" property="outwayid" jdbcType="VARCHAR"/>
+        <result column="OutWayType" property="outwaytype" jdbcType="INTEGER"/>
+        <result column="OutWayName" property="outwayname" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        Id, OutWayId, OutWayType, OutWayName, IsDelete
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secrectway_tbl
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="select" resultMap="BaseResultMap" parameterType="java.util.List">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secrectway_tbl
+        where OutWayId in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+    </select>
+
+    <select id="selectByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_secrectway_tbl
+        where OutWayType = #{type,jdbcType=INTEGER}
+        and IsDelete = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bm_secrectway_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSecrectwayTbl">
+    insert into bm_secrectway_tbl (Id, OutWayId, OutWayType, 
+      OutWayName, IsDelete)
+    values (#{id,jdbcType=INTEGER}, #{outwayid,jdbcType=VARCHAR}, #{outwaytype,jdbcType=INTEGER}, 
+      #{outwayname,jdbcType=VARCHAR}, #{isdelete,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSecrectwayTbl">
+        insert into bm_secrectway_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="outwayid != null">
+                OutWayId,
+            </if>
+            <if test="outwaytype != null">
+                OutWayType,
+            </if>
+            <if test="outwayname != null">
+                OutWayName,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="outwayid != null">
+                #{outwayid,jdbcType=VARCHAR},
+            </if>
+            <if test="outwaytype != null">
+                #{outwaytype,jdbcType=INTEGER},
+            </if>
+            <if test="outwayname != null">
+                #{outwayname,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSecrectwayTbl">
+        update bm_secrectway_tbl
+        <set>
+            <if test="outwayid != null">
+                OutWayId = #{outwayid,jdbcType=VARCHAR},
+            </if>
+            <if test="outwaytype != null">
+                OutWayType = #{outwaytype,jdbcType=INTEGER},
+            </if>
+            <if test="outwayname != null">
+                OutWayName = #{outwayname,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSecrectwayTbl">
+    update bm_secrectway_tbl
+    set OutWayId = #{outwayid,jdbcType=VARCHAR},
+      OutWayType = #{outwaytype,jdbcType=INTEGER},
+      OutWayName = #{outwayname,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

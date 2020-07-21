@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmSlsetofficerTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmSlsetofficerTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="OrgID" property="orgid" jdbcType="VARCHAR"/>
+        <result column="UserID" property="userid" jdbcType="VARCHAR"/>
+        <result column="Post" property="post" jdbcType="VARCHAR"/>
+        <result column="Range" property="range" jdbcType="VARCHAR"/>
+        <result column="IsTrain" property="istrain" jdbcType="CHAR"/>
+        <result column="TrainDate" property="traindate" jdbcType="TIMESTAMP"/>
+        <result column="Valid" property="valid" jdbcType="VARCHAR"/>
+        <result column="Certificate" property="certificate" jdbcType="VARCHAR"/>
+        <result column="SLType" property="sltype" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="Creater" property="creater" jdbcType="VARCHAR"/>
+        <result column="ValidSDate" property="validsdate" jdbcType="TIMESTAMP"/>
+        <result column="ValidEDate" property="validedate" jdbcType="TIMESTAMP"/>
+        <result column="SecretRange" property="secretrange" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    s.Id,  s.UniqueID,  s.OrgID,  s.UserID,  s.Post,  s.Range,  s.IsTrain, date_format(s.TrainDate, '%Y-%m-%d')  TrainDate,  s.Valid,  s.Certificate,
+     s.SLType,  s.IsDelete, s.CreateTime,  s.Creater, date_format(s.ValidSDate, '%Y-%m-%d') ValidSDate,date_format(s.ValidEDate, '%Y-%m-%d') ValidEDate,  s.SecretRange,b.codeName typeName,
+    o.OrgName orgName,t.UserName userName
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_slsetofficer_tbl s
+        left join basecode b on b.id = s.SLType
+        left join organization o on o.Uniqueid = s.OrgID
+        left join bm_staff_tbl t on t.StaffId = s.UserID
+        where s.UniqueID = #{id}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_slsetofficer_tbl s
+        left join basecode b on b.id = s.SLType
+        left join organization o on o.Uniqueid = s.OrgID
+        left join bm_staff_tbl t on t.StaffId = s.UserID
+        <where>
+            s.IsDelete = 0
+            <if test="typeId != null">
+                and s.SLType = #{typeId}
+            </if>
+            <if test="orgId != null">
+                and s.OrgID = #{orgId}
+            </if>
+            <if test="userId != null">
+                and s.UserID = #{userId}
+            </if>
+        </where>
+        order by s.id desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(UniqueID)
+        from bm_slsetofficer_tbl
+        <where>
+            IsDelete = 0
+            <if test="typeId != null">
+                and SLType = #{typeId}
+            </if>
+            <if test="orgId != null">
+                and OrgID = #{orgId}
+            </if>
+            <if test="userId != null">
+                and UserID = #{userId}
+            </if>
+        </where>
+
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_slsetofficer_tbl set IsDelete  = 1
+    where UniqueID = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetofficerTbl">
+    insert into bm_slsetofficer_tbl (Id, UniqueID, OrgID, 
+      UserID, Post, `Range`,
+      IsTrain, TrainDate, Valid,
+      Certificate, SLType, IsDelete, 
+      CreateTime, Creater, ValidSDate, 
+      ValidEDate, SecretRange)
+    values (#{id}, #{uniqueid}, #{orgid},
+      #{userid}, #{post}, #{range},
+      #{istrain}, str_to_date(#{traindate},'%Y-%m-%d') , #{valid},
+      #{certificate}, #{sltype}, 0,
+      NOW(), #{creater}, str_to_date(#{validsdate},'%Y-%m-%d') ,
+      str_to_date(#{validedate},'%Y-%m-%d') , #{secretrange})
+  </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetofficerTbl">
+        update bm_slsetofficer_tbl
+        <set>
+            <if test="uniqueid != null">
+                UniqueID = #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="orgid != null">
+                OrgID = #{orgid,jdbcType=VARCHAR},
+            </if>
+            <if test="userid != null">
+                UserID = #{userid,jdbcType=VARCHAR},
+            </if>
+            <if test="post != null">
+                Post = #{post,jdbcType=VARCHAR},
+            </if>
+            <if test="range != null">
+                Range = #{range,jdbcType=VARCHAR},
+            </if>
+            <if test="istrain != null">
+                IsTrain = #{istrain,jdbcType=CHAR},
+            </if>
+            <if test="traindate != null">
+                TrainDate = #{traindate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="valid != null">
+                Valid = #{valid,jdbcType=VARCHAR},
+            </if>
+            <if test="certificate != null">
+                Certificate = #{certificate,jdbcType=VARCHAR},
+            </if>
+            <if test="sltype != null">
+                SLType = #{sltype,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                CreateTime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creater != null">
+                Creater = #{creater,jdbcType=VARCHAR},
+            </if>
+            <if test="validsdate != null">
+                ValidSDate = #{validsdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="validedate != null">
+                ValidEDate = #{validedate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="secretrange != null">
+                SecretRange = #{secretrange,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmSlsetofficerTbl">
+    update bm_slsetofficer_tbl
+    set
+      OrgID = #{orgid,jdbcType=VARCHAR},
+      UserID = #{userid,jdbcType=VARCHAR},
+      Post = #{post,jdbcType=VARCHAR},
+      `Range` = #{range,jdbcType=VARCHAR},
+      IsTrain = #{istrain,jdbcType=CHAR},
+      TrainDate = str_to_date(#{traindate},'%Y-%m-%d'),
+      Valid = #{valid,jdbcType=VARCHAR},
+      Certificate = #{certificate,jdbcType=VARCHAR},
+      SLType = #{sltype,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      Creater = #{creater,jdbcType=VARCHAR},
+      ValidSDate =str_to_date(#{validsdate},'%Y-%m-%d'),
+      ValidEDate =str_to_date(#{validedate},'%Y-%m-%d'),
+      SecretRange = #{secretrange,jdbcType=VARCHAR}
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmVouchinfoTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmVouchinfoTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="VouchInfoId" property="vouchinfoid" jdbcType="VARCHAR"/>
+        <result column="InfoName" property="infoname" jdbcType="VARCHAR"/>
+        <result column="InfoContent" property="infocontent" jdbcType="VARCHAR"/>
+        <result column="KeyWord" property="keyword" jdbcType="VARCHAR"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="FileUrl" property="fileurl" jdbcType="VARCHAR"/>
+        <result column="InfoRemark" property="inforemark" jdbcType="VARCHAR"/>
+        <result column="TopSign" property="topsign" jdbcType="INTEGER"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="ReadNum" property="readnum" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="TypeId" property="typeid" jdbcType="VARCHAR"/>
+        <result column="Picture" property="picture" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    b.Id, b.VouchInfoId, b.InfoName, b.InfoContent, b.KeyWord, date_format(b.UpdateTime, '%Y-%m-%d')  UpdateTime , b.FileUrl, b.InfoRemark,
+    b.TopSign, b.SortOrder, b.ReadNum, b.IsDelete, b.TypeId, b.Picture,c.codeName typeName
+  </sql>
+    <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.backBusiness.dto.BmVouchinfoTbl"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_vouchinfo_tbl b
+        left join basecode c on c.id = b.TypeId
+        where b.VouchInfoId = #{id}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.BmVouchinfoTbl">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_vouchinfo_tbl b
+        left join basecode c on c.id = b.TypeId
+        where b.IsDelete = 0
+        order by b.Id desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="querySecretKnowledge" resultMap="BaseResultMap" >
+        select
+        *
+        from bm_vouchinfo_tbl
+        where IsDelete = 0
+        order by TopSign desc
+    </select>
+
+    <select id="queryIsSign" resultType="com.hangyu.platform.web.backBusiness.dto.BmVouchinfoTbl"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_vouchinfo_tbl b
+        left join basecode c on c.id = b.TypeId
+        where
+        b.IsDelete = 0
+        <if test="name != null and name != ''">
+            and b.InfoName like CONCAT("%",#{name},"%")
+        </if>
+        order by b.Id desc
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(Id)
+    from bm_vouchinfo_tbl
+    where IsDelete = 0
+  </select>
+
+    <update id="cancelTop" >
+        update  bm_vouchinfo_tbl set TopSign = 0
+        where IsDelete = 0
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_vouchinfo_tbl set IsDelete = 1
+    where VouchInfoId = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmVouchinfoTbl">
+    insert into bm_vouchinfo_tbl (Id, VouchInfoId, InfoName, 
+      InfoContent, KeyWord, UpdateTime, 
+      FileUrl, InfoRemark, TopSign, 
+      SortOrder, ReadNum, IsDelete, 
+      TypeId, Picture)
+    values (#{id,jdbcType=INTEGER}, #{vouchinfoid,jdbcType=VARCHAR}, #{infoname,jdbcType=VARCHAR}, 
+      #{infocontent,jdbcType=VARCHAR}, #{keyword,jdbcType=VARCHAR}, str_to_date(#{updatetime},'%Y-%m-%d'),
+      #{fileurl,jdbcType=VARCHAR}, #{inforemark,jdbcType=VARCHAR}, #{topsign,jdbcType=INTEGER}, 
+      #{sortorder,jdbcType=INTEGER}, #{readnum,jdbcType=INTEGER},0,
+      #{typeid,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmVouchinfoTbl">
+    update bm_vouchinfo_tbl
+    set
+      InfoName = #{infoname,jdbcType=VARCHAR},
+      InfoContent = #{infocontent,jdbcType=VARCHAR},
+      KeyWord = #{keyword,jdbcType=VARCHAR},
+      UpdateTime = str_to_date(#{updatetime},'%Y-%m-%d'),
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      InfoRemark = #{inforemark,jdbcType=VARCHAR},
+      TopSign = #{topsign,jdbcType=INTEGER},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      ReadNum = #{readnum,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      TypeId = #{typeid,jdbcType=VARCHAR},
+      Picture = #{picture,jdbcType=VARCHAR}
+    where VouchInfoId = #{vouchinfoid,jdbcType=VARCHAR}
+  </update>
+</mapper>

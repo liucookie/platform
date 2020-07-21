@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.AffairsexerciseinfoTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoTbl">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="VisitorDate" property="visitordate" jdbcType="TIMESTAMP"/>
+        <result column="ContactPart" property="contactpart" jdbcType="VARCHAR"/>
+        <result column="KeepStaff" property="keepstaff" jdbcType="VARCHAR"/>
+        <result column="KeepSupervise" property="keepsupervise" jdbcType="VARCHAR"/>
+        <result column="SecretLevelId" property="secretlevelid" jdbcType="VARCHAR"/>
+        <result column="CustomerCount" property="customercount" jdbcType="INTEGER"/>
+        <result column="VisitorDeptId" property="visitordeptid" jdbcType="VARCHAR"/>
+        <result column="VisitorAddress" property="visitoraddress" jdbcType="VARCHAR"/>
+        <result column="LinkPhone" property="linkphone" jdbcType="VARCHAR"/>
+        <result column="VisitorResion" property="visitorresion" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="KeepStaffName" property="keepstaffname" jdbcType="VARCHAR"/>
+        <result column="SecretLevel" property="secretlevel" jdbcType="VARCHAR"/>
+        <result column="VisitorDeptName" property="visitordeptname" jdbcType="VARCHAR"/>
+        <result column="VisitorEDate" property="visitoredate" jdbcType="TIMESTAMP"/>
+        <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, UniqueID, date_format(VisitorDate, '%Y-%m-%d')  VisitorDate , ContactPart, KeepStaff, KeepSupervise, SecretLevelId,
+    CustomerCount, VisitorDeptId, VisitorAddress, LinkPhone, VisitorResion, IsDelete, 
+    UpdateTime, KeepStaffName, SecretLevel, VisitorDeptName, date_format(VisitorEDate, '%Y-%m-%d')  VisitorEDate, Remark
+  </sql>
+    <sql id="Base_Column_List1">
+    a.id,  a.UniqueID,  date_format(a.VisitorDate, '%Y-%m-%d')  VisitorDate, a.ContactPart,  a.KeepStaff,  a.KeepSupervise,  a.SecretLevelId,
+     a.CustomerCount,  a.VisitorDeptId,  a.VisitorAddress,  a.LinkPhone,  a.VisitorResion,  a.IsDelete,
+     a.UpdateTime,  a.KeepStaffName,  a.SecretLevel,  a.VisitorDeptName,  a.VisitorEDate,  a.Remark,
+     ba.codename serectLevelName,o.OrgName visitDeptName
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from affairsexerciseinfo_tbl
+        where a.UniqueID = #{id}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoTbl">
+        select
+        <include refid="Base_Column_List"/>
+        from affairsexerciseinfo_tbl
+        <where>
+            isDelete = 0
+            <if test="orgName != null">
+                and VisitorDeptName = #{orgName}
+            </if>
+        </where>
+        order by UpdateTime desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from affairsexerciseinfo_tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null">
+                and VisitorDeptName = #{orgName}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update  affairsexerciseinfo_tbl set IsDelete = 1
+    where UniqueID = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoTbl">
+    insert into affairsexerciseinfo_tbl (id, UniqueID, VisitorDate, 
+      ContactPart, KeepStaff, KeepSupervise, 
+      SecretLevelId, CustomerCount, VisitorDeptId, 
+      VisitorAddress, LinkPhone, VisitorResion, 
+      IsDelete, UpdateTime, KeepStaffName, 
+      SecretLevel, VisitorDeptName, VisitorEDate, 
+      Remark)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, str_to_date(#{visitordate},'%Y-%m-%d %H:%i:%s'),
+      #{contactpart,jdbcType=VARCHAR}, #{keepstaff,jdbcType=VARCHAR}, #{keepsupervise,jdbcType=VARCHAR}, 
+      #{secretlevelid,jdbcType=VARCHAR}, #{customercount,jdbcType=INTEGER}, #{visitordeptid,jdbcType=VARCHAR}, 
+      #{visitoraddress,jdbcType=VARCHAR}, #{linkphone,jdbcType=VARCHAR}, #{visitorresion,jdbcType=VARCHAR}, 
+      0, NOW(), #{keepstaffname,jdbcType=VARCHAR},
+      #{secretlevel,jdbcType=VARCHAR}, #{visitordeptname,jdbcType=VARCHAR},str_to_date(#{visitoredate},'%Y-%m-%d %H:%i:%s'),
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoTbl">
+        insert into affairsexerciseinfo_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="uniqueid != null">
+                UniqueID,
+            </if>
+            <if test="visitordate != null">
+                VisitorDate,
+            </if>
+            <if test="contactpart != null">
+                ContactPart,
+            </if>
+            <if test="keepstaff != null">
+                KeepStaff,
+            </if>
+            <if test="keepsupervise != null">
+                KeepSupervise,
+            </if>
+            <if test="secretlevelid != null">
+                SecretLevelId,
+            </if>
+            <if test="customercount != null">
+                CustomerCount,
+            </if>
+            <if test="visitordeptid != null">
+                VisitorDeptId,
+            </if>
+            <if test="visitoraddress != null">
+                VisitorAddress,
+            </if>
+            <if test="linkphone != null">
+                LinkPhone,
+            </if>
+            <if test="visitorresion != null">
+                VisitorResion,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+            <if test="updatetime != null">
+                UpdateTime,
+            </if>
+            <if test="keepstaffname != null">
+                KeepStaffName,
+            </if>
+            <if test="secretlevel != null">
+                SecretLevel,
+            </if>
+            <if test="visitordeptname != null">
+                VisitorDeptName,
+            </if>
+            <if test="visitoredate != null">
+                VisitorEDate,
+            </if>
+            <if test="remark != null">
+                Remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="uniqueid != null">
+                #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="visitordate != null">
+                #{visitordate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="contactpart != null">
+                #{contactpart,jdbcType=VARCHAR},
+            </if>
+            <if test="keepstaff != null">
+                #{keepstaff,jdbcType=VARCHAR},
+            </if>
+            <if test="keepsupervise != null">
+                #{keepsupervise,jdbcType=VARCHAR},
+            </if>
+            <if test="secretlevelid != null">
+                #{secretlevelid,jdbcType=VARCHAR},
+            </if>
+            <if test="customercount != null">
+                #{customercount,jdbcType=INTEGER},
+            </if>
+            <if test="visitordeptid != null">
+                #{visitordeptid,jdbcType=VARCHAR},
+            </if>
+            <if test="visitoraddress != null">
+                #{visitoraddress,jdbcType=VARCHAR},
+            </if>
+            <if test="linkphone != null">
+                #{linkphone,jdbcType=VARCHAR},
+            </if>
+            <if test="visitorresion != null">
+                #{visitorresion,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="keepstaffname != null">
+                #{keepstaffname,jdbcType=VARCHAR},
+            </if>
+            <if test="secretlevel != null">
+                #{secretlevel,jdbcType=VARCHAR},
+            </if>
+            <if test="visitordeptname != null">
+                #{visitordeptname,jdbcType=VARCHAR},
+            </if>
+            <if test="visitoredate != null">
+                #{visitoredate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.AffairsexerciseinfoTbl">
+    update affairsexerciseinfo_tbl
+    set
+      VisitorDate =  str_to_date(#{visitordate},'%Y-%m-%d %H:%i:%s'),
+      ContactPart = #{contactpart,jdbcType=VARCHAR},
+      KeepStaff = #{keepstaff,jdbcType=VARCHAR},
+      KeepSupervise = #{keepsupervise,jdbcType=VARCHAR},
+      SecretLevelId = #{secretlevelid,jdbcType=VARCHAR},
+      CustomerCount = #{customercount,jdbcType=INTEGER},
+      VisitorDeptId = #{visitordeptid,jdbcType=VARCHAR},
+      VisitorAddress = #{visitoraddress,jdbcType=VARCHAR},
+      LinkPhone = #{linkphone,jdbcType=VARCHAR},
+      VisitorResion = #{visitorresion,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      UpdateTime = NOW(),
+      KeepStaffName = #{keepstaffname,jdbcType=VARCHAR},
+      SecretLevel = #{secretlevel,jdbcType=VARCHAR},
+      VisitorDeptName = #{visitordeptname,jdbcType=VARCHAR},
+      VisitorEDate =  str_to_date(#{visitoredate},'%Y-%m-%d %H:%i:%s'),
+      Remark = #{remark,jdbcType=VARCHAR}
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

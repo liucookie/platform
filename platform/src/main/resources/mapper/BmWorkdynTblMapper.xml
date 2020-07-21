@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmWorkdynTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmWorkdynTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="WorkDynId" property="workdynid" jdbcType="VARCHAR" />
+    <result column="InfoName" property="infoname" jdbcType="VARCHAR" />
+    <result column="InfoContent" property="infocontent" jdbcType="VARCHAR" />
+    <result column="KeyWord" property="keyword" jdbcType="VARCHAR" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="FileUrl" property="fileurl" jdbcType="VARCHAR" />
+    <result column="InfoRemark" property="inforemark" jdbcType="VARCHAR" />
+    <result column="TopSign" property="topsign" jdbcType="INTEGER" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="ReadNum" property="readnum" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="IsPublish" property="ispublish" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, WorkDynId, InfoName, InfoContent, KeyWord, date_format(UpdateTime, '%Y-%m-%d')  UpdateTime , FileUrl, InfoRemark, TopSign,
+    SortOrder, ReadNum, IsDelete, IsPublish
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_workdyn_tbl
+    where WorkDynId = #{id}
+  </select>
+  <select id="select" resultMap="BaseResultMap"  >
+    select
+    <include refid="Base_Column_List" />
+    from bm_workdyn_tbl
+    where IsDelete = 0
+    order by Id desc
+    limit #{start},#{pageSize}
+  </select>
+  <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(Id)
+    from bm_workdyn_tbl
+    where IsDelete = 0
+  </select>
+
+  <select id="queryWorkDynamic" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List"/>
+    from bm_workdyn_tbl
+    <where>
+      IsDelete = 0
+      and IsPublish = 1
+      <if test="topSign != null and topSign != ''">
+        and TopSign = #{topSign}
+      </if>
+    </where>
+    order by TopSign desc
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update   bm_workdyn_tbl set IsDelete  = 1
+    where WorkDynId = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmWorkdynTbl" >
+    insert into bm_workdyn_tbl (Id, WorkDynId, InfoName, 
+      InfoContent, KeyWord, UpdateTime, 
+      FileUrl, InfoRemark, TopSign, 
+      SortOrder, ReadNum, IsDelete, 
+      IsPublish)
+    values (#{id,jdbcType=INTEGER}, #{workdynid,jdbcType=VARCHAR}, #{infoname,jdbcType=VARCHAR}, 
+      #{infocontent,jdbcType=VARCHAR}, #{keyword,jdbcType=VARCHAR},str_to_date(#{updatetime},'%Y-%m-%d') ,
+      #{fileurl,jdbcType=VARCHAR}, #{inforemark,jdbcType=VARCHAR}, #{topsign,jdbcType=INTEGER}, 
+      #{sortorder,jdbcType=INTEGER}, #{readnum,jdbcType=INTEGER},0,
+     0)
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmWorkdynTbl" >
+    update bm_workdyn_tbl
+    set
+      InfoName = #{infoname,jdbcType=VARCHAR},
+      InfoContent = #{infocontent,jdbcType=VARCHAR},
+      KeyWord = #{keyword,jdbcType=VARCHAR},
+      UpdateTime = str_to_date(#{updatetime},'%Y-%m-%d') ,
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      InfoRemark = #{inforemark,jdbcType=VARCHAR},
+      TopSign = #{topsign,jdbcType=INTEGER},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      ReadNum = #{readnum,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      IsPublish = #{ispublish,jdbcType=INTEGER}
+    where WorkDynId = #{workdynid,jdbcType=VARCHAR}
+  </update>
+
+  <update id="isPublish">
+    update bm_workdyn_tbl
+    set
+    IsPublish = #{status,jdbcType=INTEGER}
+    where WorkDynId = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

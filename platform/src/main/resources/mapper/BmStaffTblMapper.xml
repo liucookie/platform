@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmStaffTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="StaffId" property="staffid" jdbcType="NVARCHAR"/>
+        <result column="DeptId" property="deptid" jdbcType="NVARCHAR"/>
+        <result column="UserName" property="username" jdbcType="NVARCHAR"/>
+        <result column="UserSex" property="usersex" jdbcType="NVARCHAR"/>
+        <result column="BorthDate" property="borthdate" jdbcType="TIMESTAMP"/>
+        <result column="UserFace" property="userface" jdbcType="NVARCHAR"/>
+        <result column="UserJob" property="userjob" jdbcType="NVARCHAR"/>
+        <result column="UserOffice" property="useroffice" jdbcType="NVARCHAR"/>
+        <result column="SecretLevelId" property="secretlevelid" jdbcType="NVARCHAR"/>
+        <result column="UserTypeId" property="usertypeid" jdbcType="NVARCHAR"/>
+        <result column="UserStateId" property="userstateid" jdbcType="NVARCHAR"/>
+        <result column="SecretProvide" property="secretprovide" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="HrSynId" property="hrsynid" jdbcType="NVARCHAR"/>
+        <result column="StaffPhoto" property="staffphoto" jdbcType="NVARCHAR"/>
+        <result column="JobPost" property="jobpost" jdbcType="NVARCHAR"/>
+        <result column="AdminPost" property="adminpost" jdbcType="NVARCHAR"/>
+        <result column="InJobTime" property="injobtime" jdbcType="TIMESTAMP"/>
+        <result column="SignSecretTime" property="signsecrettime" jdbcType="TIMESTAMP"/>
+        <result column="StaffMemo" property="staffmemo" jdbcType="LONGNVARCHAR"/>
+        <result column="AccoutName" property="accoutname" jdbcType="NVARCHAR"/>
+        <result column="UserPhone" property="userphone" jdbcType="NVARCHAR"/>
+        <result column="LoginType" property="logintype" jdbcType="INTEGER"/>
+        <result column="Pass" property="pass" jdbcType="NVARCHAR"/>
+        <result column="StaffEmail" property="staffemail" jdbcType="NVARCHAR"/>
+        <result column="StaffOCS" property="staffocs" jdbcType="NVARCHAR"/>
+        <result column="StartTime" property="starttime" jdbcType="TIMESTAMP"/>
+        <result column="SysId" property="sysid" jdbcType="NVARCHAR"/>
+        <result column="Superior" property="superior" jdbcType="NVARCHAR"/>
+        <result column="PostTypeId" property="posttypeid" jdbcType="INTEGER"/>
+        <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="RoleTypeIds" property="roletypeids" jdbcType="NVARCHAR"/>
+        <result column="WorkID" property="workid" jdbcType="NVARCHAR"/>
+        <result column="IDcard" property="idcard" jdbcType="NVARCHAR"/>
+        <result column="IsCanApprove" property="iscanapprove" jdbcType="INTEGER"/>
+        <result column="NativePlace" property="nativeplace" jdbcType="NVARCHAR"/>
+        <result column="CensusRegister" property="censusregister" jdbcType="NVARCHAR"/>
+        <result column="HomeAdd" property="homeadd" jdbcType="NVARCHAR"/>
+        <result column="Education" property="education" jdbcType="NVARCHAR"/>
+        <result column="OfficePhone" property="officephone" jdbcType="NVARCHAR"/>
+        <result column="InDate" property="indate" jdbcType="NVARCHAR"/>
+        <result column="IsOutStu" property="isoutstu" jdbcType="NVARCHAR"/>
+        <result column="IsOutHome" property="isouthome" jdbcType="NVARCHAR"/>
+        <result column="IsOutSub" property="isoutsub" jdbcType="NVARCHAR"/>
+        <result column="UserPhoto" property="userphoto" jdbcType="LONGVARBINARY"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    Id, StaffId, DeptId, UserName, UserSex, BorthDate, UserFace, UserJob, UserOffice,
+    SecretLevelId, UserTypeId, UserStateId, SecretProvide, IsDelete, HrSynId, StaffPhoto, 
+    JobPost, AdminPost, InJobTime, SignSecretTime, StaffMemo, AccoutName, UserPhone,Pass,
+    LoginType, StaffEmail, StaffOCS, StartTime, SysId, Superior, PostTypeId, CreateTime,
+    UpdateTime, RoleTypeIds, WorkID, IDcard, IsCanApprove, NativePlace, CensusRegister, 
+    HomeAdd, Education, OfficePhone, InDate, IsOutStu, IsOutHome, IsOutSub
+  </sql>
+    <sql id="Blob_Column_List">
+    UserPhoto
+  </sql>
+
+    <sql id="Base_Column_List1">
+    s.Id, s.StaffId, s.DeptId, s.UserName, s.UserSex, date_format(s.BorthDate,'%Y-%m-%d') borthdate, s.UserFace, s.UserJob, s.UserOffice,
+    s.SecretLevelId, s.UserTypeId, s.UserStateId, s.SecretProvide, s.IsDelete, s.HrSynId,s.Pass,
+    s.JobPost,s.AdminPost,date_format(s.InJobTime,'%Y-%m-%d') InJobTime, date_format(s.SignSecretTime,'%Y-%m-%d') signsecrettime, s.StaffMemo, s.AccoutName, s.UserPhone,s.UserPhoto,
+    s.LoginType, s.StaffEmail, s.StaffOCS, s.StartTime, s.SysId, s.Superior, s.PostTypeId, s.CreateTime,
+    s.UpdateTime, s.RoleTypeIds, s.WorkID, s.IDcard, s.IsCanApprove, s.NativePlace, s.CensusRegister,
+    s.HomeAdd, s.Education, s.OfficePhone, date_format(s.InDate,'%Y-%m-%d') indate, s.IsOutStu, s.IsOutHome, s.IsOutSub,
+    o.orgname orgName,l.codeName levelName,b.codeName userTypeName,t.codeName userStateName
+  </sql>
+
+    <sql id="Base_Column_List2">
+    s.Id, s.StaffId, s.DeptId, s.UserName, s.UserSex, date_format(s.BorthDate,'%Y-%m-%d') borthdate, s.UserFace, s.UserJob, s.UserOffice,
+    s.SecretLevelId, s.UserTypeId, s.UserStateId, s.SecretProvide, s.IsDelete, s.HrSynId,
+    s.JobPost,s.AdminPost,date_format(s.InJobTime,'%Y-%m-%d') InJobTime,date_format(s.SignSecretTime,'%Y-%m-%d') signsecrettime, s.StaffMemo, s.AccoutName, s.UserPhone,
+    s.LoginType, s.StaffEmail, s.StaffOCS, s.StartTime, s.SysId, s.Superior, s.PostTypeId, s.CreateTime,
+    s.UpdateTime, s.RoleTypeIds, s.WorkID, s.IDcard, s.IsCanApprove, s.NativePlace, s.CensusRegister,
+    s.HomeAdd, s.Education, s.OfficePhone, date_format(s.InDate,'%Y-%m-%d') indate, s.IsOutStu, s.IsOutHome, s.IsOutSub,
+    o.orgname orgName,l.codeName levelName,b.codeName userTypeName,t.codeName userStateName
+  </sql>
+
+    <select id="queryStaffInfoPage" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.StaffQueryVO">
+        select
+        <include refid="Base_Column_List2"/>
+        from BM_Staff_Tbl s
+        left join organization o on s.DeptId = o.UniqueId
+        left JOIN basecode l on s.SecretLevelId = l.id
+        left JOIN basecode b on s.UserTypeId = b.id
+        left JOIN basecode t on s.UserStateId = t.id
+        <where>
+            s.isDelete = 0
+            <if test="orgId != null and orgId != ''">
+                and s.DeptId = #{orgId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and s.UserName like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="jobType != null and jobType != ''">
+                and s.UserTypeId = #{jobType}
+            </if>
+            <if test="secretLevel != null and secretLevel != ''">
+                and s.SecretLevelId = #{secretLevel}
+            </if>
+            <if test="jobStatus != null and jobStatus != ''">
+                and s.UserStateId = #{jobStatus}
+            </if>
+            <if test="jobName != null and jobName != ''">
+                and s.UserJob like CONCAT('%',#{jobName},'%')
+            </if>
+        </where>
+        order by s.CreateTime desc
+        limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(s.StaffId)
+        from BM_Staff_Tbl s
+        left join organization o
+        on s.DeptId = o.UniqueId
+        <where>
+            s.isDelete = 0
+            <if test="orgId != null and orgId != ''">
+                and s.DeptId = #{orgId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and s.UserName like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="jobType != null and jobType != ''">
+                and s.UserTypeId = #{jobType}
+            </if>
+            <if test="secretLevel != null and secretLevel != ''">
+                and s.SecretLevelId = #{secretLevel}
+            </if>
+            <if test="jobStatus != null and jobStatus != ''">
+                and s.UserStateId = #{jobStatus}
+            </if>
+            <if test="jobName != null and jobName != ''">
+                and s.UserJob like CONCAT('%',#{jobName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getStaffByOrgId" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+    select
+    staffId,UserName,AccoutName
+    from BM_Staff_Tbl
+    where
+    DeptID = #{orgid}
+    and isDelete = 0
+  </select>
+
+    <select id="selectBatch" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+        select
+        staffId,UserName,AccoutName
+        from BM_Staff_Tbl
+        where
+        staffId in
+        <foreach collection="list" item="item" open="(" close=")" index="index" separator=",">
+            #{item}
+        </foreach>
+        and isDelete = 0
+    </select>
+
+    <select id="queryByDeptId" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+        select
+        <include refid="Base_Column_List2"/>
+        from BM_Staff_Tbl
+        where DeptID = #{deptId}
+        AND IsDelete = 0
+
+    </select>
+
+    <select id="selectByAccount" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+    select
+      b.AccoutName,b.UserName,b.Pass,b.StaffId,l.codeName levelName,o.orgname orgName
+    from BM_Staff_Tbl b
+    left JOIN basecode l on  b.SecretLevelId = l.id
+    left join organization o on b.DeptId = o.UniqueId
+    where b.AccoutName = #{account}
+    AND b.IsDelete = 0
+  </select>
+
+    <select id="selectByUserName" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+    select
+    AccoutName,UserName,Pass,StaffId
+    from BM_Staff_Tbl
+    where UserName = #{userName}
+    AND IsDelete = 0
+  </select>
+
+    <select id="selectByUserId" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+        select
+        <include refid="Base_Column_List1"/>
+        from BM_Staff_Tbl s
+        left join organization o on s.DeptId = o.UniqueId
+        left JOIN basecode l on s.SecretLevelId = l.id
+        left JOIN basecode b on s.UserTypeId = b.id
+        left JOIN basecode t on s.UserStateId = t.id
+        where s.StaffId = #{userId}
+        AND s.IsDelete = 0
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from BM_Staff_Tbl
+        where Id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from BM_Staff_Tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+    insert into BM_Staff_Tbl (Id, StaffId, DeptId,
+      UserName, UserSex, BorthDate, 
+      UserFace, UserJob, UserOffice, 
+      SecretLevelId, UserTypeId, UserStateId, 
+      SecretProvide, IsDelete, HrSynId, 
+      StaffPhoto, JobPost, AdminPost, 
+      InJobTime, SignSecretTime, StaffMemo, 
+      AccoutName, UserPhone, LoginType, 
+      Pass, StaffEmail, StaffOCS, 
+      StartTime, SysId, Superior, 
+      PostTypeId, CreateTime, UpdateTime, 
+      RoleTypeIds, WorkID, IDcard, 
+      IsCanApprove, NativePlace, CensusRegister, 
+      HomeAdd, Education, OfficePhone, 
+      InDate, IsOutStu, IsOutHome, 
+      IsOutSub, UserPhoto)
+    values (#{id,jdbcType=INTEGER}, #{staffid,jdbcType=NVARCHAR}, #{deptid,jdbcType=NVARCHAR},
+      #{username,jdbcType=NVARCHAR}, #{usersex,jdbcType=NVARCHAR}, str_to_date(#{borthdate},'%Y-%m-%d'),
+      #{userface,jdbcType=NVARCHAR}, #{userjob,jdbcType=NVARCHAR}, #{useroffice,jdbcType=NVARCHAR}, 
+      #{secretlevelid,jdbcType=NVARCHAR}, #{usertypeid,jdbcType=NVARCHAR}, #{userstateid,jdbcType=NVARCHAR}, 
+      #{secretprovide,jdbcType=INTEGER}, 0, #{hrsynid,jdbcType=NVARCHAR},
+      #{staffphoto,jdbcType=NVARCHAR}, #{jobpost,jdbcType=NVARCHAR}, #{adminpost,jdbcType=NVARCHAR}, 
+      str_to_date(#{injobtime},'%Y-%m-%d'),str_to_date(#{signsecrettime},'%Y-%m-%d'), #{staffmemo,jdbcType=LONGNVARCHAR},
+      #{accoutname,jdbcType=NVARCHAR}, #{userphone,jdbcType=NVARCHAR}, #{logintype,jdbcType=INTEGER}, 
+      #{pass,jdbcType=NVARCHAR}, #{staffemail,jdbcType=NVARCHAR}, #{staffocs,jdbcType=NVARCHAR}, 
+      str_to_date(#{starttime},'%Y-%m-%d'), #{sysid,jdbcType=NVARCHAR}, #{superior,jdbcType=NVARCHAR},
+      #{posttypeid,jdbcType=INTEGER}, NOW(),  str_to_date(#{updatetime},'%Y-%m-%d %H:%i:%s'),
+      #{roletypeids,jdbcType=NVARCHAR}, #{workid,jdbcType=NVARCHAR}, #{idcard,jdbcType=NVARCHAR}, 
+      #{iscanapprove,jdbcType=INTEGER}, #{nativeplace,jdbcType=NVARCHAR}, #{censusregister,jdbcType=NVARCHAR}, 
+      #{homeadd,jdbcType=NVARCHAR}, #{education,jdbcType=NVARCHAR}, #{officephone,jdbcType=NVARCHAR}, 
+      #{indate,jdbcType=TIMESTAMP}, #{isoutstu,jdbcType=NVARCHAR}, #{isouthome,jdbcType=NVARCHAR}, 
+      #{isoutsub,jdbcType=NVARCHAR}, #{userphoto,jdbcType=LONGVARBINARY})
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+        insert into BM_Staff_Tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            Id,
+
+            <if test="staffid != null">
+                StaffId,
+            </if>
+            <if test="deptid != null">
+                DeptId,
+            </if>
+            <if test="username != null">
+                UserName,
+            </if>
+            <if test="usersex != null">
+                UserSex,
+            </if>
+            <if test="borthdate != null">
+                BorthDate,
+            </if>
+            <if test="userface != null">
+                UserFace,
+            </if>
+            <if test="userjob != null">
+                UserJob,
+            </if>
+            <if test="useroffice != null">
+                UserOffice,
+            </if>
+            <if test="secretlevelid != null">
+                SecretLevelId,
+            </if>
+            <if test="usertypeid != null">
+                UserTypeId,
+            </if>
+            <if test="userstateid != null">
+                UserStateId,
+            </if>
+            <if test="secretprovide != null">
+                SecretProvide,
+            </if>
+            <if test="isdelete != null">
+                0,
+            </if>
+            <if test="hrsynid != null">
+                HrSynId,
+            </if>
+            <if test="staffphoto != null">
+                StaffPhoto,
+            </if>
+            <if test="jobpost != null">
+                JobPost,
+            </if>
+            <if test="adminpost != null">
+                AdminPost,
+            </if>
+            <if test="injobtime != null">
+                InJobTime,
+            </if>
+            <if test="signsecrettime != null">
+                SignSecretTime,
+            </if>
+            <if test="staffmemo != null">
+                StaffMemo,
+            </if>
+            <if test="accoutname != null">
+                AccoutName,
+            </if>
+            <if test="userphone != null">
+                UserPhone,
+            </if>
+            <if test="logintype != null">
+                LoginType,
+            </if>
+            <if test="pass != null">
+                Pass,
+            </if>
+            <if test="staffemail != null">
+                StaffEmail,
+            </if>
+            <if test="staffocs != null">
+                StaffOCS,
+            </if>
+            <if test="starttime != null">
+                StartTime,
+            </if>
+            <if test="sysid != null">
+                SysId,
+            </if>
+            <if test="superior != null">
+                Superior,
+            </if>
+            <if test="posttypeid != null">
+                PostTypeId,
+            </if>
+            <if test="createtime != null">
+                CreateTime,
+            </if>
+            <if test="updatetime != null">
+                UpdateTime,
+            </if>
+            <if test="roletypeids != null">
+                RoleTypeIds,
+            </if>
+            <if test="workid != null">
+                WorkID,
+            </if>
+            <if test="idcard != null">
+                IDcard,
+            </if>
+            <if test="iscanapprove != null">
+                IsCanApprove,
+            </if>
+            <if test="nativeplace != null">
+                NativePlace,
+            </if>
+            <if test="censusregister != null">
+                CensusRegister,
+            </if>
+            <if test="homeadd != null">
+                HomeAdd,
+            </if>
+            <if test="education != null">
+                Education,
+            </if>
+            <if test="officephone != null">
+                OfficePhone,
+            </if>
+            <if test="indate != null">
+                InDate,
+            </if>
+            <if test="isoutstu != null">
+                IsOutStu,
+            </if>
+            <if test="isouthome != null">
+                IsOutHome,
+            </if>
+            <if test="isoutsub != null">
+                IsOutSub,
+            </if>
+            <if test="userphoto != null">
+                UserPhoto,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            #{id,jdbcType=INTEGER},
+
+            <if test="staffid != null">
+                #{staffid,jdbcType=NVARCHAR},
+            </if>
+            <if test="deptid != null">
+                #{deptid,jdbcType=NVARCHAR},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=NVARCHAR},
+            </if>
+            <if test="usersex != null">
+                #{usersex,jdbcType=NVARCHAR},
+            </if>
+            <if test="borthdate != null">
+                str_to_date(#{borthdate},'%Y-%m-%d'),
+            </if>
+            <if test="userface != null">
+                #{userface,jdbcType=NVARCHAR},
+            </if>
+            <if test="userjob != null">
+                #{userjob,jdbcType=NVARCHAR},
+            </if>
+            <if test="useroffice != null">
+                #{useroffice,jdbcType=NVARCHAR},
+            </if>
+            <if test="secretlevelid != null">
+                #{secretlevelid,jdbcType=NVARCHAR},
+            </if>
+            <if test="usertypeid != null">
+                #{usertypeid,jdbcType=NVARCHAR},
+            </if>
+            <if test="userstateid != null">
+                #{userstateid,jdbcType=NVARCHAR},
+            </if>
+            <if test="secretprovide != null">
+                #{secretprovide,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null">
+                0,
+            </if>
+            <if test="hrsynid != null">
+                #{hrsynid,jdbcType=NVARCHAR},
+            </if>
+            <if test="staffphoto != null">
+                #{staffphoto,jdbcType=NVARCHAR},
+            </if>
+            <if test="jobpost != null">
+                #{jobpost,jdbcType=NVARCHAR},
+            </if>
+            <if test="adminpost != null">
+                #{adminpost,jdbcType=NVARCHAR},
+            </if>
+            <if test="injobtime != null">
+                str_to_date(#{injobtime},'%Y-%m-%d'),
+            </if>
+            <if test="signsecrettime != null">
+                str_to_date(#{signsecrettime},'%Y-%m-%d'),
+            </if>
+            <if test="staffmemo != null">
+                #{staffmemo,jdbcType=LONGNVARCHAR},
+            </if>
+            <if test="accoutname != null">
+                #{accoutname,jdbcType=NVARCHAR},
+            </if>
+            <if test="userphone != null">
+                #{userphone,jdbcType=NVARCHAR},
+            </if>
+            <if test="logintype != null">
+                #{logintype,jdbcType=INTEGER},
+            </if>
+            <if test="pass != null">
+                #{pass,jdbcType=NVARCHAR},
+            </if>
+            <if test="staffemail != null">
+                #{staffemail,jdbcType=NVARCHAR},
+            </if>
+            <if test="staffocs != null">
+                #{staffocs,jdbcType=NVARCHAR},
+            </if>
+            <if test="starttime != null">
+                str_to_date(#{starttime},'%Y-%m-%d'),
+            </if>
+            <if test="sysid != null">
+                #{sysid,jdbcType=NVARCHAR},
+            </if>
+            <if test="superior != null">
+                #{superior,jdbcType=NVARCHAR},
+            </if>
+            <if test="posttypeid != null">
+                #{posttypeid,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                NOW(),
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=DATE},
+            </if>
+            <if test="roletypeids != null">
+                #{roletypeids,jdbcType=NVARCHAR},
+            </if>
+            <if test="workid != null">
+                #{workid,jdbcType=NVARCHAR},
+            </if>
+            <if test="idcard != null">
+                #{idcard,jdbcType=NVARCHAR},
+            </if>
+            <if test="iscanapprove != null">
+                #{iscanapprove,jdbcType=INTEGER},
+            </if>
+            <if test="nativeplace != null">
+                #{nativeplace,jdbcType=NVARCHAR},
+            </if>
+            <if test="censusregister != null">
+                #{censusregister,jdbcType=NVARCHAR},
+            </if>
+            <if test="homeadd != null">
+                #{homeadd,jdbcType=NVARCHAR},
+            </if>
+            <if test="education != null">
+                #{education,jdbcType=NVARCHAR},
+            </if>
+            <if test="officephone != null">
+                #{officephone,jdbcType=NVARCHAR},
+            </if>
+            <if test="indate != null">
+                str_to_date(#{indate},'%Y-%m-%d'),
+            </if>
+            <if test="isoutstu != null">
+                #{isoutstu,jdbcType=NVARCHAR},
+            </if>
+            <if test="isouthome != null">
+                #{isouthome,jdbcType=NVARCHAR},
+            </if>
+            <if test="isoutsub != null">
+                #{isoutsub,jdbcType=NVARCHAR},
+            </if>
+            <if test="userphoto != null">
+                #{userphoto,jdbcType=LONGVARBINARY},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+        update BM_Staff_Tbl
+        <set>
+            <if test="deptid != null">
+                DeptId = #{deptid,jdbcType=NVARCHAR},
+            </if>
+            <if test="username != null">
+                UserName = #{username,jdbcType=NVARCHAR},
+            </if>
+            <if test="usersex != null">
+                UserSex = #{usersex,jdbcType=NVARCHAR},
+            </if>
+            <if test="borthdate != null">
+                BorthDate = #{borthdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userface != null">
+                UserFace = #{userface,jdbcType=NVARCHAR},
+            </if>
+            <if test="userjob != null">
+                UserJob = #{userjob,jdbcType=NVARCHAR},
+            </if>
+            <if test="useroffice != null">
+                UserOffice = #{useroffice,jdbcType=NVARCHAR},
+            </if>
+            <if test="secretlevelid != null">
+                SecretLevelId = #{secretlevelid,jdbcType=NVARCHAR},
+            </if>
+            <if test="usertypeid != null">
+                UserTypeId = #{usertypeid,jdbcType=NVARCHAR},
+            </if>
+            <if test="userstateid != null">
+                UserStateId = #{userstateid,jdbcType=NVARCHAR},
+            </if>
+            <if test="secretprovide != null">
+                SecretProvide = #{secretprovide,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="hrsynid != null">
+                HrSynId = #{hrsynid,jdbcType=NVARCHAR},
+            </if>
+            <if test="staffphoto != null">
+                StaffPhoto = #{staffphoto,jdbcType=NVARCHAR},
+            </if>
+            <if test="jobpost != null">
+                JobPost = #{jobpost,jdbcType=NVARCHAR},
+            </if>
+            <if test="adminpost != null">
+                AdminPost = #{adminpost,jdbcType=NVARCHAR},
+            </if>
+            <if test="injobtime != null">
+                InJobTime = #{injobtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="signsecrettime != null">
+                SignSecretTime = #{signsecrettime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="staffmemo != null">
+                StaffMemo = #{staffmemo,jdbcType=LONGNVARCHAR},
+            </if>
+            <if test="accoutname != null">
+                AccoutName = #{accoutname,jdbcType=NVARCHAR},
+            </if>
+            <if test="userphone != null">
+                UserPhone = #{userphone,jdbcType=NVARCHAR},
+            </if>
+            <if test="logintype != null">
+                LoginType = #{logintype,jdbcType=INTEGER},
+            </if>
+            <if test="pass != null">
+                Pass = #{pass,jdbcType=NVARCHAR},
+            </if>
+            <if test="staffemail != null">
+                StaffEmail = #{staffemail,jdbcType=NVARCHAR},
+            </if>
+            <if test="staffocs != null">
+                StaffOCS = #{staffocs,jdbcType=NVARCHAR},
+            </if>
+            <if test="starttime != null">
+                StartTime = #{starttime,jdbcType=NVARCHAR},
+            </if>
+            <if test="sysid != null">
+                SysId = #{sysid,jdbcType=NVARCHAR},
+            </if>
+            <if test="superior != null">
+                Superior = #{superior,jdbcType=NVARCHAR},
+            </if>
+            <if test="posttypeid != null">
+                PostTypeId = #{posttypeid,jdbcType=INTEGER},
+            </if>
+            <if test="createtime != null">
+                CreateTime = #{createtime,jdbcType=DATE},
+            </if>
+            <if test="updatetime != null">
+                UpdateTime = #{updatetime,jdbcType=DATE},
+            </if>
+            <if test="roletypeids != null">
+                RoleTypeIds = #{roletypeids,jdbcType=NVARCHAR},
+            </if>
+            <if test="workid != null">
+                WorkID = #{workid,jdbcType=NVARCHAR},
+            </if>
+            <if test="idcard != null">
+                IDcard = #{idcard,jdbcType=NVARCHAR},
+            </if>
+            <if test="iscanapprove != null">
+                IsCanApprove = #{iscanapprove,jdbcType=INTEGER},
+            </if>
+            <if test="nativeplace != null">
+                NativePlace = #{nativeplace,jdbcType=NVARCHAR},
+            </if>
+            <if test="censusregister != null">
+                CensusRegister = #{censusregister,jdbcType=NVARCHAR},
+            </if>
+            <if test="homeadd != null">
+                HomeAdd = #{homeadd,jdbcType=NVARCHAR},
+            </if>
+            <if test="education != null">
+                Education = #{education,jdbcType=NVARCHAR},
+            </if>
+            <if test="officephone != null">
+                OfficePhone = #{officephone,jdbcType=NVARCHAR},
+            </if>
+            <if test="indate != null">
+                InDate = #{indate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isoutstu != null">
+                IsOutStu = #{isoutstu,jdbcType=NVARCHAR},
+            </if>
+            <if test="isouthome != null">
+                IsOutHome = #{isouthome,jdbcType=NVARCHAR},
+            </if>
+            <if test="isoutsub != null">
+                IsOutSub = #{isoutsub,jdbcType=NVARCHAR},
+            </if>
+            UserPhoto = #{userphoto,jdbcType=LONGVARBINARY}
+        </set>
+        where StaffId = #{staffid,jdbcType=NVARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+    update BM_Staff_Tbl
+    set StaffId = #{staffid,jdbcType=NVARCHAR},
+      DeptId = #{deptid,jdbcType=NVARCHAR},
+      UserName = #{username,jdbcType=NVARCHAR},
+      UserSex = #{usersex,jdbcType=NVARCHAR},
+      BorthDate = #{borthdate,jdbcType=TIMESTAMP},
+      UserFace = #{userface,jdbcType=NVARCHAR},
+      UserJob = #{userjob,jdbcType=NVARCHAR},
+      UserOffice = #{useroffice,jdbcType=NVARCHAR},
+      SecretLevelId = #{secretlevelid,jdbcType=NVARCHAR},
+      UserTypeId = #{usertypeid,jdbcType=NVARCHAR},
+      UserStateId = #{userstateid,jdbcType=NVARCHAR},
+      SecretProvide = #{secretprovide,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      HrSynId = #{hrsynid,jdbcType=NVARCHAR},
+      StaffPhoto = #{staffphoto,jdbcType=NVARCHAR},
+      JobPost = #{jobpost,jdbcType=NVARCHAR},
+      AdminPost = #{adminpost,jdbcType=NVARCHAR},
+      InJobTime = #{injobtime,jdbcType=TIMESTAMP},
+      SignSecretTime = #{signsecrettime,jdbcType=TIMESTAMP},
+      StaffMemo = #{staffmemo,jdbcType=LONGNVARCHAR},
+      AccoutName = #{accoutname,jdbcType=NVARCHAR},
+      UserPhone = #{userphone,jdbcType=NVARCHAR},
+      LoginType = #{logintype,jdbcType=INTEGER},
+      Pass = #{pass,jdbcType=NVARCHAR},
+      StaffEmail = #{staffemail,jdbcType=NVARCHAR},
+      StaffOCS = #{staffocs,jdbcType=NVARCHAR},
+      StartTime = #{starttime,jdbcType=NVARCHAR},
+      SysId = #{sysid,jdbcType=NVARCHAR},
+      Superior = #{superior,jdbcType=NVARCHAR},
+      PostTypeId = #{posttypeid,jdbcType=INTEGER},
+      CreateTime = #{createtime,jdbcType=DATE},
+      UpdateTime = #{updatetime,jdbcType=DATE},
+      RoleTypeIds = #{roletypeids,jdbcType=NVARCHAR},
+      WorkID = #{workid,jdbcType=NVARCHAR},
+      IDcard = #{idcard,jdbcType=NVARCHAR},
+      IsCanApprove = #{iscanapprove,jdbcType=INTEGER},
+      NativePlace = #{nativeplace,jdbcType=NVARCHAR},
+      CensusRegister = #{censusregister,jdbcType=NVARCHAR},
+      HomeAdd = #{homeadd,jdbcType=NVARCHAR},
+      Education = #{education,jdbcType=NVARCHAR},
+      OfficePhone = #{officephone,jdbcType=NVARCHAR},
+      InDate = #{indate,jdbcType=TIMESTAMP},
+      IsOutStu = #{isoutstu,jdbcType=NVARCHAR},
+      IsOutHome = #{isouthome,jdbcType=NVARCHAR},
+      IsOutSub = #{isoutsub,jdbcType=NVARCHAR},
+      UserPhoto = #{userphoto,jdbcType=LONGVARBINARY}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+    update BM_Staff_Tbl
+    set StaffId = #{staffid,jdbcType=NVARCHAR},
+      DeptId = #{deptid,jdbcType=NVARCHAR},
+      UserName = #{username,jdbcType=NVARCHAR},
+      UserSex = #{usersex,jdbcType=NVARCHAR},
+      BorthDate = #{borthdate,jdbcType=TIMESTAMP},
+      UserFace = #{userface,jdbcType=NVARCHAR},
+      UserJob = #{userjob,jdbcType=NVARCHAR},
+      UserOffice = #{useroffice,jdbcType=NVARCHAR},
+      SecretLevelId = #{secretlevelid,jdbcType=NVARCHAR},
+      UserTypeId = #{usertypeid,jdbcType=NVARCHAR},
+      UserStateId = #{userstateid,jdbcType=NVARCHAR},
+      SecretProvide = #{secretprovide,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      HrSynId = #{hrsynid,jdbcType=NVARCHAR},
+      StaffPhoto = #{staffphoto,jdbcType=NVARCHAR},
+      JobPost = #{jobpost,jdbcType=NVARCHAR},
+      AdminPost = #{adminpost,jdbcType=NVARCHAR},
+      InJobTime = #{injobtime,jdbcType=TIMESTAMP},
+      SignSecretTime = #{signsecrettime,jdbcType=TIMESTAMP},
+      StaffMemo = #{staffmemo,jdbcType=LONGNVARCHAR},
+      AccoutName = #{accoutname,jdbcType=NVARCHAR},
+      UserPhone = #{userphone,jdbcType=NVARCHAR},
+      LoginType = #{logintype,jdbcType=INTEGER},
+      Pass = #{pass,jdbcType=NVARCHAR},
+      StaffEmail = #{staffemail,jdbcType=NVARCHAR},
+      StaffOCS = #{staffocs,jdbcType=NVARCHAR},
+      StartTime = #{starttime,jdbcType=NVARCHAR},
+      SysId = #{sysid,jdbcType=NVARCHAR},
+      Superior = #{superior,jdbcType=NVARCHAR},
+      PostTypeId = #{posttypeid,jdbcType=INTEGER},
+      CreateTime = #{createtime,jdbcType=DATE},
+      UpdateTime = #{updatetime,jdbcType=DATE},
+      RoleTypeIds = #{roletypeids,jdbcType=NVARCHAR},
+      WorkID = #{workid,jdbcType=NVARCHAR},
+      IDcard = #{idcard,jdbcType=NVARCHAR},
+      IsCanApprove = #{iscanapprove,jdbcType=INTEGER},
+      NativePlace = #{nativeplace,jdbcType=NVARCHAR},
+      CensusRegister = #{censusregister,jdbcType=NVARCHAR},
+      HomeAdd = #{homeadd,jdbcType=NVARCHAR},
+      Education = #{education,jdbcType=NVARCHAR},
+      OfficePhone = #{officephone,jdbcType=NVARCHAR},
+      InDate = #{indate,jdbcType=TIMESTAMP},
+      IsOutStu = #{isoutstu,jdbcType=NVARCHAR},
+      IsOutHome = #{isouthome,jdbcType=NVARCHAR},
+      IsOutSub = #{isoutsub,jdbcType=NVARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="queryByOrgId" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+    select s.UserName from BM_Staff_Tbl s
+    LEFT JOIN BM_OrgUser_Tbl o
+    on s.StaffId = o.UserId
+    where o.OrgId = #{orgId}
+    AND o.IsDelete = 0
+
+  </select>
+
+    <update id="deleteByUserId" parameterType="java.lang.String">
+    update BM_Staff_Tbl
+    set IsDelete = 1
+    where StaffId = #{userid}
+
+  </update>
+
+
+    <select id="queryExportInfo" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl"
+            parameterType="com.hangyu.platform.web.backBusiness.vo.StaffQueryVO">
+        select
+        <include refid="Base_Column_List2"/>
+        from BM_Staff_Tbl s
+        left join organization o on s.DeptId = o.UniqueId
+        left JOIN basecode l on s.SecretLevelId = l.id
+        left JOIN basecode b on s.UserTypeId = b.id
+        left JOIN basecode t on s.UserStateId = t.id
+        <where>
+            s.isDelete = 0
+            <if test="orgId != null and orgId != ''">
+                and s.DeptId = #{orgId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and s.UserName like CONCAT('%',#{userName},'%')
+            </if>
+            <if test="jobType != null and jobType != ''">
+                and s.UserTypeId = #{jobType}
+            </if>
+            <if test="secretLevel != null and secretLevel != ''">
+                and s.SecretLevelId = #{secretLevel}
+            </if>
+            <if test="jobStatus != null and jobStatus != ''">
+                and s.UserStateId = #{jobStatus}
+            </if>
+            <if test="jobName != null and jobName != ''">
+                and s.UserJob like CONCAT('%',#{jobName},'%')
+            </if>
+        </where>
+        order by s.CreateTime desc
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            insert into BM_Staff_Tbl (Id, StaffId, DeptId,
+            UserName, UserSex, BorthDate,
+            UserFace, UserJob, UserOffice,
+            SecretLevelId, UserTypeId, UserStateId,
+            SecretProvide, IsDelete, HrSynId,
+            StaffPhoto, JobPost, AdminPost,
+            InJobTime, SignSecretTime, StaffMemo,
+            AccoutName, UserPhone, LoginType,
+            Pass, StaffEmail, StaffOCS,
+            StartTime, SysId, Superior,
+            PostTypeId, CreateTime, UpdateTime,
+            RoleTypeIds, WorkID, IDcard,
+            IsCanApprove, NativePlace, CensusRegister,
+            HomeAdd, Education, OfficePhone,
+            InDate, IsOutStu, IsOutHome,
+            IsOutSub, UserPhoto)
+            values (#{item.id,jdbcType=INTEGER}, #{item.staffid,jdbcType=NVARCHAR}, #{item.deptid,jdbcType=NVARCHAR},
+            #{item.username,jdbcType=NVARCHAR}, #{item.usersex,jdbcType=NVARCHAR},
+            str_to_date(#{item.borthdate},'%Y-%m-%d'),
+            #{item.userface,jdbcType=NVARCHAR}, #{item.userjob,jdbcType=NVARCHAR}, #{item.useroffice,jdbcType=NVARCHAR},
+            #{item.secretlevelid,jdbcType=NVARCHAR}, #{item.usertypeid,jdbcType=NVARCHAR},
+            #{item.userstateid,jdbcType=NVARCHAR},
+            #{item.secretprovide,jdbcType=INTEGER}, 0, #{item.hrsynid,jdbcType=NVARCHAR},
+            #{item.staffphoto,jdbcType=NVARCHAR}, #{item.jobpost,jdbcType=NVARCHAR},
+            #{item.adminpost,jdbcType=NVARCHAR},
+            str_to_date(#{item.injobtime},'%Y-%m-%d'),str_to_date(#{item.signsecrettime},'%Y-%m-%d'),
+            #{item.staffmemo,jdbcType=LONGNVARCHAR},
+            #{item.accoutname,jdbcType=NVARCHAR}, #{item.userphone,jdbcType=NVARCHAR},
+            #{item.logintype,jdbcType=INTEGER},
+            #{item.pass,jdbcType=NVARCHAR}, #{item.staffemail,jdbcType=NVARCHAR}, #{item.staffocs,jdbcType=NVARCHAR},
+            str_to_date(#{item.starttime},'%Y-%m-%d'), #{item.sysid,jdbcType=NVARCHAR},
+            #{item.superior,jdbcType=NVARCHAR},
+            #{item.posttypeid,jdbcType=INTEGER}, NOW(), str_to_date(#{item.updatetime},'%Y-%m-%d %H:%i:%s'),
+            #{item.roletypeids,jdbcType=NVARCHAR}, #{item.workid,jdbcType=NVARCHAR}, #{item.idcard,jdbcType=NVARCHAR},
+            #{item.iscanapprove,jdbcType=INTEGER}, #{item.nativeplace,jdbcType=NVARCHAR},
+            #{item.censusregister,jdbcType=NVARCHAR},
+            #{item.homeadd,jdbcType=NVARCHAR}, #{item.education,jdbcType=NVARCHAR},
+            #{item.officephone,jdbcType=NVARCHAR},
+            #{item.indate,jdbcType=TIMESTAMP}, #{item.isoutstu,jdbcType=NVARCHAR}, #{item.isouthome,jdbcType=NVARCHAR},
+            #{item.isoutsub,jdbcType=NVARCHAR}, #{item.userphoto,jdbcType=LONGVARBINARY})
+        </foreach>
+    </insert>
+
+    <select id="selectByLevelId" resultType="com.hangyu.platform.web.backBusiness.dto.BmStaffTbl">
+        select
+        b.staffId,b.UserName,b.AccoutName,b.WorkID,b.DeptId,o.OrgName orgName,s.codename levelName
+        from BM_Staff_Tbl b
+        left join organization o on b.DeptId = o.UniqueId
+        left join basecode s on s.id = b.SecretLevelId
+        <where>
+            b.DeptId in
+            <foreach collection="list" open="(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+          <if test="null != levelId">
+              and b.SecretLevelId = #{levelId}
+          </if>
+            and b.isDelete = 0
+        </where>
+    </select>
+
+</mapper>

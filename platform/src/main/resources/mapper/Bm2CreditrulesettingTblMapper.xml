@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2CreditrulesettingTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2CreditrulesettingTbl" >
+    <id column="CreditRuleSettingId" property="creditrulesettingid" jdbcType="VARCHAR" />
+    <result column="DefaultDeptScore" property="defaultdeptscore" jdbcType="DOUBLE" />
+    <result column="DefaultPersonScore" property="defaultpersonscore" jdbcType="DOUBLE" />
+    <result column="DPAddup" property="dpaddup" jdbcType="DOUBLE" />
+    <result column="DPDeduct" property="dpdeduct" jdbcType="DOUBLE" />
+    <result column="DLQuarterAddup" property="dlquarteraddup" jdbcType="DOUBLE" />
+    <result column="DLQuarterDeduct" property="dlquarterdeduct" jdbcType="DOUBLE" />
+    <result column="DLYearLimited" property="dlyearlimited" jdbcType="DOUBLE" />
+    <result column="DLYearAddup" property="dlyearaddup" jdbcType="DOUBLE" />
+    <result column="DLYearDeduct" property="dlyeardeduct" jdbcType="DOUBLE" />
+    <result column="ExamnieYear" property="examnieyear" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CreditRuleSettingId, DefaultDeptScore, DefaultPersonScore, DPAddup, DPDeduct, DLQuarterAddup, 
+    DLQuarterDeduct, DLYearLimited, DLYearAddup, DLYearDeduct, ExamnieYear
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm2_creditrulesetting_tbl
+    where CreditRuleSettingId = #{creditrulesettingid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryByYear" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from bm2_creditrulesetting_tbl
+    where ExamnieYear = #{year}
+    limit 1
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from bm2_creditrulesetting_tbl
+    where CreditRuleSettingId = #{creditrulesettingid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CreditrulesettingTbl" >
+    insert into bm2_creditrulesetting_tbl (CreditRuleSettingId, DefaultDeptScore, 
+      DefaultPersonScore, DPAddup, DPDeduct, 
+      DLQuarterAddup, DLQuarterDeduct, DLYearLimited, 
+      DLYearAddup, DLYearDeduct, ExamnieYear
+      )
+    values (#{creditrulesettingid,jdbcType=VARCHAR}, #{defaultdeptscore,jdbcType=DOUBLE}, 
+      #{defaultpersonscore,jdbcType=DOUBLE}, #{dpaddup,jdbcType=DOUBLE}, #{dpdeduct,jdbcType=DOUBLE}, 
+      #{dlquarteraddup,jdbcType=DOUBLE}, #{dlquarterdeduct,jdbcType=DOUBLE}, #{dlyearlimited,jdbcType=DOUBLE}, 
+      #{dlyearaddup,jdbcType=DOUBLE}, #{dlyeardeduct,jdbcType=DOUBLE}, #{examnieyear,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CreditrulesettingTbl" >
+    insert into bm2_creditrulesetting_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="creditrulesettingid != null" >
+        CreditRuleSettingId,
+      </if>
+      <if test="defaultdeptscore != null" >
+        DefaultDeptScore,
+      </if>
+      <if test="defaultpersonscore != null" >
+        DefaultPersonScore,
+      </if>
+      <if test="dpaddup != null" >
+        DPAddup,
+      </if>
+      <if test="dpdeduct != null" >
+        DPDeduct,
+      </if>
+      <if test="dlquarteraddup != null" >
+        DLQuarterAddup,
+      </if>
+      <if test="dlquarterdeduct != null" >
+        DLQuarterDeduct,
+      </if>
+      <if test="dlyearlimited != null" >
+        DLYearLimited,
+      </if>
+      <if test="dlyearaddup != null" >
+        DLYearAddup,
+      </if>
+      <if test="dlyeardeduct != null" >
+        DLYearDeduct,
+      </if>
+      <if test="examnieyear != null" >
+        ExamnieYear,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="creditrulesettingid != null" >
+        #{creditrulesettingid,jdbcType=VARCHAR},
+      </if>
+      <if test="defaultdeptscore != null" >
+        #{defaultdeptscore,jdbcType=DOUBLE},
+      </if>
+      <if test="defaultpersonscore != null" >
+        #{defaultpersonscore,jdbcType=DOUBLE},
+      </if>
+      <if test="dpaddup != null" >
+        #{dpaddup,jdbcType=DOUBLE},
+      </if>
+      <if test="dpdeduct != null" >
+        #{dpdeduct,jdbcType=DOUBLE},
+      </if>
+      <if test="dlquarteraddup != null" >
+        #{dlquarteraddup,jdbcType=DOUBLE},
+      </if>
+      <if test="dlquarterdeduct != null" >
+        #{dlquarterdeduct,jdbcType=DOUBLE},
+      </if>
+      <if test="dlyearlimited != null" >
+        #{dlyearlimited,jdbcType=DOUBLE},
+      </if>
+      <if test="dlyearaddup != null" >
+        #{dlyearaddup,jdbcType=DOUBLE},
+      </if>
+      <if test="dlyeardeduct != null" >
+        #{dlyeardeduct,jdbcType=DOUBLE},
+      </if>
+      <if test="examnieyear != null" >
+        #{examnieyear,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CreditrulesettingTbl" >
+    update bm2_creditrulesetting_tbl
+    <set >
+      <if test="defaultdeptscore != null" >
+        DefaultDeptScore = #{defaultdeptscore,jdbcType=DOUBLE},
+      </if>
+      <if test="defaultpersonscore != null" >
+        DefaultPersonScore = #{defaultpersonscore,jdbcType=DOUBLE},
+      </if>
+      <if test="dpaddup != null" >
+        DPAddup = #{dpaddup,jdbcType=DOUBLE},
+      </if>
+      <if test="dpdeduct != null" >
+        DPDeduct = #{dpdeduct,jdbcType=DOUBLE},
+      </if>
+      <if test="dlquarteraddup != null" >
+        DLQuarterAddup = #{dlquarteraddup,jdbcType=DOUBLE},
+      </if>
+      <if test="dlquarterdeduct != null" >
+        DLQuarterDeduct = #{dlquarterdeduct,jdbcType=DOUBLE},
+      </if>
+      <if test="dlyearlimited != null" >
+        DLYearLimited = #{dlyearlimited,jdbcType=DOUBLE},
+      </if>
+      <if test="dlyearaddup != null" >
+        DLYearAddup = #{dlyearaddup,jdbcType=DOUBLE},
+      </if>
+      <if test="dlyeardeduct != null" >
+        DLYearDeduct = #{dlyeardeduct,jdbcType=DOUBLE},
+      </if>
+      <if test="examnieyear != null" >
+        ExamnieYear = #{examnieyear,jdbcType=INTEGER},
+      </if>
+    </set>
+    where CreditRuleSettingId = #{creditrulesettingid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2CreditrulesettingTbl" >
+    update bm2_creditrulesetting_tbl
+    set DefaultDeptScore = #{defaultdeptscore,jdbcType=DOUBLE},
+      DefaultPersonScore = #{defaultpersonscore,jdbcType=DOUBLE},
+      DPAddup = #{dpaddup,jdbcType=DOUBLE},
+      DPDeduct = #{dpdeduct,jdbcType=DOUBLE},
+      DLQuarterAddup = #{dlquarteraddup,jdbcType=DOUBLE},
+      DLQuarterDeduct = #{dlquarterdeduct,jdbcType=DOUBLE},
+      DLYearLimited = #{dlyearlimited,jdbcType=DOUBLE},
+      DLYearAddup = #{dlyearaddup,jdbcType=DOUBLE},
+      DLYearDeduct = #{dlyeardeduct,jdbcType=DOUBLE},
+      ExamnieYear = #{examnieyear,jdbcType=INTEGER}
+    where CreditRuleSettingId = #{creditrulesettingid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmOrguserTblMapper">
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmOrguserTbl">
+    <id column="Id" jdbcType="INTEGER" property="id" />
+    <result column="UniqueId" jdbcType="VARCHAR" property="uniqueid" />
+    <result column="UserId" jdbcType="VARCHAR" property="userid" />
+    <result column="OrgId" jdbcType="VARCHAR" property="orgid" />
+    <result column="UserJob" jdbcType="VARCHAR" property="userjob" />
+    <result column="UserPost" jdbcType="VARCHAR" property="userpost" />
+    <result column="IsDelete" jdbcType="INTEGER" property="isdelete" />
+    <result column="IsHistory" jdbcType="INTEGER" property="ishistory" />
+    <result column="OId" jdbcType="INTEGER" property="oid" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    u.Id, u.UniqueId, u.UserId, u.OrgId, u.UserJob, u.UserPost, u.IsDelete, u.IsHistory, u.OId,s.UserName username
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from BM_OrgUser_Tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByIds" resultType="com.hangyu.platform.web.backBusiness.dto.BmOrguserTbl">
+    select
+    DISTINCT
+    <include refid="Base_Column_List" />
+    from BM_OrgUser_Tbl u
+    LEFT JOIN BM_Staff_Tbl s
+    on u.UserId = s.StaffId
+    where u.UserId in
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+    and u.IsDelete = 0
+    and u.OrgId = #{orgId}
+  </select>
+
+
+  <select id="selectByOrgId" parameterType="java.lang.String" resultType="com.hangyu.platform.web.backBusiness.dto.BmOrguserTbl">
+    select
+    <include refid="Base_Column_List" />
+    from BM_OrgUser_Tbl u
+    left join BM_Staff_Tbl s
+    on u.UserId = s.StaffId
+    where u.OrgId = #{orgId}
+    and s.IsDelete = 0
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from BM_OrgUser_Tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByOrgId" parameterType="java.lang.String">
+    update BM_OrgUser_Tbl
+    set IsDelete = 1
+    where OrgId = #{orgId}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrguserTbl">
+    insert into BM_OrgUser_Tbl (Id, UniqueId, UserId,
+      OrgId, UserJob, UserPost,
+      IsDelete, IsHistory, OId
+      )
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR},
+      #{orgid,jdbcType=VARCHAR}, #{userjob,jdbcType=VARCHAR}, #{userpost,jdbcType=VARCHAR},
+      0, #{ishistory,jdbcType=INTEGER}, #{oid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrguserTbl">
+    insert into BM_OrgUser_Tbl
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        Id,
+      </if>
+      <if test="uniqueid != null">
+        UniqueId,
+      </if>
+      <if test="userid != null">
+        UserId,
+      </if>
+      <if test="orgid != null">
+        OrgId,
+      </if>
+      <if test="userjob != null">
+        UserJob,
+      </if>
+      <if test="userpost != null">
+        UserPost,
+      </if>
+      <if test="isdelete != null">
+        IsDelete,
+      </if>
+      <if test="ishistory != null">
+        IsHistory,
+      </if>
+      <if test="oid != null">
+        OId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null">
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null">
+        #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="userjob != null">
+        #{userjob,jdbcType=VARCHAR},
+      </if>
+      <if test="userpost != null">
+        #{userpost,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="ishistory != null">
+        #{ishistory,jdbcType=INTEGER},
+      </if>
+      <if test="oid != null">
+        #{oid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrguserTbl">
+    update BM_OrgUser_Tbl
+    <set>
+      <if test="uniqueid != null">
+        UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        UserId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="orgid != null">
+        OrgId = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="userjob != null">
+        UserJob = #{userjob,jdbcType=VARCHAR},
+      </if>
+      <if test="userpost != null">
+        UserPost = #{userpost,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="ishistory != null">
+        IsHistory = #{ishistory,jdbcType=INTEGER},
+      </if>
+      <if test="oid != null">
+        OId = #{oid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmOrguserTbl">
+    update BM_OrgUser_Tbl
+    set UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      UserId = #{userid,jdbcType=VARCHAR},
+      OrgId = #{orgid,jdbcType=VARCHAR},
+      UserJob = #{userjob,jdbcType=VARCHAR},
+      UserPost = #{userpost,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      IsHistory = #{ishistory,jdbcType=INTEGER},
+      OId = #{oid,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 批量更新，员工职务-->
+  <update id="updateByUserId" parameterType="java.util.List">
+   <foreach collection="list" item="item" index="index"  open="" separator=";" close="">
+    update BM_OrgUser_Tbl
+     <set>
+      UserJob = #{item.userjob},
+      UserPost = #{item.userpost}
+     </set>
+    where UniqueId = #{item.uniqueid}
+  </foreach>
+  </update>
+
+
+</mapper>

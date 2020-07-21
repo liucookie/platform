@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.Bm2PlancheckobjfoulactionstatTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Bm2PlancheckobjfoulactionstatTbl">
+        <id column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="PlanID" property="planid" jdbcType="VARCHAR"/>
+        <result column="PlanName" property="planname" jdbcType="VARCHAR"/>
+        <result column="PlanCheckType" property="planchecktype" jdbcType="INTEGER"/>
+        <result column="CheckObjID" property="checkobjid" jdbcType="VARCHAR"/>
+        <result column="CheckObjType" property="checkobjtype" jdbcType="INTEGER"/>
+        <result column="OrgId" property="orgid" jdbcType="VARCHAR"/>
+        <result column="OrgName" property="orgname" jdbcType="VARCHAR"/>
+        <result column="StaffID" property="staffid" jdbcType="VARCHAR"/>
+        <result column="StaffName" property="staffname" jdbcType="VARCHAR"/>
+        <result column="ExamineItem" property="examineitem" jdbcType="VARCHAR"/>
+        <result column="FoulActionName" property="foulactionname" jdbcType="VARCHAR"/>
+        <result column="DeductLeaderAllow" property="deductleaderallow" jdbcType="DOUBLE"/>
+        <result column="DeductPersonAllow" property="deductpersonallow" jdbcType="DOUBLE"/>
+        <result column="AdminPunish" property="adminpunish" jdbcType="VARCHAR"/>
+        <result column="DeductLeaderCash" property="deductleadercash" jdbcType="DOUBLE"/>
+        <result column="DeductPersonCash" property="deductpersoncash" jdbcType="DOUBLE"/>
+        <result column="DeductDeptScore" property="deductdeptscore" jdbcType="DOUBLE"/>
+        <result column="DeductPersonScore" property="deductpersonscore" jdbcType="DOUBLE"/>
+        <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    UniqueID, PlanID, PlanName, PlanCheckType, CheckObjID, CheckObjType, OrgId, OrgName, 
+    StaffID, StaffName, ExamineItem, FoulActionName, DeductLeaderAllow, DeductPersonAllow, 
+    AdminPunish, DeductLeaderCash, DeductPersonCash, DeductDeptScore, DeductPersonScore, 
+    CreateTime, UpdateTime, IsDelete
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_plancheckobjfoulactionstat_tbl
+        where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByUserID" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_plancheckobjfoulactionstat_tbl
+        where PlanID = #{planId}
+        and IsDelete = 0
+        and CheckObjID = #{userId}
+        and PlanCheckType = 1
+        limit 1
+    </select>
+
+    <select id="queryCheckUser" resultMap="BaseResultMap" >
+        select
+        <include refid="Base_Column_List"/>
+        from bm2_plancheckobjfoulactionstat_tbl
+        where PlanID = #{planId}
+        and IsDelete = 0
+        limit #{start},#{pageSize}
+    </select>
+    <select id="queryCheckCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select
+        COUNT(UniqueID)
+        from bm2_plancheckobjfoulactionstat_tbl
+        where PlanID = #{planId}
+        and IsDelete = 0
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from bm2_plancheckobjfoulactionstat_tbl
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2PlancheckobjfoulactionstatTbl">
+    insert into bm2_plancheckobjfoulactionstat_tbl (UniqueID, PlanID, PlanName, 
+      PlanCheckType, CheckObjID, CheckObjType, 
+      OrgId, OrgName, StaffID, 
+      StaffName, ExamineItem, FoulActionName, 
+      DeductLeaderAllow, DeductPersonAllow, AdminPunish, 
+      DeductLeaderCash, DeductPersonCash, DeductDeptScore, 
+      DeductPersonScore, CreateTime, UpdateTime, 
+      IsDelete)
+    values (#{uniqueid,jdbcType=VARCHAR}, #{planid,jdbcType=VARCHAR}, #{planname,jdbcType=VARCHAR}, 
+      #{planchecktype,jdbcType=INTEGER}, #{checkobjid,jdbcType=VARCHAR}, #{checkobjtype,jdbcType=INTEGER}, 
+      #{orgid,jdbcType=VARCHAR}, #{orgname,jdbcType=VARCHAR}, #{staffid,jdbcType=VARCHAR}, 
+      #{staffname,jdbcType=VARCHAR}, #{examineitem,jdbcType=VARCHAR}, #{foulactionname,jdbcType=VARCHAR}, 
+      #{deductleaderallow,jdbcType=DOUBLE}, #{deductpersonallow,jdbcType=DOUBLE}, #{adminpunish,jdbcType=VARCHAR}, 
+      #{deductleadercash,jdbcType=DOUBLE}, #{deductpersoncash,jdbcType=DOUBLE}, #{deductdeptscore,jdbcType=DOUBLE}, 
+      #{deductpersonscore,jdbcType=DOUBLE}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, 
+      #{isdelete,jdbcType=INTEGER})
+  </insert>
+    <update id="updateByPrimaryKey"
+            parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2PlancheckobjfoulactionstatTbl">
+    update bm2_plancheckobjfoulactionstat_tbl
+    set PlanID = #{planid,jdbcType=VARCHAR},
+      PlanName = #{planname,jdbcType=VARCHAR},
+      PlanCheckType = #{planchecktype,jdbcType=INTEGER},
+      CheckObjID = #{checkobjid,jdbcType=VARCHAR},
+      CheckObjType = #{checkobjtype,jdbcType=INTEGER},
+      OrgId = #{orgid,jdbcType=VARCHAR},
+      OrgName = #{orgname,jdbcType=VARCHAR},
+      StaffID = #{staffid,jdbcType=VARCHAR},
+      StaffName = #{staffname,jdbcType=VARCHAR},
+      ExamineItem = #{examineitem,jdbcType=VARCHAR},
+      FoulActionName = #{foulactionname,jdbcType=VARCHAR},
+      DeductLeaderAllow = #{deductleaderallow,jdbcType=DOUBLE},
+      DeductPersonAllow = #{deductpersonallow,jdbcType=DOUBLE},
+      AdminPunish = #{adminpunish,jdbcType=VARCHAR},
+      DeductLeaderCash = #{deductleadercash,jdbcType=DOUBLE},
+      DeductPersonCash = #{deductpersoncash,jdbcType=DOUBLE},
+      DeductDeptScore = #{deductdeptscore,jdbcType=DOUBLE},
+      DeductPersonScore = #{deductpersonscore,jdbcType=DOUBLE},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+
+
+
+</mapper>

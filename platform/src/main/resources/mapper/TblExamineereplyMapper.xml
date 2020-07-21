@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TblExamineereplyMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TblExamineereply">
+        <id column="ID" property="id" jdbcType="INTEGER"/>
+        <result column="BM_Staff_Tbl_StaffId" property="bmStaffTblStaffid" jdbcType="VARCHAR"/>
+        <result column="SpecificTestID" property="specifictestid" jdbcType="INTEGER"/>
+        <result column="tb_ExamPlanID" property="tbExamplanid" jdbcType="INTEGER"/>
+        <result column="ReplyContent" property="replycontent" jdbcType="VARCHAR"/>
+        <result column="TestType" property="testtype" jdbcType="VARCHAR"/>
+        <result column="examId" property="examId" jdbcType="INTEGER"/>
+        <result column="examineerId" property="examineerId" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, BM_Staff_Tbl_StaffId, SpecificTestID, tb_ExamPlanID, ReplyContent, TestType,examId,examineerId
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_examineereply
+        where ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tbl_examineereply
+        where BM_Staff_Tbl_StaffId = #{userId}
+        and examineerId = #{examineeId}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_examineereply
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.TblExamineereply">
+    insert into tbl_examineereply (ID, BM_Staff_Tbl_StaffId, SpecificTestID, 
+      tb_ExamPlanID, ReplyContent, TestType,examId,examineerId
+      )
+    values (#{id,jdbcType=INTEGER}, #{bmStaffTblStaffid,jdbcType=VARCHAR}, #{specifictestid,jdbcType=INTEGER}, 
+      #{tbExamplanid,jdbcType=INTEGER}, #{replycontent,jdbcType=VARCHAR}, #{testtype,jdbcType=VARCHAR},#{examId},
+      #{examineerId}
+      )
+  </insert>
+
+    <insert id="insertBatch" parameterType="com.hangyu.platform.web.backBusiness.dto.TblExamineereply">
+        <foreach collection="list" item="item" separator=";">
+            insert into tbl_examineereply (ID, BM_Staff_Tbl_StaffId, SpecificTestID,
+            tb_ExamPlanID, ReplyContent, TestType,examId,examineerId
+            )
+            values (#{item.id,jdbcType=INTEGER}, #{item.bmStaffTblStaffid,jdbcType=VARCHAR},
+            #{item.specifictestid,jdbcType=INTEGER},
+            #{item.tbExamplanid,jdbcType=INTEGER}, #{item.replycontent,jdbcType=VARCHAR},
+            #{item.testtype,jdbcType=VARCHAR},#{item.examId},#{item.examineerId}
+            )
+        </foreach>
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TblExamineereply">
+    update tbl_examineereply
+    set BM_Staff_Tbl_StaffId = #{bmStaffTblStaffid,jdbcType=VARCHAR},
+      SpecificTestID = #{specifictestid,jdbcType=INTEGER},
+      tb_ExamPlanID = #{tbExamplanid,jdbcType=INTEGER},
+      ReplyContent = #{replycontent,jdbcType=VARCHAR},
+      examineerId = #{examineerId},
+      TestType = #{testtype,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

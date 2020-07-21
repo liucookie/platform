@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmPictureTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmPictureTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueId" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="TypeId" property="typeid" jdbcType="VARCHAR"/>
+        <result column="NativeFileName" property="nativefilename" jdbcType="VARCHAR"/>
+        <result column="RemoteFileName" property="remotefilename" jdbcType="VARCHAR"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="TopSign" property="topsign" jdbcType="INTEGER"/>
+        <result column="SortOrder" property="sortorder" jdbcType="INTEGER"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="Remark" property="remark" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    r.Id, r.UniqueId, r.TypeId, r.NativeFileName, r.RemoteFileName,  date_format(r.UpdateTime, '%Y-%m-%d')  UpdateTime,
+    r.TopSign, r.SortOrder,
+    r.IsDelete,r.Remark,c.codeName typeName
+  </sql>
+    <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.backBusiness.dto.BmPictureTbl"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_picture_tbl r
+        left join basecode c on c.id = r.TypeId
+        where r.UniqueId = #{id}
+    </select>
+
+    <select id="selectBatch" resultType="com.hangyu.platform.web.backBusiness.dto.BmPictureTbl"
+            parameterType="java.util.List">
+        select
+        *
+        from bm_picture_tbl
+        where UniqueId IN
+        <foreach collection="list" close=")" open="(" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.BmPictureTbl">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_picture_tbl r
+        left join basecode c on c.id = r.TypeId
+        where r.IsDelete = 0
+        order by r.Id desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="queryByTypeId" resultType="com.hangyu.platform.web.backBusiness.dto.BmPictureTbl"
+    parameterType="java.lang.String">
+        select
+        *
+        from bm_picture_tbl
+        where IsDelete = 0
+        and TypeId = #{typeId}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(Id)
+        from bm_picture_tbl
+        where IsDelete = 0
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update  bm_picture_tbl set IsDelete = 1
+    where UniqueId = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmPictureTbl">
+    insert into bm_picture_tbl (Id, UniqueId, TypeId, 
+      NativeFileName, RemoteFileName, UpdateTime, 
+      TopSign, SortOrder, IsDelete, 
+      Remark)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{typeid,jdbcType=VARCHAR}, 
+      #{nativefilename,jdbcType=VARCHAR}, #{remotefilename,jdbcType=VARCHAR}, NOW(),
+      #{topsign,jdbcType=INTEGER}, #{sortorder,jdbcType=INTEGER}, 0,
+      #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmPictureTbl">
+    update bm_picture_tbl
+    set
+      TypeId = #{typeid,jdbcType=VARCHAR},
+      NativeFileName = #{nativefilename,jdbcType=VARCHAR},
+      RemoteFileName = #{remotefilename,jdbcType=VARCHAR},
+      UpdateTime = str_to_date(#{updatetime},'%Y-%m-%d'),
+      TopSign = #{topsign,jdbcType=INTEGER},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      Remark = #{remark,jdbcType=LONGVARCHAR}
+    where UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

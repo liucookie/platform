@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.safeAdmin.mapper.MenuMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.safeAdmin.dto.Menu">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="menuname" property="menuname" jdbcType="VARCHAR"/>
+        <result column="createtime" property="createtime" jdbcType="VARCHAR"/>
+        <result column="updatetime" property="updatetime" jdbcType="VARCHAR"/>
+        <result column="createperson" property="createperson" jdbcType="VARCHAR"/>
+        <result column="updateperson" property="updateperson" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="parentid" property="parentid" jdbcType="INTEGER"/>
+        <result column="orgid" property="orgid" jdbcType="VARCHAR"/>
+        <result column="level" property="level" jdbcType="INTEGER"/>
+        <result column="menuorder" property="menuorder" jdbcType="INTEGER"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="params" property="params" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    id, menuname, date_format(createtime, '%Y-%m-%d %H:%i:%s') createtime, date_format(updatetime, '%Y-%m-%d %H:%i:%s') updatetime,
+    createperson, updateperson, status, parentid,
+    orgid, level, menuorder, url, type, params
+  </sql>
+
+    <sql id="Base_Column_List2">
+    m.id, m.menuname, date_format(m.createtime, '%Y-%m-%d %H:%i:%s') createtime,
+    date_format(m.updatetime, '%Y-%m-%d %H:%i:%s') updatetime, m.createperson, m.updateperson,
+     m.status, m.parentid,
+    m.orgid, m.level, m.menuorder, m.url, m.type, m.params
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from menu
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from menu
+        where id in (select menuid from menurole where roleid = #{roleId})
+    </select>
+
+
+    <select id="queryAllMenu" resultType="com.hangyu.platform.web.safeAdmin.dto.Menu" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from menu
+        <where>
+            <if test="type != null and type != ''">
+                type in (${type})
+            </if>
+        </where>
+        order by menuorder
+    </select>
+
+    <select id="queryButtonByParentId" resultType="com.hangyu.platform.web.safeAdmin.dto.Menu" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from menu
+        <where>
+            type = 2
+            <if test="parentid != null and parentid != ''">
+             and   parentid = #{parentid}
+            </if>
+        </where>
+        order by menuorder
+    </select>
+
+
+    <select id="getUserMenu" resultType="com.hangyu.platform.web.safeAdmin.dto.Menu">
+        select
+        <include refid="Base_Column_List"/>
+        from menu
+        <where>
+            <if test="id != null and id != ''">
+                parentid = #{id}
+            </if>
+            <if test="type != null and type != ''">
+               and type = #{type}
+            </if>
+        </where>
+        order by menuorder
+    </select>
+
+
+    <select id="queryMenuD" resultType="com.hangyu.platform.web.logAdmin.vo.MenuVO">
+    select
+        id,
+        menuname as menuName,
+        type
+      from menu
+      <where>
+        parentid = #{parentId}
+        <if test="type != null">
+        and type = #{type}
+        </if>
+      </where>
+       order by menuorder
+  </select>
+
+
+    <select id="queryMenuByUserId" resultType="com.hangyu.platform.web.safeAdmin.dto.Menu">
+        select
+        <include refid="Base_Column_List2"/>
+        from menu m where m.id in
+        (
+        select r.menuid from menuRole r where r.roleid in
+        (
+        select u.roleid from userRole u where u.userid = #{userid}
+        )
+        )
+        <if test="type != null and type != ''">
+            and m.type in (${type})
+        </if>
+        <if test="level != null and level != ''">
+            and m.level = #{level}
+        </if>
+        order by m.menuorder
+    </select>
+
+    <select id="queryByMenuId" resultType="com.hangyu.platform.web.safeAdmin.dto.Menu">
+       select
+       <include refid="Base_Column_List"/>
+       from menu
+       where id in
+       <foreach collection="list" item="item" separator="," open="(" close=")">
+        #{item}
+       </foreach>
+        order by menuorder
+    </select>
+
+    <select id="queryUserMenuIds" resultType="java.lang.Integer">
+    select
+     m.id
+    from menu m where m.id in
+    (
+    select r.menuid from menuRole r where r.roleid in
+    (
+    select u.roleid from userRole u where u.userid = #{userid}
+    )
+    )
+    </select>
+
+    <select id="queryMenuId" resultType="java.lang.Integer">
+        select id from menu
+        <where>
+             parentid = #{id}
+            <if test="type != null and type != ''">
+              and  type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryMenuByAdmin" resultType="com.hangyu.platform.web.safeAdmin.dto.Menu">
+        select
+        <include refid="Base_Column_List"/>
+        from menu
+        <where>
+        <if test="type != null and type != ''">
+             type in (${type})
+        </if>
+        <if test="level != null and level != ''">
+            and level = #{level}
+        </if>
+        <if test="account != null and account != ''">
+             and status = #{account}
+        </if>
+        </where>
+        order by menuorder
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+       delete from menu
+       where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+
+    <delete id="deleteByPId" parameterType="java.lang.Integer">
+        delete from menu where parentid = #{pId}
+    </delete>
+
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.safeAdmin.dto.Menu">
+    insert into menu (id, menuname, createtime, 
+      updatetime, createperson, updateperson, 
+      status, parentid, orgid, 
+      level, menuorder, url,
+      type, params)
+    values (#{id,jdbcType=INTEGER}, #{menuname,jdbcType=VARCHAR}, NOW(),
+      #{updatetime,jdbcType=TIMESTAMP}, #{createperson,jdbcType=VARCHAR}, #{updateperson,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BIT}, #{parentid,jdbcType=INTEGER}, #{orgid,jdbcType=VARCHAR},
+      #{level,jdbcType=INTEGER}, #{menuorder,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR},
+      #{type,jdbcType=INTEGER}, #{params,jdbcType=VARCHAR})
+  </insert>
+
+
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.safeAdmin.dto.Menu">
+        insert into menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="menuname != null">
+                menuname,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="updatetime != null">
+                updatetime,
+            </if>
+            <if test="createperson != null">
+                createperson,
+            </if>
+            <if test="updateperson != null">
+                updateperson,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="parentid != null">
+                parentid,
+            </if>
+            <if test="orgid != null">
+                orgid,
+            </if>
+            <if test="level != null">
+                level,
+            </if>
+            <if test="menuorder != null">
+                menuorder,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="params != null">
+                params,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="menuname != null">
+                #{menuname,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createperson != null">
+                #{createperson,jdbcType=VARCHAR},
+            </if>
+            <if test="updateperson != null">
+                #{updateperson,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=BIT},
+            </if>
+            <if test="parentid != null">
+                #{parentid,jdbcType=INTEGER},
+            </if>
+            <if test="orgid != null">
+                #{orgid,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=INTEGER},
+            </if>
+            <if test="menuorder != null">
+                #{menuorder,jdbcType=INTEGER},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="params != null">
+                #{params,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.safeAdmin.dto.Menu">
+        update menu
+        <set>
+            <if test="menuname != null">
+                menuname = #{menuname,jdbcType=VARCHAR},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime,jdbcType=TIMESTAMP},
+            </if>
+            updatetime = NOW(),
+            <if test="createperson != null">
+                createperson = #{createperson,jdbcType=VARCHAR},
+            </if>
+            <if test="updateperson != null">
+                updateperson = #{updateperson,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=BIT},
+            </if>
+            <if test="parentid != null">
+                parentid = #{parentid,jdbcType=INTEGER},
+            </if>
+            <if test="orgid != null">
+                orgid = #{orgid,jdbcType=VARCHAR},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=INTEGER},
+            </if>
+            <if test="menuorder != null">
+                menuorder = #{menuorder,jdbcType=INTEGER},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="params != null">
+                params = #{params,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.safeAdmin.dto.Menu">
+    update menu
+    set menuname = #{menuname,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      createperson = #{createperson,jdbcType=VARCHAR},
+      updateperson = #{updateperson,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      parentid = #{parentid,jdbcType=INTEGER},
+      orgid = #{orgid,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      menuorder = #{menuorder,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      params = #{params,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

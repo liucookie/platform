@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmStafffamilyTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmStafffamilyTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="FamId" property="famid" jdbcType="VARCHAR" />
+    <result column="StaffId" property="staffid" jdbcType="VARCHAR" />
+    <result column="FamRelation" property="famrelation" jdbcType="VARCHAR" />
+    <result column="FamName" property="famname" jdbcType="VARCHAR" />
+    <result column="BorthDate" property="borthdate" jdbcType="TIMESTAMP" />
+    <result column="FamFace" property="famface" jdbcType="VARCHAR" />
+    <result column="FamUnit" property="famunit" jdbcType="VARCHAR" />
+    <result column="FamJob" property="famjob" jdbcType="VARCHAR" />
+    <result column="FamWork" property="famwork" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="SId" property="sid" jdbcType="INTEGER" />
+    <result column="FamPhone" property="famphone" jdbcType="VARCHAR" />
+    <result column="IsOut" property="isout" jdbcType="VARCHAR" />
+    <result column="IdCard" property="idcard" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hangyu.platform.web.backBusiness.dto.BmStafffamilyTbl" extends="BaseResultMap" >
+    <result column="FamRemark" property="famremark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    Id, FamId, StaffId, FamRelation, FamName,BorthDate, FamFace, FamUnit, FamJob, FamWork,
+    SortOrder, IsDelete, SId, FamPhone, IsOut, IdCard
+  </sql>
+  <sql id="Blob_Column_List" >
+    FamRemark
+  </sql>
+  <sql id="Base_Column_List1" >
+    Id, FamId, StaffId, FamRelation, FamName, date_format(BorthDate,'%Y-%m-%d') BorthDate, FamFace, FamUnit, FamJob, FamWork,
+    SortOrder, IsDelete, SId, FamPhone, IsOut, IdCard
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from bm_stafffamily_tbl
+    where Id = #{id,jdbcType=INTEGER}
+
+  </select>
+
+
+  <select id="selectByUserId" resultType="com.hangyu.platform.web.backBusiness.dto.BmStafffamilyTbl" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List1" />
+    from bm_stafffamily_tbl
+    where StaffId = #{userid}
+    and IsDelete = 0
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bm_stafffamily_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStafffamilyTbl" >
+    insert into bm_stafffamily_tbl (Id, FamId, StaffId, 
+      FamRelation, FamName, BorthDate, 
+      FamFace, FamUnit, FamJob, 
+      FamWork, SortOrder, IsDelete, 
+      SId, FamPhone, IsOut, 
+      IdCard, FamRemark)
+    values (#{id,jdbcType=INTEGER}, #{famid,jdbcType=VARCHAR}, #{staffid,jdbcType=VARCHAR}, 
+      #{famrelation,jdbcType=VARCHAR}, #{famname,jdbcType=VARCHAR}, str_to_date(#{borthdate},'%Y-%m-%d'),
+      #{famface,jdbcType=VARCHAR}, #{famunit,jdbcType=VARCHAR}, #{famjob,jdbcType=VARCHAR}, 
+      #{famwork,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, 0,
+      #{sid,jdbcType=INTEGER}, #{famphone,jdbcType=VARCHAR}, #{isout,jdbcType=VARCHAR}, 
+      #{idcard,jdbcType=VARCHAR}, #{famremark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStafffamilyTbl" >
+    insert into bm_stafffamily_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="famid != null" >
+        FamId,
+      </if>
+      <if test="staffid != null" >
+        StaffId,
+      </if>
+      <if test="famrelation != null" >
+        FamRelation,
+      </if>
+      <if test="famname != null" >
+        FamName,
+      </if>
+      <if test="borthdate != null" >
+        BorthDate,
+      </if>
+      <if test="famface != null" >
+        FamFace,
+      </if>
+      <if test="famunit != null" >
+        FamUnit,
+      </if>
+      <if test="famjob != null" >
+        FamJob,
+      </if>
+      <if test="famwork != null" >
+        FamWork,
+      </if>
+      <if test="sortorder != null" >
+        SortOrder,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="sid != null" >
+        SId,
+      </if>
+      <if test="famphone != null" >
+        FamPhone,
+      </if>
+      <if test="isout != null" >
+        IsOut,
+      </if>
+      <if test="idcard != null" >
+        IdCard,
+      </if>
+      <if test="famremark != null" >
+        FamRemark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="famid != null" >
+        #{famid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="famrelation != null" >
+        #{famrelation,jdbcType=VARCHAR},
+      </if>
+      <if test="famname != null" >
+        #{famname,jdbcType=VARCHAR},
+      </if>
+      <if test="borthdate != null" >
+        str_to_date(#{borthdate},'%Y-%m-%d'),
+      </if>
+      <if test="famface != null" >
+        #{famface,jdbcType=VARCHAR},
+      </if>
+      <if test="famunit != null" >
+        #{famunit,jdbcType=VARCHAR},
+      </if>
+      <if test="famjob != null" >
+        #{famjob,jdbcType=VARCHAR},
+      </if>
+      <if test="famwork != null" >
+        #{famwork,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+       0,
+      </if>
+      <if test="sid != null" >
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="famphone != null" >
+        #{famphone,jdbcType=VARCHAR},
+      </if>
+      <if test="isout != null" >
+        #{isout,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="famremark != null" >
+        #{famremark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStafffamilyTbl" >
+    update bm_stafffamily_tbl
+    <set >
+      <if test="famid != null" >
+        FamId = #{famid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null" >
+        StaffId = #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="famrelation != null" >
+        FamRelation = #{famrelation,jdbcType=VARCHAR},
+      </if>
+      <if test="famname != null" >
+        FamName = #{famname,jdbcType=VARCHAR},
+      </if>
+      <if test="borthdate != null" >
+        BorthDate = str_to_date(#{borthdate},'%Y-%m-%d'),
+      </if>
+      <if test="famface != null" >
+        FamFace = #{famface,jdbcType=VARCHAR},
+      </if>
+      <if test="famunit != null" >
+        FamUnit = #{famunit,jdbcType=VARCHAR},
+      </if>
+      <if test="famjob != null" >
+        FamJob = #{famjob,jdbcType=VARCHAR},
+      </if>
+      <if test="famwork != null" >
+        FamWork = #{famwork,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        SortOrder = #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null" >
+        SId = #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="famphone != null" >
+        FamPhone = #{famphone,jdbcType=VARCHAR},
+      </if>
+      <if test="isout != null" >
+        IsOut = #{isout,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        IdCard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="famremark != null" >
+        FamRemark = #{famremark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where FamId = #{famid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hangyu.platform.web.backBusiness.dto.BmStafffamilyTbl" >
+    update bm_stafffamily_tbl
+    set FamId = #{famid,jdbcType=VARCHAR},
+      StaffId = #{staffid,jdbcType=VARCHAR},
+      FamRelation = #{famrelation,jdbcType=VARCHAR},
+      FamName = #{famname,jdbcType=VARCHAR},
+      BorthDate = str_to_date(#{borthdate},'%Y-%m-%d'),
+      FamFace = #{famface,jdbcType=VARCHAR},
+      FamUnit = #{famunit,jdbcType=VARCHAR},
+      FamJob = #{famjob,jdbcType=VARCHAR},
+      FamWork = #{famwork,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      SId = #{sid,jdbcType=INTEGER},
+      FamPhone = #{famphone,jdbcType=VARCHAR},
+      IsOut = #{isout,jdbcType=VARCHAR},
+      IdCard = #{idcard,jdbcType=VARCHAR},
+      FamRemark = #{famremark,jdbcType=LONGVARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="java.lang.String" >
+    update bm_stafffamily_tbl
+    set IsDelete = 1
+    where StaffId = #{staffid,jdbcType=VARCHAR}
+  </update>
+</mapper>

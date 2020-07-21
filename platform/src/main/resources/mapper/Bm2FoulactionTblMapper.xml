@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2FoulactionTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2FoulactionTbl" >
+    <id column="FoulActionID" property="foulactionid" jdbcType="VARCHAR" />
+    <result column="FoulActionTypeID" property="foulactiontypeid" jdbcType="VARCHAR" />
+    <result column="FoulActionName" property="foulactionname" jdbcType="VARCHAR" />
+    <result column="DeductLeaderAllow" property="deductleaderallow" jdbcType="DOUBLE" />
+    <result column="DeductPersonAllow" property="deductpersonallow" jdbcType="DOUBLE" />
+    <result column="AdminPunish" property="adminpunish" jdbcType="VARCHAR" />
+    <result column="DeductLeaderCash" property="deductleadercash" jdbcType="DOUBLE" />
+    <result column="DeductPersonCash" property="deductpersoncash" jdbcType="DOUBLE" />
+    <result column="DeductDeptScore" property="deductdeptscore" jdbcType="DOUBLE" />
+    <result column="DeductPersonType" property="deductpersontype" jdbcType="INTEGER" />
+    <result column="DeductPersonScore" property="deductpersonscore" jdbcType="DOUBLE" />
+    <result column="Memo" property="memo" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="CreateTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    FoulActionID, FoulActionTypeID, FoulActionName, DeductLeaderAllow, DeductPersonAllow, 
+    AdminPunish, DeductLeaderCash, DeductPersonCash, DeductDeptScore, DeductPersonType, 
+    DeductPersonScore, Memo, IsDelete, CreateTime, UpdateTime
+  </sql>
+
+  <sql id="Base_Column_List1" >
+    f.FoulActionID, f.FoulActionTypeID, f.FoulActionName, f.DeductLeaderAllow, f.DeductPersonAllow,
+    f.AdminPunish, f.DeductLeaderCash, f.DeductPersonCash, f.DeductDeptScore, f.DeductPersonType,
+    f.DeductPersonScore, f.Memo, f.IsDelete, f.CreateTime, f.UpdateTime,t.FoulActionTypeName foulactiontypename
+  </sql>
+
+  <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2FoulactionTbl" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List1" />
+    from bm2_foulaction_tbl f
+    left JOIN  BM2_FoulActionType_Tbl t on f.FoulActionTypeID = t.FoulActionTypeID
+    where f.FoulActionID = #{foulactionid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryByType" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2FoulactionTbl" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from bm2_foulaction_tbl
+    where IsDelete = 0
+      and FoulActionTypeID  = #{type}
+  </select>
+
+
+  <select id="query" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2FoulactionTbl" parameterType="com.hangyu.platform.web.sysAdmin.vo.Bm2FoulactionQueryVO" >
+    select
+    <include refid="Base_Column_List1" />
+    from bm2_foulaction_tbl f
+    left JOIN  BM2_FoulActionType_Tbl t on f.FoulActionTypeID = t.FoulActionTypeID
+    <where>
+      f.IsDelete = 0
+      <if test="type != null and type != ''" >
+         and f.FoulActionTypeID = #{type}
+      </if>
+      <if test="name != null and name != ''" >
+        and f.FoulActionName  like CONCAT('%',#{name},'%')
+      </if>
+      <if test="allowance != null and allowance != ''" >
+        and f.DeductLeaderAllow = #{allowance}
+      </if>
+      <if test="cash != null and cash != ''" >
+        and f.DeductLeaderCash = #{cash}
+      </if>
+      <if test="score != null and score != ''" >
+        and f.DeductDeptScore = #{score}
+      </if>
+      <if test="punish != null and punish != ''" >
+        and f.AdminPunish = #{punish}
+      </if>
+      <if test="memo != null and memo != ''" >
+        and f.Memo like CONCAT('%',#{memo},'%')
+      </if>
+    </where>
+    order by f.CreateTime desc
+    limit #{pageNum},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer" parameterType="com.hangyu.platform.web.sysAdmin.vo.Bm2FoulactionQueryVO" >
+    select
+    COUNT(FoulActionID)
+    from bm2_foulaction_tbl
+    <where>
+      IsDelete = 0
+      <if test="type != null and type != ''" >
+        and FoulActionTypeID = #{type}
+      </if>
+      <if test="name != null and name != ''" >
+        and FoulActionName  like CONCAT('%',#{name},'%')
+      </if>
+      <if test="allowance != null and allowance != ''" >
+        and DeductLeaderAllow = #{allowance}
+      </if>
+      <if test="cash != null and cash != ''" >
+        and DeductLeaderCash = #{cash}
+      </if>
+      <if test="score != null and score != ''" >
+        and DeductDeptScore = #{score}
+      </if>
+      <if test="punish != null and punish != ''" >
+        and AdminPunish = #{punish}
+      </if>
+      <if test="memo != null and memo != ''" >
+        and Memo like CONCAT('%',#{memo},'%')
+      </if>
+    </where>
+
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm2_foulaction_tbl set IsDelete = 1
+    where FoulActionID = #{foulactionid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FoulactionTbl" >
+    insert into bm2_foulaction_tbl (FoulActionID, FoulActionTypeID, FoulActionName, 
+      DeductLeaderAllow, DeductPersonAllow, AdminPunish, 
+      DeductLeaderCash, DeductPersonCash, DeductDeptScore, 
+      DeductPersonType, DeductPersonScore, Memo, 
+      IsDelete, CreateTime, UpdateTime
+      )
+    values (#{foulactionid,jdbcType=VARCHAR}, #{foulactiontypeid,jdbcType=VARCHAR}, #{foulactionname,jdbcType=VARCHAR}, 
+      #{deductleaderallow,jdbcType=DOUBLE}, #{deductpersonallow,jdbcType=DOUBLE}, #{adminpunish,jdbcType=VARCHAR}, 
+      #{deductleadercash,jdbcType=DOUBLE}, #{deductpersoncash,jdbcType=DOUBLE}, #{deductdeptscore,jdbcType=DOUBLE}, 
+      #{deductpersontype,jdbcType=INTEGER}, #{deductpersonscore,jdbcType=DOUBLE}, #{memo,jdbcType=VARCHAR}, 
+      0, NOW(), #{updatetime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+  <foreach collection="list" index="item" separator=";" item="item" >
+    insert into bm2_foulaction_tbl (FoulActionID, FoulActionTypeID, FoulActionName,
+    DeductLeaderAllow, DeductPersonAllow, AdminPunish,
+    DeductLeaderCash, DeductPersonCash, DeductDeptScore,
+    DeductPersonType, DeductPersonScore, Memo,
+    IsDelete, CreateTime, UpdateTime
+    )
+    values (#{item.foulactionid,jdbcType=VARCHAR}, #{item.foulactiontypeid,jdbcType=VARCHAR}, #{item.foulactionname,jdbcType=VARCHAR},
+    #{item.deductleaderallow,jdbcType=DOUBLE}, #{item.deductpersonallow,jdbcType=DOUBLE}, #{item.adminpunish,jdbcType=VARCHAR},
+    #{item.deductleadercash,jdbcType=DOUBLE}, #{item.deductpersoncash,jdbcType=DOUBLE}, #{item.deductdeptscore,jdbcType=DOUBLE},
+    #{item.deductpersontype,jdbcType=INTEGER}, #{item.deductpersonscore,jdbcType=DOUBLE}, #{item.memo,jdbcType=VARCHAR},
+    0, NOW(), #{item.updatetime,jdbcType=TIMESTAMP}
+    )
+  </foreach>
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FoulactionTbl" >
+    insert into bm2_foulaction_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="foulactionid != null" >
+        FoulActionID,
+      </if>
+      <if test="foulactiontypeid != null" >
+        FoulActionTypeID,
+      </if>
+      <if test="foulactionname != null" >
+        FoulActionName,
+      </if>
+      <if test="deductleaderallow != null" >
+        DeductLeaderAllow,
+      </if>
+      <if test="deductpersonallow != null" >
+        DeductPersonAllow,
+      </if>
+      <if test="adminpunish != null" >
+        AdminPunish,
+      </if>
+      <if test="deductleadercash != null" >
+        DeductLeaderCash,
+      </if>
+      <if test="deductpersoncash != null" >
+        DeductPersonCash,
+      </if>
+      <if test="deductdeptscore != null" >
+        DeductDeptScore,
+      </if>
+      <if test="deductpersontype != null" >
+        DeductPersonType,
+      </if>
+      <if test="deductpersonscore != null" >
+        DeductPersonScore,
+      </if>
+      <if test="memo != null" >
+        Memo,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="createtime != null" >
+        CreateTime,
+      </if>
+      <if test="updatetime != null" >
+        UpdateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="foulactionid != null" >
+        #{foulactionid,jdbcType=VARCHAR},
+      </if>
+      <if test="foulactiontypeid != null" >
+        #{foulactiontypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="foulactionname != null" >
+        #{foulactionname,jdbcType=VARCHAR},
+      </if>
+      <if test="deductleaderallow != null" >
+        #{deductleaderallow,jdbcType=DOUBLE},
+      </if>
+      <if test="deductpersonallow != null" >
+        #{deductpersonallow,jdbcType=DOUBLE},
+      </if>
+      <if test="adminpunish != null" >
+        #{adminpunish,jdbcType=VARCHAR},
+      </if>
+      <if test="deductleadercash != null" >
+        #{deductleadercash,jdbcType=DOUBLE},
+      </if>
+      <if test="deductpersoncash != null" >
+        #{deductpersoncash,jdbcType=DOUBLE},
+      </if>
+      <if test="deductdeptscore != null" >
+        #{deductdeptscore,jdbcType=DOUBLE},
+      </if>
+      <if test="deductpersontype != null" >
+        #{deductpersontype,jdbcType=INTEGER},
+      </if>
+      <if test="deductpersonscore != null" >
+        #{deductpersonscore,jdbcType=DOUBLE},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FoulactionTbl" >
+    update bm2_foulaction_tbl
+    <set >
+      <if test="foulactiontypeid != null" >
+        FoulActionTypeID = #{foulactiontypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="foulactionname != null" >
+        FoulActionName = #{foulactionname,jdbcType=VARCHAR},
+      </if>
+      <if test="deductleaderallow != null" >
+        DeductLeaderAllow = #{deductleaderallow,jdbcType=DOUBLE},
+      </if>
+      <if test="deductpersonallow != null" >
+        DeductPersonAllow = #{deductpersonallow,jdbcType=DOUBLE},
+      </if>
+      <if test="adminpunish != null" >
+        AdminPunish = #{adminpunish,jdbcType=VARCHAR},
+      </if>
+      <if test="deductleadercash != null" >
+        DeductLeaderCash = #{deductleadercash,jdbcType=DOUBLE},
+      </if>
+      <if test="deductpersoncash != null" >
+        DeductPersonCash = #{deductpersoncash,jdbcType=DOUBLE},
+      </if>
+      <if test="deductdeptscore != null" >
+        DeductDeptScore = #{deductdeptscore,jdbcType=DOUBLE},
+      </if>
+      <if test="deductpersontype != null" >
+        DeductPersonType = #{deductpersontype,jdbcType=INTEGER},
+      </if>
+      <if test="deductpersonscore != null" >
+        DeductPersonScore = #{deductpersonscore,jdbcType=DOUBLE},
+      </if>
+      <if test="memo != null" >
+        Memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        NOW(),
+      </if>
+    </set>
+    where FoulActionID = #{foulactionid,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2FoulactionTbl" >
+    update bm2_foulaction_tbl
+    set FoulActionTypeID = #{foulactiontypeid,jdbcType=VARCHAR},
+      FoulActionName = #{foulactionname,jdbcType=VARCHAR},
+      DeductLeaderAllow = #{deductleaderallow,jdbcType=DOUBLE},
+      DeductPersonAllow = #{deductpersonallow,jdbcType=DOUBLE},
+      AdminPunish = #{adminpunish,jdbcType=VARCHAR},
+      DeductLeaderCash = #{deductleadercash,jdbcType=DOUBLE},
+      DeductPersonCash = #{deductpersoncash,jdbcType=DOUBLE},
+      DeductDeptScore = #{deductdeptscore,jdbcType=DOUBLE},
+      DeductPersonType = #{deductpersontype,jdbcType=INTEGER},
+      DeductPersonScore = #{deductpersonscore,jdbcType=DOUBLE},
+      Memo = #{memo,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      CreateTime = #{createtime,jdbcType=TIMESTAMP},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP}
+    where FoulActionID = #{foulactionid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="queryAll" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2FoulactionTbl" parameterType="com.hangyu.platform.web.sysAdmin.vo.Bm2FoulactionQueryVO" >
+    select
+    <include refid="Base_Column_List1" />
+    from bm2_foulaction_tbl f
+    left JOIN  BM2_FoulActionType_Tbl t on f.FoulActionTypeID = t.FoulActionTypeID
+    <where>
+      f.IsDelete = 0
+      <if test="type != null and type != ''" >
+        and f.FoulActionTypeID = #{type}
+      </if>
+      <if test="name != null and name != ''" >
+        and f.FoulActionName  like CONCAT('%',#{name},'%')
+      </if>
+      <if test="allowance != null and allowance != ''" >
+        and f.DeductLeaderAllow = #{allowance}
+      </if>
+      <if test="cash != null and cash != ''" >
+        and f.DeductLeaderCash = #{cash}
+      </if>
+      <if test="score != null and score != ''" >
+        and f.DeductDeptScore = #{score}
+      </if>
+      <if test="punish != null and punish != ''" >
+        and f.AdminPunish = #{punish}
+      </if>
+      <if test="memo != null and memo != ''" >
+        and f.Memo like CONCAT('%',#{memo},'%')
+      </if>
+    </where>
+    order by f.CreateTime desc
+  </select>
+</mapper>

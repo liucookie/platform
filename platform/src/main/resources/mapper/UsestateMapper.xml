@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.UsestateMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Usestate">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="UseStateName" property="usestatename" jdbcType="VARCHAR"/>
+        <result column="UseStateMemo" property="usestatememo" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    Id, UniqueID, UseStateName, UseStateMemo, IsDelete
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from usestate
+        where UniqueID = #{id}
+    </select>
+
+
+    <select id="selectAllByPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from usestate where
+        isDelete = 0
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(UniqueID)
+    from usestate where
+    isDelete = 0
+  </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+     update usestate
+      set
+        IsDelete = 1
+       where UniqueID = #{uniqueid}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Usestate">
+    insert into usestate (Id, UniqueID, UseStateName, 
+      UseStateMemo, IsDelete)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{usestatename,jdbcType=VARCHAR}, 
+      #{usestatememo,jdbcType=VARCHAR}, 0)
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Usestate">
+        insert into usestate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="uniqueid != null">
+                UniqueID,
+            </if>
+            <if test="usestatename != null">
+                UseStateName,
+            </if>
+            <if test="usestatememo != null">
+                UseStateMemo,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="uniqueid != null">
+                #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="usestatename != null">
+                #{usestatename,jdbcType=VARCHAR},
+            </if>
+            <if test="usestatememo != null">
+                #{usestatememo,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.Usestate">
+        update usestate
+        <set>
+            <if test="uniqueid != null">
+                UniqueID = #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="usestatename != null">
+                UseStateName = #{usestatename,jdbcType=VARCHAR},
+            </if>
+            <if test="usestatememo != null">
+                UseStateMemo = #{usestatememo,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+        </set>
+        where UniqueID = #{uniqueid}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.Usestate">
+    update usestate
+    set UniqueID = #{uniqueid,jdbcType=VARCHAR},
+      UseStateName = #{usestatename,jdbcType=VARCHAR},
+      UseStateMemo = #{usestatememo,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.SystemsetTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.SystemsetTbl" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="SysSetId" property="syssetid" jdbcType="VARCHAR" />
+    <result column="ComputerShowSign" property="computershowsign" jdbcType="INTEGER" />
+    <result column="LogKeepMonth" property="logkeepmonth" jdbcType="INTEGER" />
+    <result column="SelfCheckBeginDate" property="selfcheckbegindate" jdbcType="INTEGER" />
+    <result column="SelfCheckEndDate" property="selfcheckenddate" jdbcType="INTEGER" />
+    <result column="SelfCheckCreateOption" property="selfcheckcreateoption" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    Id, SysSetId, ComputerShowSign, LogKeepMonth, SelfCheckBeginDate, SelfCheckEndDate, 
+    SelfCheckCreateOption
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from systemset_tbl
+    limit 1
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from systemset_tbl
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.SystemsetTbl" >
+    insert into systemset_tbl (Id, SysSetId, ComputerShowSign, 
+      LogKeepMonth, SelfCheckBeginDate, SelfCheckEndDate, 
+      SelfCheckCreateOption)
+    values (#{id,jdbcType=INTEGER}, #{syssetid,jdbcType=VARCHAR}, #{computershowsign,jdbcType=INTEGER}, 
+      #{logkeepmonth,jdbcType=INTEGER}, #{selfcheckbegindate,jdbcType=INTEGER}, #{selfcheckenddate,jdbcType=INTEGER}, 
+      #{selfcheckcreateoption,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.SystemsetTbl" >
+    insert into systemset_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="syssetid != null" >
+        SysSetId,
+      </if>
+      <if test="computershowsign != null" >
+        ComputerShowSign,
+      </if>
+      <if test="logkeepmonth != null" >
+        LogKeepMonth,
+      </if>
+      <if test="selfcheckbegindate != null" >
+        SelfCheckBeginDate,
+      </if>
+      <if test="selfcheckenddate != null" >
+        SelfCheckEndDate,
+      </if>
+      <if test="selfcheckcreateoption != null" >
+        SelfCheckCreateOption,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="syssetid != null" >
+        #{syssetid,jdbcType=VARCHAR},
+      </if>
+      <if test="computershowsign != null" >
+        #{computershowsign,jdbcType=INTEGER},
+      </if>
+      <if test="logkeepmonth != null" >
+        #{logkeepmonth,jdbcType=INTEGER},
+      </if>
+      <if test="selfcheckbegindate != null" >
+        #{selfcheckbegindate,jdbcType=INTEGER},
+      </if>
+      <if test="selfcheckenddate != null" >
+        #{selfcheckenddate,jdbcType=INTEGER},
+      </if>
+      <if test="selfcheckcreateoption != null" >
+        #{selfcheckcreateoption,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.SystemsetTbl" >
+    update systemset_tbl
+    <set >
+
+      <if test="computershowsign != null" >
+        ComputerShowSign = #{computershowsign,jdbcType=INTEGER},
+      </if>
+      <if test="logkeepmonth != null" >
+        LogKeepMonth = #{logkeepmonth,jdbcType=INTEGER},
+      </if>
+      <if test="selfcheckbegindate != null" >
+        SelfCheckBeginDate = #{selfcheckbegindate,jdbcType=INTEGER},
+      </if>
+      <if test="selfcheckenddate != null" >
+        SelfCheckEndDate = #{selfcheckenddate,jdbcType=INTEGER},
+      </if>
+      <if test="selfcheckcreateoption != null" >
+        SelfCheckCreateOption = #{selfcheckcreateoption,jdbcType=INTEGER},
+      </if>
+    </set>
+    where SysSetId = #{syssetid}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.SystemsetTbl" >
+    update systemset_tbl
+    set SysSetId = #{syssetid,jdbcType=VARCHAR},
+      ComputerShowSign = #{computershowsign,jdbcType=INTEGER},
+      LogKeepMonth = #{logkeepmonth,jdbcType=INTEGER},
+      SelfCheckBeginDate = #{selfcheckbegindate,jdbcType=INTEGER},
+      SelfCheckEndDate = #{selfcheckenddate,jdbcType=INTEGER},
+      SelfCheckCreateOption = #{selfcheckcreateoption,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

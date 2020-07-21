@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmCheckselfdeptTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmCheckselfdeptTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CheckSelfId" property="checkselfid" jdbcType="VARCHAR" />
+    <result column="SelfPlanId" property="selfplanid" jdbcType="VARCHAR" />
+    <result column="DeptId" property="deptid" jdbcType="VARCHAR" />
+    <result column="DeptName" property="deptname" jdbcType="VARCHAR" />
+    <result column="StaffNum" property="staffnum" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="ExamineStatus" property="examinestatus" jdbcType="INTEGER" />
+    <result column="WithoutComputerNum" property="withoutcomputernum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CheckSelfId, SelfPlanId, DeptId, DeptName, StaffNum, IsDelete, ExamineStatus, 
+    WithoutComputerNum
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_checkselfdept_tbl
+    where IsDelete  = 0
+    and SelfPlanId = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update  bm_checkselfdept_tbl set IsDelete = 1
+    where SelfPlanId = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckselfdeptTbl" >
+    insert into bm_checkselfdept_tbl (ID, CheckSelfId, SelfPlanId, 
+      DeptId, DeptName, StaffNum, 
+      IsDelete, ExamineStatus, WithoutComputerNum
+      )
+    values (#{id,jdbcType=INTEGER}, #{checkselfid,jdbcType=VARCHAR}, #{selfplanid,jdbcType=VARCHAR}, 
+      #{deptid,jdbcType=VARCHAR}, #{deptname,jdbcType=VARCHAR}, #{staffnum,jdbcType=INTEGER}, 
+      0, #{examinestatus,jdbcType=INTEGER}, #{withoutcomputernum,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckselfdeptTbl" >
+    insert into bm_checkselfdept_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="checkselfid != null" >
+        CheckSelfId,
+      </if>
+      <if test="selfplanid != null" >
+        SelfPlanId,
+      </if>
+      <if test="deptid != null" >
+        DeptId,
+      </if>
+      <if test="deptname != null" >
+        DeptName,
+      </if>
+      <if test="staffnum != null" >
+        StaffNum,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="examinestatus != null" >
+        ExamineStatus,
+      </if>
+      <if test="withoutcomputernum != null" >
+        WithoutComputerNum,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="checkselfid != null" >
+        #{checkselfid,jdbcType=VARCHAR},
+      </if>
+      <if test="selfplanid != null" >
+        #{selfplanid,jdbcType=VARCHAR},
+      </if>
+      <if test="deptid != null" >
+        #{deptid,jdbcType=VARCHAR},
+      </if>
+      <if test="deptname != null" >
+        #{deptname,jdbcType=VARCHAR},
+      </if>
+      <if test="staffnum != null" >
+        #{staffnum,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="examinestatus != null" >
+        #{examinestatus,jdbcType=INTEGER},
+      </if>
+      <if test="withoutcomputernum != null" >
+        #{withoutcomputernum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckselfdeptTbl" >
+    update bm_checkselfdept_tbl
+    <set >
+      <if test="checkselfid != null" >
+        CheckSelfId = #{checkselfid,jdbcType=VARCHAR},
+      </if>
+      <if test="selfplanid != null" >
+        SelfPlanId = #{selfplanid,jdbcType=VARCHAR},
+      </if>
+      <if test="deptid != null" >
+        DeptId = #{deptid,jdbcType=VARCHAR},
+      </if>
+      <if test="deptname != null" >
+        DeptName = #{deptname,jdbcType=VARCHAR},
+      </if>
+      <if test="staffnum != null" >
+        StaffNum = #{staffnum,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="examinestatus != null" >
+        ExamineStatus = #{examinestatus,jdbcType=INTEGER},
+      </if>
+      <if test="withoutcomputernum != null" >
+        WithoutComputerNum = #{withoutcomputernum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmCheckselfdeptTbl" >
+    update bm_checkselfdept_tbl
+    set
+      SelfPlanId = #{selfplanid,jdbcType=VARCHAR},
+      DeptId = #{deptid,jdbcType=VARCHAR},
+      DeptName = #{deptname,jdbcType=VARCHAR},
+      StaffNum = #{staffnum,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      ExamineStatus = #{examinestatus,jdbcType=INTEGER},
+      WithoutComputerNum = #{withoutcomputernum,jdbcType=INTEGER}
+    where CheckSelfId = #{checkselfid,jdbcType=VARCHAR}
+  </update>
+</mapper>

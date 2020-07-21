@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.OrganizationMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Organization">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="ParentId" property="parentid" jdbcType="VARCHAR"/>
+        <result column="OrgName" property="orgname" jdbcType="VARCHAR"/>
+        <result column="OrgMemo" property="orgmemo" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="OrgPath" property="orgpath" jdbcType="VARCHAR"/>
+        <result column="orderTax" property="ordertax" jdbcType="INTEGER"/>
+        <result column="SynId" property="synid" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+              id, UniqueID, ParentId, OrgName, OrgMemo, IsDelete, OrgPath, orderTax, SynId
+     </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from Organization
+        where UniqueID = #{id}
+    </select>
+    <select id="getAllOrg" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from Organization
+        where IsDelete = 0
+        order by orderTax
+    </select>
+
+    <select id="queryNameBatch" resultType="java.lang.String" parameterType="java.util.List">
+        select
+        OrgName
+        from Organization
+        where UniqueID IN
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="queryParentName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from Organization
+        where IsDelete = 0
+        and UniqueID = (Select ParentId from Organization where UniqueID = #{childId})
+    </select>
+
+    <select id="queryByOrgName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from Organization
+        where IsDelete = 0
+        and OrgName = #{orgName}
+    </select>
+
+    <select id="queryOrganization" resultType="com.hangyu.platform.web.backBusiness.vo.OrganizationVO">
+     SELECT
+        UniqueID AS id,
+        OrgName  AS organizationName
+       FROM Organization
+        WHERE
+         ParentId= #{pid}
+        AND  IsDelete = 0
+        order by orderTax
+   </select>
+
+    <select id="queryByParentId" resultType="java.lang.String" parameterType="java.lang.String">
+     SELECT
+        UniqueID
+       FROM Organization
+        WHERE
+         ParentId= #{pid}
+        AND  IsDelete = 0
+
+   </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+           update Organization set IsDelete = 1
+            where UniqueID = #{id} or  ParentId = #{id}
+  </delete>
+
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Organization">
+    insert into Organization (id, UniqueID, ParentId, 
+      OrgName, OrgMemo, IsDelete, 
+      OrgPath, orderTax, SynId
+      )
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{parentid,jdbcType=VARCHAR}, 
+      #{orgname,jdbcType=VARCHAR}, #{orgmemo,jdbcType=VARCHAR}, 0,
+      #{orgpath,jdbcType=VARCHAR}, #{ordertax,jdbcType=INTEGER}, #{synid,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.Organization">
+        insert into Organization
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="uniqueid != null">
+                UniqueID,
+            </if>
+            <if test="parentid != null">
+                ParentId,
+            </if>
+            <if test="orgname != null">
+                OrgName,
+            </if>
+            <if test="orgmemo != null">
+                OrgMemo,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+            <if test="orgpath != null">
+                OrgPath,
+            </if>
+            <if test="ordertax != null">
+                orderTax,
+            </if>
+            <if test="synid != null">
+                SynId,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="uniqueid != null">
+                #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="parentid != null">
+                #{parentid,jdbcType=VARCHAR},
+            </if>
+            <if test="orgname != null">
+                #{orgname,jdbcType=VARCHAR},
+            </if>
+            <if test="orgmemo != null">
+                #{orgmemo,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="orgpath != null">
+                #{orgpath,jdbcType=VARCHAR},
+            </if>
+            <if test="ordertax != null">
+                #{ordertax,jdbcType=INTEGER},
+            </if>
+            <if test="synid != null">
+                #{synid,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.Organization">
+        update Organization
+        <set>
+            <if test="parentid != null">
+                ParentId = #{parentid,jdbcType=VARCHAR},
+            </if>
+            <if test="orgname != null">
+                OrgName = #{orgname,jdbcType=VARCHAR},
+            </if>
+            <if test="orgmemo != null">
+                OrgMemo = #{orgmemo,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="orgpath != null">
+                OrgPath = #{orgpath,jdbcType=VARCHAR},
+            </if>
+            <if test="ordertax != null">
+                orderTax = #{ordertax,jdbcType=INTEGER},
+            </if>
+            <if test="synid != null">
+                SynId = #{synid,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+    </update>
+
+
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" separator=";" close="">
+            update Organization
+            <set>
+                orderTax = #{item.ordertax,jdbcType=INTEGER}
+            </set>
+            where UniqueId = #{item.uniqueid}
+        </foreach>
+    </update>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" separator=";" close="">
+            delete from Organization
+            where UniqueId = #{item}
+        </foreach>
+    </delete>
+</mapper>

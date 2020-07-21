@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.OaLevelintegrateMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.OaLevelintegrate" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="FileName" property="filename" jdbcType="VARCHAR" />
+    <result column="FileNo" property="fileno" jdbcType="VARCHAR" />
+    <result column="SecretLeve" property="secretleve" jdbcType="VARCHAR" />
+    <result column="Promoter" property="promoter" jdbcType="VARCHAR" />
+    <result column="Auditperson" property="auditperson" jdbcType="VARCHAR" />
+    <result column="ApprovalPeople" property="approvalpeople" jdbcType="VARCHAR" />
+    <result column="GenerateTime" property="generatetime" jdbcType="TIMESTAMP" />
+    <result column="StartDepartment" property="startdepartment" jdbcType="VARCHAR" />
+    <result column="StartOffices" property="startoffices" jdbcType="VARCHAR" />
+    <result column="Isdelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="UserId" property="userid" jdbcType="VARCHAR" />
+    <result column="ImporTime" property="importime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, FileName, FileNo, SecretLeve, Promoter, Auditperson, ApprovalPeople, GenerateTime, 
+    StartDepartment, StartOffices, Isdelete, UserId, ImporTime
+  </sql>
+
+  <sql id="Base_Column_List1" >
+    a.Id, a.FileName, a.FileNo, a.SecretLeve, a.Promoter, a.Auditperson, a.ApprovalPeople, date_format(a.GenerateTime, '%Y-%m-%d %H:%i:%s')  GenerateTime,
+    a.StartDepartment, a.StartOffices, a.Isdelete, a.UserId, date_format(a.ImporTime, '%Y-%m-%d %H:%i:%s')  ImporTime
+  </sql>
+
+  <select id="select" resultMap="BaseResultMap" parameterType="com.hangyu.platform.web.backBusiness.vo.AvidmQueryVO">
+    select
+    distinct
+    <include refid="Base_Column_List1"/>
+    from oa_levelintegrate a
+    left join bm_staff_tbl s on a.Promoter = s.AccoutName
+    left join organization o on s.DeptId = o.UniqueID
+    <where>
+      a.Isdelete = 0
+      <if test="orgId != null and userAccount == null">
+        and  a.Promoter in
+        (select AccoutName FROM bm_staff_tbl  where DeptId = #{orgId})
+      </if>
+      <if test="userAccount != null">
+        and a.Promoter = #{userAccount}
+      </if>
+      <if test="fileName != null">
+        and a.FileName like CONCAT('%',#{fileName},'%')
+      </if>
+      <if test="level != null">
+        and a.SecretLeve = #{level}
+      </if>
+    </where>
+    order by a.Id desc
+    limit #{pageNum} , #{pageSize}
+  </select>
+
+    <select id="selectTotal" resultMap="BaseResultMap" parameterType="com.hangyu.platform.web.backBusiness.vo.AvidmQueryVO">
+        select
+        distinct
+        <include refid="Base_Column_List1"/>
+        from oa_levelintegrate a
+        left join bm_staff_tbl s on a.Promoter = s.AccoutName
+        left join organization o on s.DeptId = o.UniqueID
+        <where>
+            a.Isdelete = 0
+            <if test="orgId != null and userAccount == null">
+                and  a.Promoter in
+                (select AccoutName FROM bm_staff_tbl  where DeptId = #{orgId})
+            </if>
+            <if test="userAccount != null">
+                and a.Promoter = #{userAccount}
+            </if>
+            <if test="fileName != null">
+                and a.FileName like CONCAT('%',#{fileName},'%')
+            </if>
+            <if test="level != null">
+                and a.SecretLeve = #{level}
+            </if>
+        </where>
+    </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from oa_levelintegrate
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update oa_levelintegrate set Isdelete = 1
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.OaLevelintegrate" >
+    insert into oa_levelintegrate (Id, FileName, FileNo, 
+      SecretLeve, Promoter, Auditperson, 
+      ApprovalPeople, GenerateTime, StartDepartment, 
+      StartOffices, Isdelete, UserId, 
+      ImporTime)
+    values (#{id,jdbcType=INTEGER}, #{filename,jdbcType=VARCHAR}, #{fileno,jdbcType=VARCHAR}, 
+      #{secretleve,jdbcType=VARCHAR}, #{promoter,jdbcType=VARCHAR}, #{auditperson,jdbcType=VARCHAR}, 
+      #{approvalpeople,jdbcType=VARCHAR}, str_to_date(#{generatetime},'%Y-%m-%d %H:%i:%s'), #{startdepartment,jdbcType=VARCHAR},
+      #{startoffices,jdbcType=VARCHAR}, 0, #{userid,jdbcType=VARCHAR},
+      NOW())
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.OaLevelintegrate" >
+    insert into oa_levelintegrate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        Id,
+      </if>
+      <if test="filename != null" >
+        FileName,
+      </if>
+      <if test="fileno != null" >
+        FileNo,
+      </if>
+      <if test="secretleve != null" >
+        SecretLeve,
+      </if>
+      <if test="promoter != null" >
+        Promoter,
+      </if>
+      <if test="auditperson != null" >
+        Auditperson,
+      </if>
+      <if test="approvalpeople != null" >
+        ApprovalPeople,
+      </if>
+      <if test="generatetime != null" >
+        GenerateTime,
+      </if>
+      <if test="startdepartment != null" >
+        StartDepartment,
+      </if>
+      <if test="startoffices != null" >
+        StartOffices,
+      </if>
+      <if test="isdelete != null" >
+        Isdelete,
+      </if>
+      <if test="userid != null" >
+        UserId,
+      </if>
+      <if test="importime != null" >
+        ImporTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="fileno != null" >
+        #{fileno,jdbcType=VARCHAR},
+      </if>
+      <if test="secretleve != null" >
+        #{secretleve,jdbcType=VARCHAR},
+      </if>
+      <if test="promoter != null" >
+        #{promoter,jdbcType=VARCHAR},
+      </if>
+      <if test="auditperson != null" >
+        #{auditperson,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalpeople != null" >
+        #{approvalpeople,jdbcType=VARCHAR},
+      </if>
+      <if test="generatetime != null" >
+        #{generatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startdepartment != null" >
+        #{startdepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="startoffices != null" >
+        #{startoffices,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="importime != null" >
+        #{importime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.OaLevelintegrate" >
+    update oa_levelintegrate
+    <set >
+      <if test="filename != null" >
+        FileName = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="fileno != null" >
+        FileNo = #{fileno,jdbcType=VARCHAR},
+      </if>
+      <if test="secretleve != null" >
+        SecretLeve = #{secretleve,jdbcType=VARCHAR},
+      </if>
+      <if test="promoter != null" >
+        Promoter = #{promoter,jdbcType=VARCHAR},
+      </if>
+      <if test="auditperson != null" >
+        Auditperson = #{auditperson,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalpeople != null" >
+        ApprovalPeople = #{approvalpeople,jdbcType=VARCHAR},
+      </if>
+      <if test="generatetime != null" >
+        GenerateTime = str_to_date(#{generatetime},'%Y-%m-%d %H:%i:%s'),
+      </if>
+      <if test="startdepartment != null" >
+        StartDepartment = #{startdepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="startoffices != null" >
+        StartOffices = #{startoffices,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        Isdelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        UserId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="importime != null" >
+        ImporTime = str_to_date(#{importime},'%Y-%m-%d %H:%i:%s')
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.OaLevelintegrate" >
+    update oa_levelintegrate
+    set FileName = #{filename,jdbcType=VARCHAR},
+      FileNo = #{fileno,jdbcType=VARCHAR},
+      SecretLeve = #{secretleve,jdbcType=VARCHAR},
+      Promoter = #{promoter,jdbcType=VARCHAR},
+      Auditperson = #{auditperson,jdbcType=VARCHAR},
+      ApprovalPeople = #{approvalpeople,jdbcType=VARCHAR},
+      GenerateTime = #{generatetime,jdbcType=TIMESTAMP},
+      StartDepartment = #{startdepartment,jdbcType=VARCHAR},
+      StartOffices = #{startoffices,jdbcType=VARCHAR},
+      Isdelete = #{isdelete,jdbcType=INTEGER},
+      UserId = #{userid,jdbcType=VARCHAR},
+      ImporTime = #{importime,jdbcType=TIMESTAMP}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

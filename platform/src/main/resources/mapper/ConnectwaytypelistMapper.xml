@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.ConnectwaytypelistMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Connectwaytypelist" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="TypeName" property="typename" jdbcType="VARCHAR" />
+    <result column="Remark" property="remark" jdbcType="VARCHAR" />
+    <result column="Createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="CreateUser" property="createuser" jdbcType="VARCHAR" />
+    <result column="Updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="UpdateUser" property="updateuser" jdbcType="VARCHAR" />
+    <result column="isdelete" property="isdelete" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, typename, remark,date_format(createtime,'%Y-%m-%d') createtime, createuser,date_format(updatetime,'%Y-%m-%d') updatetime, updateuser, isdelete
+  </sql>
+
+  <!-- 总数据量 -->
+  <select id="selectTotal" resultType="integer" >
+    select count(id) from connectwaytypelist where isdelete = 0
+  </select>
+
+  <!-- 模糊查询总数据量 -->
+  <select id="selectTotals" resultType="integer" >
+    select count(id) from connectwaytypelist where isdelete = 0 and typename = #{typename}
+  </select>
+
+  <!-- 批量查询 -->
+  <select id="selectAll" resultType="com.hangyu.platform.web.sysAdmin.dto.Connectwaytypelist" >
+    select
+    <include refid="Base_Column_List" />
+     from connectwaytypelist
+     where isdelete =0 limit #{start},#{pageSize}
+  </select>
+
+  <!-- 单条查询 -->
+  <select id="select" resultType="com.hangyu.platform.web.sysAdmin.dto.Connectwaytypelist" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from connectwaytypelist
+    where id = #{id,jdbcType=INTEGER} and isdelete = 0
+  </select>
+
+  <!-- 条件模糊查询 -->
+  <select id="factorSelect" resultType="com.hangyu.platform.web.sysAdmin.dto.Connectwaytypelist" >
+    select
+    <include refid="Base_Column_List" />
+    from connectwaytypelist
+    where typename like concat('%',#{typename},'%')
+  </select>
+
+  <!-- 批量删除 -->
+  <delete id="delete" parameterType="java.lang.Integer" >
+    update connectwaytypelist  set isdelete = 1  where id in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")" >
+      #{item}
+    </foreach>
+  </delete>
+
+  <!-- 添加 -->
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Connectwaytypelist" >
+    insert into connectwaytypelist (id, TypeName, Remark, 
+      Createtime, CreateUser, UpdateUser, isdelete)
+    values (#{id,jdbcType=INTEGER}, #{typename,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      NOW(), #{createuser,jdbcType=VARCHAR},#{updateuser,jdbcType=VARCHAR}, 0)
+  </insert>
+
+  <!-- 修改信息 -->
+  <update id="update" parameterType="com.hangyu.platform.web.sysAdmin.dto.Connectwaytypelist" >
+    update connectwaytypelist
+    <set >
+      <if test="typename != null" >
+        TypeName = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createuser != null" >
+        CreateUser = #{createuser,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime == null" >
+        Updatetime = NOW(),
+      </if>
+      <if test="updateuser != null" >
+        UpdateUser = #{updateuser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

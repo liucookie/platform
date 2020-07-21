@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmResourcelibTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmResourcelibTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="ResLibId" property="reslibid" jdbcType="VARCHAR"/>
+        <result column="TypeId" property="typeid" jdbcType="VARCHAR"/>
+        <result column="ResName" property="resname" jdbcType="VARCHAR"/>
+        <result column="KeyWord" property="keyword" jdbcType="VARCHAR"/>
+        <result column="ResPic" property="respic" jdbcType="VARCHAR"/>
+        <result column="UpdateTime" property="updatetime" jdbcType="TIMESTAMP"/>
+        <result column="FileUrl" property="fileurl" jdbcType="VARCHAR"/>
+        <result column="ResRemark" property="resremark" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="Content" property="content" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    r.Id, r.ResLibId,  r.TypeId,  r.ResName, date_format(r.UpdateTime, '%Y-%m-%d')  UpdateTime,
+    r.KeyWord,  r.ResPic,   r.FileUrl,  r.ResRemark,  r.IsDelete,
+     r.Content,c.codeName typeName
+  </sql>
+    <select id="selectByPrimaryKey" resultType="com.hangyu.platform.web.backBusiness.dto.BmResourcelibTbl"
+            parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_resourcelib_tbl r
+        left join basecode c on c.id = r.TypeId
+        where r.ResLibId = #{id}
+    </select>
+
+    <select id="select" resultType="com.hangyu.platform.web.backBusiness.dto.BmResourcelibTbl">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_resourcelib_tbl r
+        left join basecode c on c.id = r.TypeId
+        where r.IsDelete = 0
+        order by r.Id desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+        select
+        COUNT(Id)
+        from bm_resourcelib_tbl
+        where IsDelete = 0
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_resourcelib_tbl set IsDelete = 1
+    where ResLibId = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmResourcelibTbl">
+    insert into bm_resourcelib_tbl (Id, ResLibId, TypeId, 
+      ResName, KeyWord, ResPic, 
+      UpdateTime, FileUrl, ResRemark, 
+      IsDelete, Content)
+    values (#{id,jdbcType=INTEGER}, #{reslibid,jdbcType=VARCHAR}, #{typeid,jdbcType=VARCHAR}, 
+      #{resname,jdbcType=VARCHAR}, #{keyword,jdbcType=VARCHAR}, #{respic,jdbcType=VARCHAR}, 
+      str_to_date(#{updatetime},'%Y-%m-%d'), #{fileurl,jdbcType=VARCHAR}, #{resremark,jdbcType=VARCHAR},
+      0, #{content,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmResourcelibTbl">
+        insert into bm_resourcelib_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="reslibid != null">
+                ResLibId,
+            </if>
+            <if test="typeid != null">
+                TypeId,
+            </if>
+            <if test="resname != null">
+                ResName,
+            </if>
+            <if test="keyword != null">
+                KeyWord,
+            </if>
+            <if test="respic != null">
+                ResPic,
+            </if>
+            <if test="updatetime != null">
+                UpdateTime,
+            </if>
+            <if test="fileurl != null">
+                FileUrl,
+            </if>
+            <if test="resremark != null">
+                ResRemark,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+            <if test="content != null">
+                Content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="reslibid != null">
+                #{reslibid,jdbcType=VARCHAR},
+            </if>
+            <if test="typeid != null">
+                #{typeid,jdbcType=VARCHAR},
+            </if>
+            <if test="resname != null">
+                #{resname,jdbcType=VARCHAR},
+            </if>
+            <if test="keyword != null">
+                #{keyword,jdbcType=VARCHAR},
+            </if>
+            <if test="respic != null">
+                #{respic,jdbcType=VARCHAR},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="fileurl != null">
+                #{fileurl,jdbcType=VARCHAR},
+            </if>
+            <if test="resremark != null">
+                #{resremark,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmResourcelibTbl">
+    update bm_resourcelib_tbl
+    set
+      TypeId = #{typeid,jdbcType=VARCHAR},
+      ResName = #{resname,jdbcType=VARCHAR},
+      KeyWord = #{keyword,jdbcType=VARCHAR},
+      ResPic = #{respic,jdbcType=VARCHAR},
+      UpdateTime = str_to_date(#{updatetime},'%Y-%m-%d'),
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      ResRemark = #{resremark,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      Content = #{content,jdbcType=VARCHAR}
+    where ResLibId = #{reslibid,jdbcType=VARCHAR}
+  </update>
+</mapper>

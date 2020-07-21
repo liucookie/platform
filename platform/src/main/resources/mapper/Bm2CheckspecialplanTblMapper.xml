@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.Bm2CheckspecialplanTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialplanTbl" >
+    <id column="PlanID" property="planid" jdbcType="VARCHAR" />
+    <result column="MonthlyPlanID" property="monthlyplanid" jdbcType="VARCHAR" />
+    <result column="PlanName" property="planname" jdbcType="VARCHAR" />
+    <result column="PlanCheckTypeID" property="planchecktypeid" jdbcType="VARCHAR" />
+    <result column="PlanBeginDate" property="planbegindate" jdbcType="TIMESTAMP" />
+    <result column="PlanEndDate" property="planenddate" jdbcType="TIMESTAMP" />
+    <result column="PlanState" property="planstate" jdbcType="INTEGER" />
+    <result column="PlanRemark" property="planremark" jdbcType="VARCHAR" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="IsYearPlan" property="isyearplan" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    c.PlanID, c.MonthlyPlanID, c.PlanName, c.PlanCheckTypeID, date_format(c.PlanBeginDate, '%Y-%m-%d')  PlanBeginDate,
+    date_format(c.PlanEndDate, '%Y-%m-%d')  PlanEndDate, c.PlanState,
+    c.PlanRemark, c.IsDelete, c.IsYearPlan,s.CheckTypeName checkTypeName
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm2_checkspecialplan_tbl
+    where PlanID = #{planid,jdbcType=VARCHAR}
+  </select>
+  <select id="queryByMonthId" resultType="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialplanTbl"
+          parameterType="com.hangyu.platform.web.backBusiness.vo.CheckPlanQueryVO">
+    select
+    <include refid="Base_Column_List"/>
+    from bm2_checkspecialplan_tbl  c
+    left join bm2_checkspecialtype_tbl s on s.CheckTypeID = c.PlanCheckTypeID
+    <where>
+      c.IsDelete = 0
+      <if test="checkType != null and checkType != ''">
+        and c.PlanCheckTypeID = #{checkType}
+      </if>
+      <if test="monthPlanId != null and monthPlanId != ''">
+        and c.MonthlyPlanID = #{monthPlanId}
+      </if>
+      <if test="status != null and status != ''">
+        and c.PlanState = #{status}
+      </if>
+      <if test="startDate != null and startDate != ''">
+        and c.PlanBeginDate >= str_to_date(#{startDate},'%Y-%m-%d')
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and str_to_date(#{endDate},'%Y-%m-%d') >= c.PlanEndDate
+      </if>
+      <if test="name != null and name != ''">
+        and c.PlanName like CONCAT("%",#{name},"%")
+      </if>
+    </where>
+    limit #{pageNum},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer"
+          parameterType="com.hangyu.platform.web.backBusiness.vo.CheckPlanQueryVO">
+    select
+    COUNT(PlanID)
+    from bm2_checkspecialplan_tbl  c
+    left join bm2_checkspecialtype_tbl s on s.CheckTypeID = c.PlanCheckTypeID
+    <where>
+      c.IsDelete = 0
+      <if test="checkType != null and checkType != ''">
+        and c.PlanCheckTypeID = #{checkType}
+      </if>
+      <if test="monthPlanId != null and monthPlanId != ''">
+        and c.MonthlyPlanID = #{monthPlanId}
+      </if>
+      <if test="status != null and status != ''">
+        and c.PlanState = #{status}
+      </if>
+      <if test="startDate != null and startDate != ''">
+        and c.PlanBeginDate >= str_to_date(#{startDate},'%Y-%m-%d')
+      </if>
+      <if test="endDate != null and endDate != ''">
+        and str_to_date(#{endDate},'%Y-%m-%d') >= c.PlanEndDate
+      </if>
+      <if test="name != null and name != ''">
+        and c.PlanName like CONCAT("%",#{name},"%")
+      </if>
+    </where>
+    limit #{pageNum},#{pageSize}
+  </select>
+
+  <select id="selectNumber" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select
+    COUNT(PlanID)
+    from bm2_checkspecialplan_tbl
+    where MonthlyPlanID = #{planId,jdbcType=VARCHAR}
+    and IsDelete = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from bm2_checkspecialplan_tbl
+    where PlanID = #{planid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialplanTbl" >
+    insert into bm2_checkspecialplan_tbl (PlanID, MonthlyPlanID, PlanName, 
+      PlanCheckTypeID, PlanBeginDate, PlanEndDate, 
+      PlanState, PlanRemark, IsDelete, 
+      IsYearPlan)
+    values (#{planid,jdbcType=VARCHAR}, #{monthlyplanid,jdbcType=VARCHAR}, #{planname,jdbcType=VARCHAR}, 
+      #{planchecktypeid,jdbcType=VARCHAR}, #{planbegindate,jdbcType=TIMESTAMP}, #{planenddate,jdbcType=TIMESTAMP}, 
+      #{planstate,jdbcType=INTEGER}, #{planremark,jdbcType=VARCHAR}, #{isdelete,jdbcType=INTEGER}, 
+      #{isyearplan,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialplanTbl" >
+    insert into bm2_checkspecialplan_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="planid != null" >
+        PlanID,
+      </if>
+      <if test="monthlyplanid != null" >
+        MonthlyPlanID,
+      </if>
+      <if test="planname != null" >
+        PlanName,
+      </if>
+      <if test="planchecktypeid != null" >
+        PlanCheckTypeID,
+      </if>
+      <if test="planbegindate != null" >
+        PlanBeginDate,
+      </if>
+      <if test="planenddate != null" >
+        PlanEndDate,
+      </if>
+      <if test="planstate != null" >
+        PlanState,
+      </if>
+      <if test="planremark != null" >
+        PlanRemark,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="isyearplan != null" >
+        IsYearPlan,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="planid != null" >
+        #{planid,jdbcType=VARCHAR},
+      </if>
+      <if test="monthlyplanid != null" >
+        #{monthlyplanid,jdbcType=VARCHAR},
+      </if>
+      <if test="planname != null" >
+        #{planname,jdbcType=VARCHAR},
+      </if>
+      <if test="planchecktypeid != null" >
+        #{planchecktypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="planbegindate != null" >
+        #{planbegindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planenddate != null" >
+        #{planenddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planstate != null" >
+        #{planstate,jdbcType=INTEGER},
+      </if>
+      <if test="planremark != null" >
+        #{planremark,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="isyearplan != null" >
+        #{isyearplan,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialplanTbl" >
+    update bm2_checkspecialplan_tbl
+    <set >
+      <if test="monthlyplanid != null" >
+        MonthlyPlanID = #{monthlyplanid,jdbcType=VARCHAR},
+      </if>
+      <if test="planname != null" >
+        PlanName = #{planname,jdbcType=VARCHAR},
+      </if>
+      <if test="planchecktypeid != null" >
+        PlanCheckTypeID = #{planchecktypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="planbegindate != null" >
+        PlanBeginDate = #{planbegindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planenddate != null" >
+        PlanEndDate = #{planenddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="planstate != null" >
+        PlanState = #{planstate,jdbcType=INTEGER},
+      </if>
+      <if test="planremark != null" >
+        PlanRemark = #{planremark,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="isyearplan != null" >
+        IsYearPlan = #{isyearplan,jdbcType=INTEGER},
+      </if>
+    </set>
+    where PlanID = #{planid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.Bm2CheckspecialplanTbl" >
+    update bm2_checkspecialplan_tbl
+    set MonthlyPlanID = #{monthlyplanid,jdbcType=VARCHAR},
+      PlanName = #{planname,jdbcType=VARCHAR},
+      PlanCheckTypeID = #{planchecktypeid,jdbcType=VARCHAR},
+      PlanBeginDate = #{planbegindate,jdbcType=TIMESTAMP},
+      PlanEndDate = #{planenddate,jdbcType=TIMESTAMP},
+      PlanState = #{planstate,jdbcType=INTEGER},
+      PlanRemark = #{planremark,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      IsYearPlan = #{isyearplan,jdbcType=INTEGER}
+    where PlanID = #{planid,jdbcType=VARCHAR}
+  </update>
+</mapper>

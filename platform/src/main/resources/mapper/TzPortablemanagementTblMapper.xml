@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.TzPortablemanagementTblMapper">
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.TzPortablemanagementTbl">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="OrgId" jdbcType="VARCHAR" property="orgid" />
+    <result column="StaffId" jdbcType="VARCHAR" property="staffid" />
+    <result column="AssetNumber" jdbcType="VARCHAR" property="assetnumber" />
+    <result column="SecretLevel" jdbcType="VARCHAR" property="secretlevel" />
+    <result column="Brand" jdbcType="VARCHAR" property="brand" />
+    <result column="Usage" jdbcType="VARCHAR" property="usage" />
+    <result column="BorrowState" jdbcType="VARCHAR" property="borrowstate" />
+    <result column="UseState" jdbcType="VARCHAR" property="usestate" />
+    <result column="InstallationTime" jdbcType="TIMESTAMP" property="installationtime" />
+    <result column="DiskSerialNumber" jdbcType="VARCHAR" property="diskserialnumber" />
+    <result column="Remark" jdbcType="VARCHAR" property="remark" />
+    <result column="IsDeleted" jdbcType="INTEGER" property="isdeleted" />
+    <result column="UniqueId" jdbcType="VARCHAR" property="uniqueid" />
+    <result column="MAC" jdbcType="VARCHAR" property="mac" />
+    <result column="OSVersion" jdbcType="VARCHAR" property="osversion" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    t.ID,  t.OrgId,  t.StaffId,  t.AssetNumber,  t.SecretLevel,  t.Brand,  t.Usage,  t.BorrowState,  t.UseState,
+     date_format(t.InstallationTime, '%Y-%m-%d')  InstallationTime ,  t.DiskSerialNumber,  t.Remark,  t.IsDeleted,
+      t.UniqueId,  t.MAC,  t.OSVersion, o.OrgName orgName,b.UserName userName
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tz_portablemanagement_tbl t
+    left join organization o on o.UniqueId = t.OrgId
+    left join bm_staff_tbl b on b.StaffId = t.StaffId
+    where t.UniqueId = #{id}
+  </select>
+
+  <select id="select" parameterType="com.hangyu.platform.web.backBusiness.vo.MediaManageQueryVO" resultType="com.hangyu.platform.web.backBusiness.dto.TzPortablemanagementTbl">
+    select
+    <include refid="Base_Column_List" />
+    from tz_portablemanagement_tbl t
+    left join organization o on o.UniqueId = t.OrgId
+    left join bm_staff_tbl b on b.StaffId = t.StaffId
+    <where>
+      t.IsDeleted = 0
+      <if test="orgId != null and orgId != ''">
+        and t.OrgId = #{orgId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and t.StaffId = #{userId}
+      </if>
+      <if test="equipId != null and equipId != ''">
+        and t.AssetNumber = #{equipId}
+      </if>
+      <if test="brand != null and brand != ''">
+        and t.Brand = #{brand}
+      </if>
+      <if test="secretName != null and secretName != ''">
+        and t.SecretLevel = #{secretName}
+      </if>
+      <if test="userStateId != null and userStateId != ''">
+        and t.UseState = #{userStateId}
+      </if>
+      <if test="usage != null and usage != ''">
+        and t.Usage = #{usage}
+      </if>
+      <if test="borrowStateId != null and borrowStateId != ''">
+        and t.BorrowState = #{borrowStateId}
+      </if>
+      <if test="chipNumber != null and chipNumber != ''">
+        and t.DiskSerialNumber like CONCAT("%",#{chipNumber},"%")
+      </if>
+    </where>
+    order by t.Id desc
+    limit #{pageNum},#{pageSize}
+  </select>
+
+  <select id="selectTotal" parameterType="com.hangyu.platform.web.backBusiness.vo.MediaManageQueryVO" resultType="java.lang.Integer">
+    select
+    COUNT(t.Id)
+    from tz_portablemanagement_tbl t
+    left join organization o on o.UniqueId = t.OrgId
+    left join bm_staff_tbl b on b.StaffId = t.StaffId
+    <where>
+      t.IsDeleted = 0
+      <if test="orgId != null and orgId != ''">
+        and t.OrgId = #{orgId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and t.StaffId = #{userId}
+      </if>
+      <if test="equipId != null and equipId != ''">
+        and t.AssetNumber = #{equipId}
+      </if>
+      <if test="brand != null and brand != ''">
+        and t.Brand = #{brand}
+      </if>
+      <if test="secretName != null and secretName != ''">
+        and t.SecretLevel = #{secretName}
+      </if>
+      <if test="userStateId != null and userStateId != ''">
+        and t.UseState = #{userStateId}
+      </if>
+      <if test="usage != null and usage != ''">
+        and t.Usage = #{usage}
+      </if>
+      <if test="borrowStateId != null and borrowStateId != ''">
+        and t.BorrowState = #{borrowStateId}
+      </if>
+      <if test="chipNumber != null and chipNumber != ''">
+        and t.DiskSerialNumber like CONCAT("%",#{chipNumber},"%")
+      </if>
+    </where>
+
+  </select>
+
+  <select id="selectAll" parameterType="com.hangyu.platform.web.backBusiness.vo.MediaManageQueryVO" resultType="com.hangyu.platform.web.backBusiness.dto.TzPortablemanagementTbl">
+    select
+    <include refid="Base_Column_List" />
+    from tz_portablemanagement_tbl t
+    left join organization o on o.UniqueId = t.OrgId
+    left join bm_staff_tbl b on b.StaffId = t.StaffId
+    <where>
+      t.IsDeleted = 0
+      <if test="orgId != null and orgId != ''">
+        and t.OrgId = #{orgId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and t.StaffId = #{userId}
+      </if>
+      <if test="equipId != null and equipId != ''">
+        and t.AssetNumber = #{equipId}
+      </if>
+      <if test="brand != null and brand != ''">
+        and t.Brand = #{brand}
+      </if>
+      <if test="secretName != null and secretName != ''">
+        and t.SecretLevel = #{secretName}
+      </if>
+      <if test="userStateId != null and userStateId != ''">
+        and t.UseState = #{userStateId}
+      </if>
+      <if test="usage != null and usage != ''">
+        and t.Usage = #{usage}
+      </if>
+      <if test="borrowStateId != null and borrowStateId != ''">
+        and t.BorrowState = #{borrowStateId}
+      </if>
+      <if test="chipNumber != null and chipNumber != ''">
+        and t.DiskSerialNumber like CONCAT("%",#{chipNumber},"%")
+      </if>
+    </where>
+    order by t.Id desc
+  </select>
+
+  <select id="queryByUserId" parameterType="java.lang.String" resultType="com.hangyu.platform.web.backBusiness.dto.TzPortablemanagementTbl">
+    select
+    <include refid="Base_Column_List" />
+    from tz_portablemanagement_tbl t
+    left join organization o on o.UniqueId = t.OrgId
+    left join bm_staff_tbl b on b.StaffId = t.StaffId
+    <where>
+      t.IsDeleted = 0
+      <if test="userId != null and userId != ''">
+        and t.StaffId = #{userId}
+      </if>
+    </where>
+    order by t.Id desc
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tz_portablemanagement_tbl
+    where UniqueId = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.TzPortablemanagementTbl">
+    insert into tz_portablemanagement_tbl (ID, OrgId, StaffId, 
+      AssetNumber, SecretLevel, Brand, 
+      `Usage`, BorrowState, UseState,
+      InstallationTime, DiskSerialNumber, Remark, 
+      IsDeleted, UniqueId, MAC, 
+      OSVersion)
+    values (#{id,jdbcType=INTEGER}, #{orgid,jdbcType=VARCHAR}, #{staffid,jdbcType=VARCHAR}, 
+      #{assetnumber,jdbcType=VARCHAR}, #{secretlevel,jdbcType=VARCHAR}, #{brand,jdbcType=VARCHAR}, 
+      #{usage,jdbcType=VARCHAR}, #{borrowstate,jdbcType=VARCHAR}, #{usestate,jdbcType=VARCHAR}, 
+      str_to_date(#{installationtime},'%Y-%m-%d'), #{diskserialnumber,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+      0, #{uniqueid,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR},
+      #{osversion,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.TzPortablemanagementTbl">
+    insert into tz_portablemanagement_tbl
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="orgid != null">
+        OrgId,
+      </if>
+      <if test="staffid != null">
+        StaffId,
+      </if>
+      <if test="assetnumber != null">
+        AssetNumber,
+      </if>
+      <if test="secretlevel != null">
+        SecretLevel,
+      </if>
+      <if test="brand != null">
+        Brand,
+      </if>
+      <if test="usage != null">
+        Usage,
+      </if>
+      <if test="borrowstate != null">
+        BorrowState,
+      </if>
+      <if test="usestate != null">
+        UseState,
+      </if>
+      <if test="installationtime != null">
+        InstallationTime,
+      </if>
+      <if test="diskserialnumber != null">
+        DiskSerialNumber,
+      </if>
+      <if test="remark != null">
+        Remark,
+      </if>
+      <if test="isdeleted != null">
+        IsDeleted,
+      </if>
+      <if test="uniqueid != null">
+        UniqueId,
+      </if>
+      <if test="mac != null">
+        MAC,
+      </if>
+      <if test="osversion != null">
+        OSVersion,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orgid != null">
+        #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null">
+        #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="assetnumber != null">
+        #{assetnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="secretlevel != null">
+        #{secretlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="usage != null">
+        #{usage,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowstate != null">
+        #{borrowstate,jdbcType=VARCHAR},
+      </if>
+      <if test="usestate != null">
+        #{usestate,jdbcType=VARCHAR},
+      </if>
+      <if test="installationtime != null">
+        #{installationtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="diskserialnumber != null">
+        #{diskserialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isdeleted != null">
+        #{isdeleted,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null">
+        #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null">
+        #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="osversion != null">
+        #{osversion,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.backBusiness.dto.TzPortablemanagementTbl">
+    update tz_portablemanagement_tbl
+    <set>
+      <if test="orgid != null">
+        OrgId = #{orgid,jdbcType=VARCHAR},
+      </if>
+      <if test="staffid != null">
+        StaffId = #{staffid,jdbcType=VARCHAR},
+      </if>
+      <if test="assetnumber != null">
+        AssetNumber = #{assetnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="secretlevel != null">
+        SecretLevel = #{secretlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        Brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="usage != null">
+        Usage = #{usage,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowstate != null">
+        BorrowState = #{borrowstate,jdbcType=VARCHAR},
+      </if>
+      <if test="usestate != null">
+        UseState = #{usestate,jdbcType=VARCHAR},
+      </if>
+      <if test="installationtime != null">
+        InstallationTime = #{installationtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="diskserialnumber != null">
+        DiskSerialNumber = #{diskserialnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        Remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isdeleted != null">
+        IsDeleted = #{isdeleted,jdbcType=INTEGER},
+      </if>
+      <if test="uniqueid != null">
+        UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      </if>
+      <if test="mac != null">
+        MAC = #{mac,jdbcType=VARCHAR},
+      </if>
+      <if test="osversion != null">
+        OSVersion = #{osversion,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.TzPortablemanagementTbl">
+    update tz_portablemanagement_tbl
+    set OrgId = #{orgid,jdbcType=VARCHAR},
+      StaffId = #{staffid,jdbcType=VARCHAR},
+      AssetNumber = #{assetnumber,jdbcType=VARCHAR},
+      SecretLevel = #{secretlevel,jdbcType=VARCHAR},
+      Brand = #{brand,jdbcType=VARCHAR},
+      `Usage` = #{usage,jdbcType=VARCHAR},
+      BorrowState = #{borrowstate,jdbcType=VARCHAR},
+      UseState = #{usestate,jdbcType=VARCHAR},
+      InstallationTime = str_to_date(#{installationtime},'%Y-%m-%d'),
+      DiskSerialNumber = #{diskserialnumber,jdbcType=VARCHAR},
+      Remark = #{remark,jdbcType=VARCHAR},
+      IsDeleted = #{isdeleted,jdbcType=INTEGER},
+      UniqueId = #{uniqueid,jdbcType=VARCHAR},
+      MAC = #{mac,jdbcType=VARCHAR},
+      OSVersion = #{osversion,jdbcType=VARCHAR}
+    where  UniqueId = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.BmSysdefinetypeTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.BmSysdefinetypeTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DefineTypeId" property="definetypeid" jdbcType="VARCHAR" />
+    <result column="DefineTypeName" property="definetypename" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="DefineTypeRemark" property="definetyperemark" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    ID, DefineTypeId, DefineTypeName, SortOrder, IsDelete,DefineTypeRemark
+  </sql>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    update bm_sysdefinetype_tbl set IsDelete = 1
+    where DefineTypeId = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSysdefinetypeTbl" >
+    insert into bm_sysdefinetype_tbl (ID, DefineTypeId, DefineTypeName, 
+      SortOrder, IsDelete, DefineTypeRemark
+      )
+    values (#{id,jdbcType=INTEGER}, #{definetypeid,jdbcType=VARCHAR}, #{definetypename,jdbcType=VARCHAR}, 
+      #{sortorder,jdbcType=INTEGER}, 0, #{definetyperemark,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+
+  <select id = "selectByPrimaryKey" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from bm_sysdefinetype_tbl
+    where DefineTypeId = #{id}
+  </select>
+
+
+  <select id = "selectAllType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_sysdefinetype_tbl
+        where IsDelete = 0
+        order by SortOrder
+        limit #{start},#{pageSize}
+  </select>
+
+  <select id="selectTotal" resultType="java.lang.Integer">
+        select COUNT(DefineTypeId)
+        from bm_sysdefinetype_tbl
+        where IsDelete = 0
+
+  </select>
+
+  <insert id="insertSelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSysdefinetypeTbl" >
+    insert into bm_sysdefinetype_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="definetypeid != null" >
+        DefineTypeId,
+      </if>
+      <if test="definetypename != null" >
+        DefineTypeName,
+      </if>
+      <if test="sortorder != null" >
+        SortOrder,
+      </if>
+      <if test="isdelete != null" >
+        IsDelete,
+      </if>
+      <if test="definetyperemark != null" >
+        DefineTypeRemark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="definetypeid != null" >
+        #{definetypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="definetypename != null" >
+        #{definetypename,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="definetyperemark != null" >
+        #{definetyperemark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSysdefinetypeTbl" >
+    update bm_sysdefinetype_tbl
+    <set >
+      <if test="definetypename != null" >
+        DefineTypeName = #{definetypename,jdbcType=VARCHAR},
+      </if>
+      <if test="sortorder != null" >
+        SortOrder = #{sortorder,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        IsDelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="definetyperemark != null" >
+        DefineTypeRemark = #{definetyperemark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where DefineTypeId = #{definetypeid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSysdefinetypeTbl" >
+    update bm_sysdefinetype_tbl
+    set DefineTypeId = #{definetypeid,jdbcType=VARCHAR},
+      DefineTypeName = #{definetypename,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER},
+      DefineTypeRemark = #{definetyperemark,jdbcType=LONGVARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.sysAdmin.dto.BmSysdefinetypeTbl" >
+    update bm_sysdefinetype_tbl
+    set DefineTypeId = #{definetypeid,jdbcType=VARCHAR},
+      DefineTypeName = #{definetypename,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

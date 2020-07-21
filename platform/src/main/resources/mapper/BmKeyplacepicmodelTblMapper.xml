@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmKeyplacepicmodelTblMapper" >
+  <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmKeyplacepicmodelTbl" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="PicModelId" property="picmodelid" jdbcType="VARCHAR" />
+    <result column="PicModelName" property="picmodelname" jdbcType="VARCHAR" />
+    <result column="PicModelRemark" property="picmodelremark" jdbcType="VARCHAR" />
+    <result column="SortOrder" property="sortorder" jdbcType="INTEGER" />
+    <result column="IsDelete" property="isdelete" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PicModelId, PicModelName, PicModelRemark, SortOrder, IsDelete
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bm_keyplacepicmodel_tbl
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="queryPlace" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from bm_keyplacepicmodel_tbl
+    where IsDelete = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bm_keyplacepicmodel_tbl
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmKeyplacepicmodelTbl" >
+    insert into bm_keyplacepicmodel_tbl (ID, PicModelId, PicModelName, 
+      PicModelRemark, SortOrder, IsDelete
+      )
+    values (#{id,jdbcType=INTEGER}, #{picmodelid,jdbcType=VARCHAR}, #{picmodelname,jdbcType=VARCHAR}, 
+      #{picmodelremark,jdbcType=VARCHAR}, #{sortorder,jdbcType=INTEGER}, #{isdelete,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmKeyplacepicmodelTbl" >
+    update bm_keyplacepicmodel_tbl
+    set PicModelId = #{picmodelid,jdbcType=VARCHAR},
+      PicModelName = #{picmodelname,jdbcType=VARCHAR},
+      PicModelRemark = #{picmodelremark,jdbcType=VARCHAR},
+      SortOrder = #{sortorder,jdbcType=INTEGER},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

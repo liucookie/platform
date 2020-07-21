@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.BmAllroundcheckTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.BmAllroundcheckTbl">
+        <id column="Id" property="id" jdbcType="INTEGER"/>
+        <result column="AllCheckId" property="allcheckid" jdbcType="VARCHAR"/>
+        <result column="CheckDetail" property="checkdetail" jdbcType="VARCHAR"/>
+        <result column="CheckRes" property="checkres" jdbcType="INTEGER"/>
+        <result column="CheckTime" property="checktime" jdbcType="TIMESTAMP"/>
+        <result column="CheckGroup" property="checkgroup" jdbcType="VARCHAR"/>
+        <result column="DealRes" property="dealres" jdbcType="VARCHAR"/>
+        <result column="FileUrl" property="fileurl" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Id, AllCheckId, CheckDetail, CheckRes,date_format(CheckTime, '%Y-%m-%d')  CheckTime , CheckGroup, DealRes, FileUrl, IsDelete
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_allroundcheck_tbl
+        where AllCheckId = #{id}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bm_allroundcheck_tbl
+        where IsDelete = 0
+        ORDER by Id desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultType="java.lang.Integer">
+    select
+    COUNT(Id)
+    from bm_allroundcheck_tbl
+    where IsDelete = 0
+  </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update bm_allroundcheck_tbl set  IsDelete = 1
+    where  AllCheckId = #{allcheckid,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.BmAllroundcheckTbl">
+    insert into bm_allroundcheck_tbl (Id, AllCheckId, CheckDetail, 
+      CheckRes, CheckTime, CheckGroup, 
+      DealRes, FileUrl, IsDelete
+      )
+    values (#{id,jdbcType=INTEGER}, #{allcheckid,jdbcType=VARCHAR}, #{checkdetail,jdbcType=VARCHAR}, 
+      #{checkres,jdbcType=INTEGER},str_to_date(#{checktime},'%Y-%m-%d'), #{checkgroup,jdbcType=VARCHAR},
+      #{dealres,jdbcType=VARCHAR}, #{fileurl,jdbcType=VARCHAR}, 0
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.BmAllroundcheckTbl">
+        insert into bm_allroundcheck_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                Id,
+            </if>
+            <if test="allcheckid != null">
+                AllCheckId,
+            </if>
+            <if test="checkdetail != null">
+                CheckDetail,
+            </if>
+            <if test="checkres != null">
+                CheckRes,
+            </if>
+            <if test="checktime != null">
+                CheckTime,
+            </if>
+            <if test="checkgroup != null">
+                CheckGroup,
+            </if>
+            <if test="dealres != null">
+                DealRes,
+            </if>
+            <if test="fileurl != null">
+                FileUrl,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="allcheckid != null">
+                #{allcheckid,jdbcType=VARCHAR},
+            </if>
+            <if test="checkdetail != null">
+                #{checkdetail,jdbcType=VARCHAR},
+            </if>
+            <if test="checkres != null">
+                #{checkres,jdbcType=INTEGER},
+            </if>
+            <if test="checktime != null">
+                #{checktime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="checkgroup != null">
+                #{checkgroup,jdbcType=VARCHAR},
+            </if>
+            <if test="dealres != null">
+                #{dealres,jdbcType=VARCHAR},
+            </if>
+            <if test="fileurl != null">
+                #{fileurl,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.hangyu.platform.web.backBusiness.dto.BmAllroundcheckTbl">
+        update bm_allroundcheck_tbl
+        <set>
+            <if test="allcheckid != null">
+                AllCheckId = #{allcheckid,jdbcType=VARCHAR},
+            </if>
+            <if test="checkdetail != null">
+                CheckDetail = #{checkdetail,jdbcType=VARCHAR},
+            </if>
+            <if test="checkres != null">
+                CheckRes = #{checkres,jdbcType=INTEGER},
+            </if>
+            <if test="checktime != null">
+                CheckTime = #{checktime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="checkgroup != null">
+                CheckGroup = #{checkgroup,jdbcType=VARCHAR},
+            </if>
+            <if test="dealres != null">
+                DealRes = #{dealres,jdbcType=VARCHAR},
+            </if>
+            <if test="fileurl != null">
+                FileUrl = #{fileurl,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+        </set>
+        where Id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.BmAllroundcheckTbl">
+    update bm_allroundcheck_tbl
+    set
+      CheckDetail = #{checkdetail,jdbcType=VARCHAR},
+      CheckRes = #{checkres,jdbcType=INTEGER},
+      CheckTime = str_to_date(#{checktime},'%Y-%m-%d'),
+      CheckGroup = #{checkgroup,jdbcType=VARCHAR},
+      DealRes = #{dealres,jdbcType=VARCHAR},
+      FileUrl = #{fileurl,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where AllCheckId = #{allcheckid,jdbcType=VARCHAR}
+  </update>
+</mapper>

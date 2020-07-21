@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.backBusiness.mapper.NationalsecurityTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.backBusiness.dto.NationalsecurityTbl">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="UniqueID" property="uniqueid" jdbcType="VARCHAR"/>
+        <result column="rFileName" property="rfilename" jdbcType="VARCHAR"/>
+        <result column="JcDate" property="jcdate" jdbcType="TIMESTAMP"/>
+        <result column="JcContent" property="jccontent" jdbcType="VARCHAR"/>
+        <result column="JcDept" property="jcdept" jdbcType="VARCHAR"/>
+        <result column="JcDeptName" property="jcdeptname" jdbcType="VARCHAR"/>
+        <result column="JcUser" property="jcuser" jdbcType="VARCHAR"/>
+        <result column="JcUserName" property="jcusername" jdbcType="VARCHAR"/>
+        <result column="BjcDepartment" property="bjcdepartment" jdbcType="VARCHAR"/>
+        <result column="JcResult" property="jcresult" jdbcType="VARCHAR"/>
+        <result column="Remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, UniqueID, rFileName,date_format(JcDate, '%Y-%m-%d')  JcDate  , JcContent, JcDept, JcDeptName, JcUser, JcUserName,
+    BjcDepartment, JcResult, Remark, IsDelete
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from nationalsecurity_tbl
+        where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+    </select>
+
+    <select id="select" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from nationalsecurity_tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null">
+                and JcDeptName = #{orgName}
+            </if>
+        </where>
+        order by id desc
+        limit #{start},#{pageSize}
+    </select>
+
+    <select id="selectTotal" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from nationalsecurity_tbl
+        <where>
+            IsDelete = 0
+            <if test="orgName != null">
+                and JcDeptName = #{orgName}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    update nationalsecurity_tbl set IsDelete = 1
+    where UniqueID = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.hangyu.platform.web.backBusiness.dto.NationalsecurityTbl">
+    insert into nationalsecurity_tbl (id, UniqueID, rFileName, 
+      JcDate, JcContent, JcDept, 
+      JcDeptName, JcUser, JcUserName, 
+      BjcDepartment, JcResult, Remark, 
+      IsDelete)
+    values (#{id,jdbcType=INTEGER}, #{uniqueid,jdbcType=VARCHAR}, #{rfilename,jdbcType=VARCHAR}, 
+      str_to_date(#{jcdate},'%Y-%m-%d'), #{jccontent,jdbcType=VARCHAR}, #{jcdept,jdbcType=VARCHAR},
+      #{jcdeptname,jdbcType=VARCHAR}, #{jcuser,jdbcType=VARCHAR}, #{jcusername,jdbcType=VARCHAR}, 
+      #{bjcdepartment,jdbcType=VARCHAR}, #{jcresult,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      0)
+  </insert>
+    <insert id="insertSelective" parameterType="com.hangyu.platform.web.backBusiness.dto.NationalsecurityTbl">
+        insert into nationalsecurity_tbl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="uniqueid != null">
+                UniqueID,
+            </if>
+            <if test="rfilename != null">
+                rFileName,
+            </if>
+            <if test="jcdate != null">
+                JcDate,
+            </if>
+            <if test="jccontent != null">
+                JcContent,
+            </if>
+            <if test="jcdept != null">
+                JcDept,
+            </if>
+            <if test="jcdeptname != null">
+                JcDeptName,
+            </if>
+            <if test="jcuser != null">
+                JcUser,
+            </if>
+            <if test="jcusername != null">
+                JcUserName,
+            </if>
+            <if test="bjcdepartment != null">
+                BjcDepartment,
+            </if>
+            <if test="jcresult != null">
+                JcResult,
+            </if>
+            <if test="remark != null">
+                Remark,
+            </if>
+            <if test="isdelete != null">
+                IsDelete,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="uniqueid != null">
+                #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="rfilename != null">
+                #{rfilename,jdbcType=VARCHAR},
+            </if>
+            <if test="jcdate != null">
+                #{jcdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="jccontent != null">
+                #{jccontent,jdbcType=VARCHAR},
+            </if>
+            <if test="jcdept != null">
+                #{jcdept,jdbcType=VARCHAR},
+            </if>
+            <if test="jcdeptname != null">
+                #{jcdeptname,jdbcType=VARCHAR},
+            </if>
+            <if test="jcuser != null">
+                #{jcuser,jdbcType=VARCHAR},
+            </if>
+            <if test="jcusername != null">
+                #{jcusername,jdbcType=VARCHAR},
+            </if>
+            <if test="bjcdepartment != null">
+                #{bjcdepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="jcresult != null">
+                #{jcresult,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.hangyu.platform.web.backBusiness.dto.NationalsecurityTbl">
+        update nationalsecurity_tbl
+        <set>
+            <if test="uniqueid != null">
+                UniqueID = #{uniqueid,jdbcType=VARCHAR},
+            </if>
+            <if test="rfilename != null">
+                rFileName = #{rfilename,jdbcType=VARCHAR},
+            </if>
+            <if test="jcdate != null">
+                JcDate = #{jcdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="jccontent != null">
+                JcContent = #{jccontent,jdbcType=VARCHAR},
+            </if>
+            <if test="jcdept != null">
+                JcDept = #{jcdept,jdbcType=VARCHAR},
+            </if>
+            <if test="jcdeptname != null">
+                JcDeptName = #{jcdeptname,jdbcType=VARCHAR},
+            </if>
+            <if test="jcuser != null">
+                JcUser = #{jcuser,jdbcType=VARCHAR},
+            </if>
+            <if test="jcusername != null">
+                JcUserName = #{jcusername,jdbcType=VARCHAR},
+            </if>
+            <if test="bjcdepartment != null">
+                BjcDepartment = #{bjcdepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="jcresult != null">
+                JcResult = #{jcresult,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                Remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                IsDelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hangyu.platform.web.backBusiness.dto.NationalsecurityTbl">
+    update nationalsecurity_tbl
+    set
+      rFileName = #{rfilename,jdbcType=VARCHAR},
+      JcDate = #{jcdate,jdbcType=TIMESTAMP},
+      JcContent = #{jccontent,jdbcType=VARCHAR},
+      JcDept = #{jcdept,jdbcType=VARCHAR},
+      JcDeptName = #{jcdeptname,jdbcType=VARCHAR},
+      JcUser = #{jcuser,jdbcType=VARCHAR},
+      JcUserName = #{jcusername,jdbcType=VARCHAR},
+      BjcDepartment = #{bjcdepartment,jdbcType=VARCHAR},
+      JcResult = #{jcresult,jdbcType=VARCHAR},
+      Remark = #{remark,jdbcType=VARCHAR},
+      IsDelete = #{isdelete,jdbcType=INTEGER}
+    where UniqueID = #{uniqueid,jdbcType=VARCHAR}
+  </update>
+</mapper>

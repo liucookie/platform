@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hangyu.platform.web.sysAdmin.mapper.Bm2LeaveTypeTblMapper">
+    <resultMap id="BaseResultMap" type="com.hangyu.platform.web.sysAdmin.dto.Bm2LeaveTypeTbl">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="LeaveTypeName" property="leavetypename" jdbcType="VARCHAR"/>
+        <result column="IsDelete" property="isdelete" jdbcType="INTEGER"/>
+        <result column="LeaveTypeMode" property="leavetypemode" jdbcType="INTEGER"/>
+        <result column="LeaveTypeRemark" property="leavetyperemark" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
+    <!-- 总数据量查询 -->
+    <select id="selectTotal" resultType="java.lang.Integer">
+        SELECT Count(ID) FROM bm2_leavetype_tbl where IsDelete=0;
+    </select>
+
+    <!-- 保密检查未签到类型管理信息批量查询 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select leavetypename,leavetypemode from bm2_leavetype_tbl
+        where IsDelete = 0  limit #{start},#{pageSize}
+  </select>
+
+    <select id="queryLeaveType" resultMap="BaseResultMap">
+        select leavetypename,leavetypemode from bm2_leavetype_tbl
+        where IsDelete = 0
+  </select>
+
+    <!-- 保密检查未签到类型管理单条信息查询 -->
+    <select id="select" parameterType="string" resultType="com.hangyu.platform.web.sysAdmin.dto.Bm2LeaveTypeTbl">
+        select leavetypename,leavetypemode from bm2_leavetype_tbl where ID = #{id}
+  </select>
+
+    <!-- 保密检查未签到类型管理信息添加 -->
+    <insert id="insert" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2LeaveTypeTbl">
+        insert into bm2_leavetype_tbl(leavetypename,leavetypemode,leavetyperemark)
+        values(#{leavetypename},#{leavetypemode},#{leavetyperemark})
+  </insert>
+
+    <!-- 保密检查未签到类型管理信息修改 -->
+    <update id="update" parameterType="com.hangyu.platform.web.sysAdmin.dto.Bm2LeaveTypeTbl">
+        update   bm2_leavetype_tbl
+        set leavetypename = #{leavetypename},leavetypemode = #{leavetypemode},leavetyperemark = #{leavetyperemark}
+        where ID=#{id}
+  </update>
+
+    <!-- 保密检查未签到类型管理信息删除 -->
+    <delete id="delete" parameterType="String">
+        update bm2_leavetype_tbl set IsDelete = 1 where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>
